@@ -54,7 +54,9 @@ export async function POST(req: Request) {
   const aiLabel = lang === "es" ? "Cálculo aproximado de IA" : "Rough AI guess";
   const guessed: EstimateItem[] = (ai && Array.isArray(ai.items) ? ai.items : [])
     .filter((i) => i && typeof i.name === "string" && Number.isFinite(i.carbsMin) && Number.isFinite(i.carbsMax))
-    .map((i) => ({ name: clip(i.name, 80), serving: clip(i.serving, 80), swap: clip(i.swap, 160), carbsMin: Math.min(i.carbsMin, i.carbsMax), carbsMax: Math.max(i.carbsMin, i.carbsMax), source: aiLabel }));
+    .map((i) => ({ name: clip(i.name, 80), serving: clip(i.serving, 80), swap: clip(i.swap, 160), carbsMin: Math.min(i.carbsMin, i.carbsMax), carbsMax: Math.max(i.carbsMin, i.carbsMax), source: aiLabel }))
+    // Low-carbohydrate foods get one fixed, neutral line, so the model cannot say "eat all you want".
+    .map((i) => (i.carbsMax <= 10 ? { ...i, swap: lang === "es" ? "Añade poco al total de carbohidratos." : "Adds little to the carbohydrate total." } : i));
 
   if (known.length > 0) {
     // Table dishes plus a part the table does not know: add the AI guess, or say plainly what was not counted.
