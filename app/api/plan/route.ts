@@ -2,6 +2,7 @@
 // within the carbohydrate target the clinician set. Traffic lights are computed in code, not by the model.
 import placesData from "@/data/places.json";
 import { askJSON, clip, lastAiError, lastAiModel, PLAN_MODELS, readBody } from "@/lib/claude";
+import { avoidTerms, violates } from "@/lib/avoid";
 import { fallbackPlan } from "@/lib/fallback";
 import { foods, lightFor } from "@/lib/foods";
 import type { Lang, Place, Plan, PlanDay, Rx } from "@/lib/types";
@@ -20,7 +21,26 @@ export async function POST(req: Request) {
     avoid: Array.isArray(r.avoid) ? r.avoid.slice(0, 8).map((x) => clip(x, 40)) : [],
     note: clip(r.note, 400),
   };
-  const fallback = fallbackPlan(rx, lang);
+  const terms = avoidTerms(rx.avoid);
+  // Safe stand-ins, tried in order, for any meal that mentions an avoided food.
+  const standIns: [string, string, string, string, number][] = [
+    ["Habichuelas guisadas con calabaza", "Stewed beans with squash", "1/2 taza de habichuelas, 1 taza de calabaza", "1/2 cup beans, 1 cup squash", 25],
+    ["Pollo guisado con ensalada", "Stewed chicken with salad", "3 onzas de pollo, 1 taza de ensalada", "3 oz chicken, 1 cup salad", 15],
+    ["Vegetales guisados con arroz integral", "Stewed vegetables with brown rice", "1 taza de vegetales, 1/3 taza de arroz", "1 cup vegetables, 1/3 cup rice", 25],
+  ];
+  const makeSafe = (plan: Plan): Plan => {
+    if (terms.length === 0) return plan;
+    const days = plan.days.map((d) => ({
+      ...d,
+      meals: d.meals.map((m) => {
+        if (!violates(`${m.dish} ${m.portion}`, terms)) return m;
+        const s = standIns.find((x) => !violates(`${x[0]} ${x[2]}`, terms)) ?? standIns[2];
+        return { ...m, dish: lang === "es" ? s[0] : s[1], portion: lang === "es" ? s[2] : s[3], carbs: s[4], light: lightFor(s[4], s[4], rx.carbTarget) };
+      }),
+    }));
+    return { ...plan, days, shopping: plan.shopping.filter((i) => !violates(i.item, terms)) };
+  };
+  const fallback = makeSafe(fallbackPlan(rx, lang));
 
   const stock = places
     .filter((p) => (rx.type === "produce" ? p.kind !== "cocina" : p.kind === "cocina"))
@@ -28,7 +48,7 @@ export async function POST(req: Request) {
     .join("\n");
   const table = foods.map((f) => `${f.name}: ${f.carbsMin}-${f.carbsMax} g per ${f.serving.en}`).join("; ");
 
-  const kitchenDishes = Array.from(new Set(places.filter((p) => p.kind === "cocina").flatMap((p) => p.stock.map((d) => d[lang]))));
+  const kitchenDishes = Array.from(new Set(places.filter((p) => p.kind === "cocina").flatMap((p) => p.stock.map((d) => d[lang])))).filter((d) => !violates(d, terms));
   const mealSchema = (dishEnum?: string[]) => ({
     type: "object",
     properties: {
@@ -54,7 +74,7 @@ export async function POST(req: Request) {
 - Breakfast: simple, not fried, no processed meats (no salami, jamón, salchicha), no sweet breads or pastries (mallorca, quesito).
 - Hard limit: no meal may be over ${rx.carbTarget} g of carbohydrate. Check each meal before writing it; if it is over, make the starchy portion smaller or swap it.
 - Give portions in household measures (taza, onzas, piezas) and an integer carbohydrate estimate. Use the local food table for carbohydrate values where a dish matches.
-- Never include these foods: ${rx.avoid.join(", ") || "(none)"}.
+- Never include these foods or anything made with them: ${terms.join(", ") || "(none)"}.
 - Dish names at most 8 words. tip = one short, kind, practical sentence about eating, addressed as "usted". No medication, glucose or dosing advice.`,
     user: `In stock this week (sample data):\n${stock}\n\nLocal food table (estimates): ${table}\n\nClinician note: ${rx.note || "none"}`,
     schema: {
@@ -92,6 +112,6 @@ export async function POST(req: Request) {
       return { meal: k, dish: clip(d[k].dish, 90), portion: clip(d[k].portion, 90), carbs, light: lightFor(carbs, carbs, rx.carbTarget) };
     }),
   }));
-  const plan: Plan = { days, shopping: Array.isArray(ai.shopping) ? ai.shopping : fallback.shopping, tip: ai.tip || fallback.tip, source: "ai" };
+  const plan: Plan = makeSafe({ days, shopping: Array.isArray(ai.shopping) ? ai.shopping.map((i) => ({ item: clip(i.item, 80), qty: clip(i.qty, 60) })) : fallback.shopping, tip: clip(ai.tip, 200) || fallback.tip, source: "ai" });
   return Response.json({ ...plan, model: lastAiModel, skipped: lastAiError });
 }

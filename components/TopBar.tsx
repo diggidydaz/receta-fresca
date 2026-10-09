@@ -1,11 +1,19 @@
 "use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { Icon } from "./Icon";
 import { common, useT } from "@/lib/i18n";
 import { setState, useAppState } from "@/lib/store";
 
+// Where "Back" leads from each screen: always one clear step up, never a surprise.
+const parent: Record<string, string> = {
+  "/paciente": "/", "/clinico": "/", "/negocio": "/", "/acerca": "/",
+  "/intake": "/paciente", "/plan": "/paciente", "/comida": "/paciente", "/canjear": "/paciente",
+};
+
 export function TopBar() {
+  const up = parent[usePathname() ?? "/"];
   const { lang, bigText } = useAppState();
   const { t } = useT();
 
@@ -36,6 +44,13 @@ export function TopBar() {
         </div>
         <p className="bg-notice px-4 py-2 text-center text-[0.85rem] font-bold text-ink">{t(common.sample)}</p>
       </header>
+      {up && (
+        <nav aria-label={t(common.back)} className="mx-auto w-full max-w-[36rem] px-4 pt-4">
+          <Link href={up} className="inline-flex min-h-[56px] items-center gap-2 rounded-2xl border-[3px] border-brand bg-panel px-5 text-[1.25rem] font-bold text-brand hover:bg-brand-soft">
+            <Icon name="left" /> {t(common.back)}
+          </Link>
+        </nav>
+      )}
     </>
   );
 }
