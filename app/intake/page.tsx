@@ -50,7 +50,20 @@ export default function IntakePage() {
   const { t, lang } = useT();
   const s = useAppState();
   const hydrated = useHydrated();
-  const [step, setStep] = useState(1);
+  // The current question survives a reload, so nobody is sent back to the start by accident.
+  const [step, setStepRaw] = useState(() => {
+    if (typeof window === "undefined") return 1;
+    try {
+      const n = Number(window.sessionStorage.getItem("rf-intake-step"));
+      return Number.isInteger(n) && n >= 1 && n <= TOTAL ? n : 1;
+    } catch {
+      return 1;
+    }
+  });
+  const setStep = (n: number) => {
+    setStepRaw(n);
+    try { window.sessionStorage.setItem("rf-intake-step", String(n)); } catch { /* ignore */ }
+  };
   const [sending, setSending] = useState(false);
   const [failed, setFailed] = useState(false);
 
@@ -71,6 +84,7 @@ export default function IntakePage() {
       if (!res.ok) throw new Error("bad response");
       const summary = (await res.json()) as IntakeSummary;
       setState({ intakeDone: true, intakeSummary: summary });
+      setStep(1);
     } catch {
       setFailed(true);
     } finally {

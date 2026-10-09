@@ -13,6 +13,7 @@ export function normalize(s: string): string {
 const FILLER = new Set(
   "dos tres cuatro cinco seis two three four five six poquita medio media mitad pedacito chiquito chiquita mucha doble bastante lleno half little bit double large extra con y de del la el lo los las un una unos unas me mi comi comio almorce desayune cene tome hoy ayer poco poquito mucho plato platos taza tazas pedazo pedazos pieza piezas porcion vaso vasos tambien mas al a en para por que solo como fue i ate had have with and some of the for my lunch breakfast dinner today just only piece pieces cup cups plate glass small big grande pequeno pequena".split(" ")
 );
+const NEGATED = /^(no|not|nada de|ningun|ninguna|i did not eat|i didn t eat|did not eat|didn t eat)\b/;
 const NOTHING = /^(no (he )?com(i|ido)( nada)?|nada|ninguna|nothing|none|i (did not|didn t) eat( anything)?)$/;
 
 /** Dish name plus simple singular/plural variants, so "maduro", "maduros", "pastel" and "pasteles" all match. */
@@ -48,9 +49,15 @@ export function applySizes(est: Estimate, sizes: Size[], target: number): Estima
 
 /** Finds table dishes mentioned in free text, and reports the food words it could not place. */
 export function parseMeal(text: string): { found: Food[]; leftover: string; sizes: Record<string, Size> } {
-  const norm = normalize(text);
-  if (!norm || NOTHING.test(norm)) return { found: [], leftover: "", sizes: {} };
-  let rest = ` ${norm} `;
+  // Drop what the person says they did NOT eat: a clause that starts with "no", and anything after "sin".
+  const kept = text
+    .split(/[,.;\n]|\b(?:pero|solo|sólo|but|only)\b/i)
+    .map(normalize)
+    .filter((c) => c && !NEGATED.test(c))
+    .map((c) => c.replace(/\b(?:sin|without)\b.*?(?=\b(?:y|con|and|with)\b|$)/g, " "));
+  const norm = kept.join(" , ").replace(/\s+/g, " ").trim();
+  if (!norm || NOTHING.test(normalize(text))) return { found: [], leftover: "", sizes: {} };
+  let rest = ` ${norm.replace(/ , /g, " | ")} `;
   const pairs = foods
     .flatMap((f) => [normalize(f.name), ...f.aliases.map(normalize)].flatMap(variants).map((a) => ({ a, f })))
     .sort((x, y) => y.a.length - x.a.length); // longest first, so "arroz con gandules" beats "arroz"
