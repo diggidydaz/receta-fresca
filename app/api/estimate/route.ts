@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     maxTokens: 500,
     toolName: "report_estimate",
     toolDescription: "Report a rough carbohydrate estimate for each dish the person ate.",
-    system: `Estimate carbohydrates for Caribbean (Puerto Rico and US Virgin Islands) dishes, per typical serving. Give a range, not a single number. Suggest one small, kind swap per dish. Write in ${lang === "es" ? "Puerto Rican Spanish" : "English"}. If the text is not food, return an empty list.`,
+    system: `Estimate carbohydrates for Caribbean (Puerto Rico and US Virgin Islands) dishes, per typical serving. Give a range, not a single number. Suggest one small, kind swap per dish, addressed to the person as \"usted\" (never \"tú\"). Do not suggest diet or artificially sweetened products; prefer water, smaller portions, or vegetables. Write in ${lang === "es" ? "Puerto Rican Spanish" : "English"}. If the text is not food, return an empty list.`,
     user: `The person ate: "${text}"`,
     schema: {
       type: "object",

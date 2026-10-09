@@ -1,7 +1,7 @@
 // Builds a one-week plan from what local stores and kitchens have in stock (sample data),
 // within the carbohydrate target the clinician set. Traffic lights are computed in code, not by the model.
 import placesData from "@/data/places.json";
-import { askJSON, clip, MODELS, readBody } from "@/lib/claude";
+import { askJSON, clip, lastAiError, readBody, SMART_THEN_FAST } from "@/lib/claude";
 import { fallbackPlan } from "@/lib/fallback";
 import { foods, lightFor } from "@/lib/foods";
 import type { Lang, Place, Plan, PlanDay, Rx } from "@/lib/types";
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
   const table = foods.map((f) => `${f.name}: ${f.carbsMin}-${f.carbsMax} g per ${f.serving.en}`).join("; ");
 
   const ai = await askJSON<{ days: { day: string; meals: { meal: string; dish: string; portion: string; carbs: number }[] }[]; shopping: { item: string; qty: string }[]; tip: string }>({
-    model: MODELS.smart,
+    model: SMART_THEN_FAST,
     timeoutMs: 45000,
     maxTokens: 3000,
     toolName: "write_week_plan",
@@ -80,7 +80,7 @@ export async function POST(req: Request) {
   });
 
   if (!ai || !Array.isArray(ai.days) || ai.days.length !== 7 || ai.days.some((d) => !Array.isArray(d.meals) || d.meals.length !== 3)) {
-    return Response.json(fallback);
+    return Response.json({ ...fallback, aiError: lastAiError });
   }
   const order = ["desayuno", "almuerzo", "cena"] as const;
   const days: PlanDay[] = ai.days.map((d) => ({

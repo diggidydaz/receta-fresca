@@ -31,7 +31,7 @@ export async function POST(req: Request) {
     maxTokens: 700,
     toolName: "write_visit_summary",
     toolDescription: "Write what the clinician prescribed, in plain words for the patient.",
-    system: `Rewrite a food prescription as 3 to 5 short points the patient can understand and act on. Each point has a Spanish (es) and an English (en) version that say the same thing. Speak to the patient as "usted". One idea per point, at most 18 words. Include every fact given and add none. If the clinician wrote a note, restate it faithfully in plain words.`,
+    system: `Rewrite a food prescription as 3 to 5 short points the patient can understand and act on. Each point has a Spanish (es) and an English (en) version that say the same thing. Speak to the patient as "usted". One idea per point, at most 18 words. Include every fact given and add none. The carbohydrate number is the patient's goal per meal set by the clinician; say it as a goal (\"Su meta es...\"), not as what the food contains. If the clinician wrote a note, restate it faithfully in plain words.`,
     user: `Prescription:
 - Type: ${rx.type === "produce" ? "fresh fruits, vegetables and root vegetables, picked up at a local colmado or farm" : "prepared meals from a local kitchen"}
 - Length: ${rx.weeks} weeks

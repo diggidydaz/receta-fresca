@@ -9,6 +9,9 @@ export const MODELS = {
   smart: "claude-sonnet-5-5",
 } as const;
 
+/** Stronger model first; if this API key cannot use it, the fast model does the job instead. */
+export const SMART_THEN_FAST = [MODELS.smart, MODELS.fast];
+
 export const SAFETY = `You are part of Receta Fresca, a food-prescription demo for people with diabetes in Puerto Rico and the US Virgin Islands.
 Hard rules:
 - Never diagnose. Never recommend, adjust or mention doses of insulin or any medication.
@@ -19,8 +22,12 @@ Hard rules:
 - Use Puerto Rican Spanish food words (habichuelas, china, guineo, vianda) when writing in Spanish.
 - All patient data here is synthetic.`;
 
+/** Last failure reason, without secrets. Returned to the client as `aiError` so problems are visible in the demo. */
+export let lastAiError = "";
+
 type AskArgs = {
-  model: string;
+  /** One model, or several to try in order if an earlier one is unavailable to this API key. */
+  model: string | string[];
   system: string;
   user: string;
   toolName: string;
@@ -32,23 +39,36 @@ type AskArgs = {
 
 export async function askJSON<T>(a: AskArgs): Promise<T | null> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) return null;
-  try {
-    const client = new Anthropic({ apiKey, timeout: a.timeoutMs ?? 25000, maxRetries: 0 });
-    const res = await client.messages.create({
-      model: a.model,
-      max_tokens: a.maxTokens ?? 1024,
-      system: `${SAFETY}\n\n${a.system}`,
-      messages: [{ role: "user", content: a.user }],
-      tools: [{ name: a.toolName, description: a.toolDescription, input_schema: a.schema as Anthropic.Tool.InputSchema }],
-      tool_choice: { type: "tool", name: a.toolName },
-    });
-    const block = res.content.find((b) => b.type === "tool_use");
-    return block && block.type === "tool_use" ? (block.input as T) : null;
-  } catch (err) {
-    console.error(`[claude] ${a.toolName} failed`, err instanceof Error ? err.message : err);
+  lastAiError = "";
+  if (!apiKey) {
+    lastAiError = "no API key configured";
     return null;
   }
+  const models = Array.isArray(a.model) ? a.model : [a.model];
+  const client = new Anthropic({ apiKey, timeout: a.timeoutMs ?? 25000, maxRetries: 0 });
+  for (const model of models) {
+    try {
+      const res = await client.messages.create({
+        model,
+        max_tokens: a.maxTokens ?? 1024,
+        system: `${SAFETY}\n\n${a.system}`,
+        messages: [{ role: "user", content: a.user }],
+        tools: [{ name: a.toolName, description: a.toolDescription, input_schema: a.schema as Anthropic.Tool.InputSchema }],
+        tool_choice: { type: "tool", name: a.toolName },
+      });
+      const block = res.content.find((b) => b.type === "tool_use");
+      if (block && block.type === "tool_use") return block.input as T;
+      lastAiError = `${model}: no structured answer`;
+    } catch (err) {
+      const status = err instanceof Anthropic.APIError ? err.status : undefined;
+      const msg = err instanceof Error ? err.message.slice(0, 200) : "unknown error";
+      lastAiError = `${model}: ${status ?? ""} ${msg}`.trim();
+      console.error(`[claude] ${a.toolName} failed`, lastAiError);
+      // Only move to the next model when this one is unavailable; a timeout or outage ends the attempt.
+      if (status !== 404 && status !== 403 && status !== 400) break;
+    }
+  }
+  return null;
 }
 
 /** Reads a JSON body without throwing. */

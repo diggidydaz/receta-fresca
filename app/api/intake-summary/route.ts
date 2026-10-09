@@ -1,6 +1,6 @@
 // Turns the patient's pre-visit answers into a one-screen summary for the clinician.
 // The model suggests logistics only (cooked meals vs produce, delivery). It never sets clinical targets.
-import { askJSON, clip, MODELS, readBody } from "@/lib/claude";
+import { askJSON, clip, lastAiError, readBody, SMART_THEN_FAST } from "@/lib/claude";
 import { fallbackIntakeSummary } from "@/lib/fallback";
 import type { IntakeAnswers, IntakeSummary, Lang, Patient } from "@/lib/types";
 
@@ -16,7 +16,7 @@ export async function POST(req: Request) {
   if (!answered) return Response.json(fallback);
 
   const ai = await askJSON<Omit<IntakeSummary, "source">>({
-    model: MODELS.smart,
+    model: SMART_THEN_FAST,
     timeoutMs: 25000,
     maxTokens: 900,
     toolName: "write_intake_summary",
@@ -51,6 +51,6 @@ Answers:
     },
   });
 
-  if (!ai || !Array.isArray(ai.keyPoints)) return Response.json(fallback);
+  if (!ai || !Array.isArray(ai.keyPoints)) return Response.json({ ...fallback, aiError: lastAiError });
   return Response.json({ ...fallback, ...ai, source: "ai" } satisfies IntakeSummary);
 }
