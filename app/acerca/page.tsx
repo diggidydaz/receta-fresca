@@ -11,6 +11,7 @@ const sections: { title: L10n; items: L10n[] }[] = [
       { es: "Receta de comida del clínico y nota en palabras sencillas para el paciente.", en: "The clinician's food prescription and a plain-language note for the patient." },
       { es: "Plan de la semana hecho con IA, con lo que hay en las tiendas.", en: "A weekly plan made with AI from what stores have in stock." },
       { es: "Estimado de carbohidratos de platos locales, basado primero en nuestra tabla de comida local.", en: "Carbohydrate estimates for local dishes, grounded first in our local food table." },
+      { es: "Foto del plato: la IA solo nombra los platos que ve; la persona los confirma y los números salen de la tabla. La foto no se guarda.", en: "Photo of the plate: the AI only names the dishes it sees; the person confirms them and the numbers come from the table. The photo is not saved." },
       { es: "Pedido en colmado, finca o cocina, y vista del negocio.", en: "Ordering from a store, farm or kitchen, and the business view." },
       { es: "Español e inglés, letra grande, lectura en voz alta.", en: "Spanish and English, large text, read aloud." },
     ],

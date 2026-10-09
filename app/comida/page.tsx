@@ -7,6 +7,13 @@ import { setState, useAppState, useHydrated } from "@/lib/store";
 import type { Estimate, LogEntry } from "@/lib/types";
 
 const copy = {
+  photo: { es: "Tomar una foto de mi plato", en: "Take a photo of my plate" },
+  photoHint: { es: "La foto no se guarda.", en: "The photo is not saved." },
+  looking: { es: "Mirando su foto…", en: "Looking at your photo…" },
+  saw: { es: "Esto es lo que vimos en su foto. Corrija lo que haga falta y toque «Ver mi estimado».", en: "This is what we saw in your photo. Fix anything that is wrong, then tap \"See my estimate\"." },
+  sawNothing: { es: "No pudimos reconocer comida en la foto. Diga o escriba lo que comió.", en: "We could not recognize food in the photo. Say or type what you ate." },
+  photoFailed: { es: "No pudimos mirar la foto. Diga o escriba lo que comió.", en: "We could not look at the photo. Say or type what you ate." },
+  photoAlt: { es: "Su foto del plato", en: "Your photo of the plate" },
   unmatched: { es: "No pudimos contar esta parte", en: "We could not count this part" },
   title: { es: "¿Qué comió?", en: "What did you eat?" },
   label: { es: "Diga o escriba lo que comió", en: "Say or type what you ate" },
@@ -39,6 +46,53 @@ export default function ComidaPage() {
   const [failed, setFailed] = useState(false);
   const [est, setEst] = useState<Estimate | null>(null);
   const headRef = useRef<HTMLHeadingElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [looking, setLooking] = useState(false);
+  const [photoMsg, setPhotoMsg] = useState<"saw" | "sawNothing" | "photoFailed" | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+
+  // Shrinks the photo in the browser before sending, so it uploads fast on a slow connection.
+  const shrink = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, 1024 / Math.max(img.width, img.height));
+        const c = document.createElement("canvas");
+        c.width = Math.round(img.width * scale);
+        c.height = Math.round(img.height * scale);
+        const ctx = c.getContext("2d");
+        if (!ctx) { URL.revokeObjectURL(url); reject(new Error("no canvas")); return; }
+        ctx.drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url);
+        resolve(c.toDataURL("image/jpeg", 0.8));
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("bad image")); };
+      img.src = url;
+    });
+
+  const onPhoto = async (file: File | undefined) => {
+    if (!file || looking) return;
+    setLooking(true); setPhotoMsg(null); setEst(null); setFailed(false); setEmpty(false);
+    try {
+      const dataUrl = await shrink(file);
+      setPreview(dataUrl);
+      const res = await fetch("/api/photo", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ image: dataUrl, lang }) });
+      if (!res.ok) throw new Error("bad");
+      const data = (await res.json()) as { dishes?: string[]; ok?: boolean };
+      if (!data.ok) { setPhotoMsg("photoFailed"); return; }
+      const dishes = Array.isArray(data.dishes) ? data.dishes.filter((d) => typeof d === "string" && d.trim()) : [];
+      if (dishes.length === 0) { setPhotoMsg("sawNothing"); return; }
+      // The photo only fills in the words. The person confirms them, and the numbers come from the usual estimate.
+      setText(dishes.join(", "));
+      setPhotoMsg("saw");
+    } catch {
+      setPhotoMsg("photoFailed");
+    } finally {
+      setLooking(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  };
 
   useEffect(() => { if (est) headRef.current?.focus(); }, [est]);
 
@@ -78,6 +132,17 @@ export default function ComidaPage() {
   return (
     <Page>
       <h1>{t(copy.title)}</h1>
+      <div className="flex flex-col gap-2">
+        <input ref={fileRef} type="file" accept="image/*" capture="environment" className="sr-only" tabIndex={-1} aria-hidden="true" onChange={(e) => void onPhoto(e.target.files?.[0])} />
+        <BigButton variant="secondary" icon="camera" disabled={looking} onClick={() => fileRef.current?.click()}>{t(copy.photo)}</BigButton>
+        <p className="text-muted">{t(copy.photoHint)}</p>
+      </div>
+      {looking && <Busy label={t(copy.looking)} />}
+      <div aria-live="polite" className="flex flex-col gap-3">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        {preview && !looking && <img src={preview} alt={t(copy.photoAlt)} className="max-h-56 w-full rounded-2xl border-2 border-rule object-cover" />}
+        {photoMsg && !looking && <Notice tone={photoMsg === "saw" ? "info" : "warn"}><p className="text-[1.25rem] font-bold">{t(copy[photoMsg])}</p></Notice>}
+      </div>
       <div className="flex flex-col gap-2">
         <VoiceInput label={t(copy.label)} hint={t(copy.hint)} value={text} onChange={(v) => { setText(v); if (v.trim()) setEmpty(false); }} />
         {empty && <p role="alert" className="text-[1.25rem] font-bold text-stop">{t(copy.empty)}</p>}
@@ -121,7 +186,7 @@ export default function ComidaPage() {
                 <ReadAloud text={readText} />
               </>
             )}
-            <BigButton variant="secondary" icon="refresh" onClick={() => { setText(""); setEst(null); setEmpty(false); setFailed(false); }}>{t(copy.another)}</BigButton>
+            <BigButton variant="secondary" icon="refresh" onClick={() => { setText(""); setEst(null); setEmpty(false); setFailed(false); setPreview(null); setPhotoMsg(null); }}>{t(copy.another)}</BigButton>
           </>
         )}
       </div>

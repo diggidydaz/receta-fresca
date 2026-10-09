@@ -18,6 +18,7 @@ const paths: Record<string, React.ReactNode> = {
   warn: (<><path d="M12 4l9 15.500H3L12 4z" /><path d="M12 10v4.500M12 17v.300" /></>),
   hand: (<><path d="M8 3.500h8l4.5 4.500v8L16 20.500H8L3.5 16V8L8 3.500z" /><path d="M8.5 12h7" /></>),
   refresh: (<><path d="M19.5 12a7.5 7.5 0 11-2.2-5.3" /><path d="M19.5 4.500v4h-4" /></>),
+  camera: (<><path d="M4 8.5h3l1.5-2.5h7L17 8.5h3v10.5H4V8.5z" /><circle cx="12" cy="13.5" r="3.5" /></>),
   truck: (<><path d="M3 6.500h10.500v10H3zM13.5 10h4l3 3v3.500h-7" /><circle cx="7" cy="17.5" r="1.8" /><circle cx="17" cy="17.5" r="1.8" /></>),
 };
 

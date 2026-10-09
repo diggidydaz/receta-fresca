@@ -9,7 +9,7 @@ A clinician prescribes fresh produce or prepared meals. The patient redeems the 
 ## The flows
 1. **Before the visit** (`/intake`): the patient answers 6 questions, one per screen, by tap or voice. AI writes a one-screen summary for the clinician.
 2. **Prescribe** (`/clinico`): the summary pre-fills a food prescription. The clinician sets the carbohydrate goal and sends it in about 30 seconds. The patient gets a plain-language note.
-3. **Plan and tracker** (`/plan`, `/comida`): a weekly plan built from local stock, and a "What did I eat?" box that returns a carbohydrate range and a traffic light.
+3. **Plan and tracker** (`/plan`, `/comida`): a weekly plan built from local stock, and a "What did I eat?" screen that takes speech, text or a photo of the plate and returns a carbohydrate range and a traffic light. For a photo, the AI only names the dishes; the person confirms them and the numbers come from the food table. The photo is not stored.
 4. **Redeem** (`/canjear`, `/negocio`): the patient picks a store, farm or kitchen; the business sees and fulfills the order.
 
 ## Working vs simulated
@@ -38,6 +38,7 @@ Designed for older adults and people affected by diabetes: Spanish first, 20px b
 |---|---|---|
 | Intake summary for the clinician | Claude Sonnet 5.5 | Careful summarizing: reports what the patient said and flags what to ask in person, without interpreting |
 | Weekly plan | Claude Haiku 5.5 (falls back to Haiku 4.5) | Measured live: a full week in about 8 seconds, started as soon as the prescription is sent |
+| Naming the dishes in a plate photo | Claude Sonnet 5.5 (falls back to Haiku 4.5) | Vision; names only, never numbers |
 | Dish estimate for food outside the table, restating the clinician's note | Claude Haiku 4.5 | Fast and low cost for short, bounded tasks |
 | Prescription facts in the patient's note, traffic lights, carb goal, avoided foods | No model | Fixed template and code, so they cannot be wrong in a new way each time |
 

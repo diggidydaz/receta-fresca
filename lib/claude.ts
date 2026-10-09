@@ -38,6 +38,8 @@ type AskArgs = {
   model: string | string[];
   system: string;
   user: string;
+  /** Optional photo sent with the question (base64, no data: prefix). It is not stored anywhere by this app. */
+  image?: { mediaType: "image/jpeg" | "image/png" | "image/webp"; data: string };
   toolName: string;
   toolDescription: string;
   schema: Record<string, unknown>;
@@ -65,7 +67,7 @@ export async function askJSON<T>(a: AskArgs): Promise<T | null> {
           model,
           max_tokens: a.maxTokens ?? 1024,
           system: `${SAFETY}\n\n${a.system}\n\nAnswer only by calling the ${a.toolName} tool, exactly once.`,
-          messages: [{ role: "user", content: a.user }],
+          messages: [{ role: "user", content: a.image ? [{ type: "image", source: { type: "base64", media_type: a.image.mediaType, data: a.image.data } }, { type: "text", text: a.user }] : a.user }],
           tools: [{ name: a.toolName, description: a.toolDescription, input_schema: a.schema as Anthropic.Tool.InputSchema }],
           tool_choice: mode === "tool" ? { type: "tool", name: a.toolName } : { type: "auto" },
         });
