@@ -51,6 +51,19 @@ export function buildEstimate(items: EstimateItem[], target: number, confidence:
   return { items, carbsMin, carbsMax, light, confidence, message };
 }
 
+/** Plain-language provenance for one dish, shown under each estimate. */
+export function sourceLabel(f: Food, lang: Lang): string {
+  const S = lang === "es";
+  const src =
+    f.source.match === "direct"
+      ? S ? "Fuente: USDA FoodData Central" : "Source: USDA FoodData Central"
+      : f.source.match === "closest"
+        ? S ? "Fuente: USDA FoodData Central (alimento parecido)" : "Source: USDA FoodData Central (closest food)"
+        : S ? "Valor preliminar, todavía sin fuente" : "Draft value, no source yet";
+  const rev = f.clinicianReviewed ? (S ? " · Revisado por una profesional de cuidado de diabetes" : " · Reviewed by a diabetes care professional") : "";
+  return src + rev;
+}
+
 export function estimateFromTable(text: string, target: number, lang: Lang): Estimate | null {
   const hits = matchFoods(text);
   if (hits.length === 0) return null;
@@ -60,6 +73,7 @@ export function estimateFromTable(text: string, target: number, lang: Lang): Est
     carbsMin: f.carbsMin,
     carbsMax: f.carbsMax,
     swap: f.swap[lang],
+    source: sourceLabel(f, lang),
   }));
   return buildEstimate(items, target, "table", lang);
 }

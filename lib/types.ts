@@ -12,7 +12,9 @@ export type Food = {
   carbsMin: number;
   carbsMax: number;
   swap: L10n;
-  verified: boolean;       // false = draft value, not yet checked against a cited source
+  verified: boolean;       // true = matched directly to a USDA FoodData Central entry
+  clinicianReviewed: boolean; // true = range looked over by a diabetes care professional
+  source: { match: "direct" | "closest" | "none"; fdcId?: number; description?: string; basis?: string };
 };
 
 export type Place = {
@@ -70,7 +72,7 @@ export type Plan = {
   source: "ai" | "fallback";
 };
 
-export type EstimateItem = { name: string; serving: string; carbsMin: number; carbsMax: number; swap: string };
+export type EstimateItem = { name: string; serving: string; carbsMin: number; carbsMax: number; swap: string; source?: string };
 export type Estimate = {
   items: EstimateItem[];
   carbsMin: number;

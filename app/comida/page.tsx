@@ -103,6 +103,7 @@ export default function ComidaPage() {
                 <p>{t(copy.serving)}: {it.serving}</p>
                 <p>{it.carbsMin}-{it.carbsMax} g</p>
                 <p>{t(copy.idea)}: {it.swap}</p>
+                {it.source && <p className="text-[0.85rem] text-muted">{it.source}</p>}
               </Card>
             ))}
             <Notice><p className="text-[1.1rem]">{est.message}</p></Notice>

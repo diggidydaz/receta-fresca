@@ -27,7 +27,7 @@ A clinician prescribes fresh produce or prepared meals. The patient redeems the 
 - Every number is labeled an estimate. Traffic lights are computed in code from the clinician's goal, not by the model.
 - The dish estimator answers from `data/foods.json` first. Claude only guesses dishes the table does not know, and that guess is flagged as low confidence.
 - Every AI route has a non-AI fallback, labeled as such, so the app works without a key or network.
-- Food table values are drafts pending verification against USDA FoodData Central and clinical review.
+- Food table (`data/foods.json`, 30 dishes): 14 matched directly to a USDA FoodData Central entry, 10 to the closest available food, 6 with no USDA match yet. Each row records its FDC ID and the arithmetic. A diabetes care professional reviewed the ranges for 15 of the most common dishes. Every dish shows its source on screen.
 
 ## Accessibility
 Designed for older adults and people affected by diabetes: Spanish first, 20px base text with a larger-text switch, Atkinson Hyperlegible typeface, one question per screen, touch targets of 56px or more, voice input and read aloud, visible focus, and traffic lights that use color, shape and a word together. Target: WCAG 2.2 AA.

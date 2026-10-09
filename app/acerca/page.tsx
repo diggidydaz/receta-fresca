@@ -36,7 +36,7 @@ const sections: { title: L10n; items: L10n[] }[] = [
   {
     title: { es: "Fuentes y créditos", en: "Sources and credits" },
     items: [
-      { es: "Tabla de comida local: valores preliminares, pendientes de verificar con USDA FoodData Central y revisión clínica.", en: "Local food table: draft values, pending verification against USDA FoodData Central and clinical review." },
+      { es: "Tabla de comida local, 30 platos: 14 comparados directamente con USDA FoodData Central, 10 con el alimento más parecido, y 6 todavía sin fuente. Una profesional de cuidado de diabetes revisó 15 de los platos más comunes.", en: "Local food table, 30 dishes: 14 matched directly to USDA FoodData Central, 10 to the closest food, and 6 still without a source. A diabetes care professional reviewed 15 of the most common dishes." },
       { es: "Inteligencia artificial: Claude, de Anthropic.", en: "AI: Claude, by Anthropic." },
       { es: "Tipografía: Atkinson Hyperlegible, del Braille Institute, hecha para personas con baja visión.", en: "Typeface: Atkinson Hyperlegible, by the Braille Institute, made for people with low vision." },
     ],

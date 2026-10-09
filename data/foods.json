@@ -18,7 +18,14 @@
    "es": "Sirva 1/2 taza y añada vegetales",
    "en": "Have 1/2 cup and add vegetables"
   },
-  "verified": false
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2708408,
+   "description": "Rice, white, cooked, no added fat",
+   "basis": "28.0 g/100 g; 1 cup = 158 g = 44 g"
+  },
+  "clinicianReviewed": true
  },
  {
   "id": "arroz-con-gandules",
@@ -38,7 +45,14 @@
    "es": "Sirva 1/2 taza con ensalada",
    "en": "Have 1/2 cup with salad"
   },
-  "verified": false
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 2708990,
+   "description": "Beans and white rice",
+   "basis": "25.2 g/100 g; 1 cup = 170 g = 43 g"
+  },
+  "clinicianReviewed": true
  },
  {
   "id": "habichuelas-guisadas",
@@ -59,7 +73,11 @@
    "es": "Mantenga la porción pequeña",
    "en": "Keep the portion small"
   },
-  "verified": false
+  "verified": false,
+  "source": {
+   "match": "none"
+  },
+  "clinicianReviewed": true
  },
  {
   "id": "mofongo",
@@ -78,7 +96,14 @@
    "es": "Porción más pequeña, con más proteína y vegetales",
    "en": "Smaller scoop, more protein and vegetables"
   },
-  "verified": false
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2710139,
+   "description": "Green plantain with cracklings, Puerto Rican style (Mofongo)",
+   "basis": "27.0 g/100 g; 1 cup = 200 g = 54 g"
+  },
+  "clinicianReviewed": true
  },
  {
   "id": "tostones",
@@ -98,7 +123,14 @@
    "es": "Coma 2 o 3 piezas",
    "en": "Have 2 or 3 pieces"
   },
-  "verified": false
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2709559,
+   "description": "Plantain, cooked with oil (tostones)",
+   "basis": "30.9 g/100 g; 5 slices = 125 g = 39 g"
+  },
+  "clinicianReviewed": true
  },
  {
   "id": "maduros",
@@ -119,7 +151,14 @@
    "es": "Coma 2 rebanadas",
    "en": "Have 2 slices"
   },
-  "verified": false
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 2709559,
+   "description": "Plantain, cooked with oil",
+   "basis": "30.9 g/100 g; 4 slices = 100 g = 31 g"
+  },
+  "clinicianReviewed": true
  },
  {
   "id": "pasteles",
@@ -133,13 +172,20 @@
    "es": "1 mediano",
    "en": "1 medium"
   },
-  "carbsMin": 30,
+  "carbsMin": 25,
   "carbsMax": 40,
   "swap": {
    "es": "Uno, con ensalada",
    "en": "One, with a side salad"
   },
-  "verified": false
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2710141,
+   "description": "Puerto Rican pasteles (Pasteles de masa)",
+   "basis": "17.4 g/100 g; 1 pastel = 149 g = 26 g"
+  },
+  "clinicianReviewed": true
  },
  {
   "id": "alcapurria",
@@ -159,7 +205,11 @@
    "es": "Comparta una",
    "en": "Share one"
   },
-  "verified": false
+  "verified": false,
+  "source": {
+   "match": "none"
+  },
+  "clinicianReviewed": false
  },
  {
   "id": "bacalaito",
@@ -173,13 +223,20 @@
    "es": "1",
    "en": "1"
   },
-  "carbsMin": 15,
+  "carbsMin": 12,
   "carbsMax": 20,
   "swap": {
    "es": "Bien con moderación",
    "en": "Fine in moderation"
   },
-  "verified": false
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2708717,
+   "description": "Bacalaitos fritos (codfish fritter)",
+   "basis": "36.1 g/100 g; 1 fritter = 35 g = 13 g; larger fritters run higher"
+  },
+  "clinicianReviewed": false
  },
  {
   "id": "pernil",
@@ -198,7 +255,14 @@
    "es": "Cortes magros, quite la grasa",
    "en": "Lean cuts, trim the fat"
   },
-  "verified": false
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 2705882,
+   "description": "Pork, roast",
+   "basis": "0 g/100 g"
+  },
+  "clinicianReviewed": false
  },
  {
   "id": "yuca-hervida",
@@ -213,12 +277,19 @@
    "en": "1/2 cup"
   },
   "carbsMin": 25,
-  "carbsMax": 30,
+  "carbsMax": 35,
   "swap": {
    "es": "Sirva 1/3 de taza",
    "en": "Have 1/3 cup"
   },
-  "verified": false
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2709564,
+   "description": "Cassava, cooked (yuca blanca)",
+   "basis": "39.6 g/100 g; 1/2 cup = 80 g = 32 g"
+  },
+  "clinicianReviewed": true
  },
  {
   "id": "sancocho",
@@ -237,7 +308,11 @@
    "es": "Más caldo y carne, menos viandas",
    "en": "More broth and meat, fewer roots"
   },
-  "verified": false
+  "verified": false,
+  "source": {
+   "match": "none"
+  },
+  "clinicianReviewed": true
  },
  {
   "id": "asopao-de-pollo",
@@ -248,16 +323,23 @@
   ],
   "region": "PR",
   "serving": {
-   "es": "1 1/2 tazas",
-   "en": "1.5 cups"
+   "es": "1 taza",
+   "en": "1 cup"
   },
-  "carbsMin": 30,
-  "carbsMax": 40,
+  "carbsMin": 40,
+  "carbsMax": 45,
   "swap": {
    "es": "Menos arroz",
    "en": "Less rice"
   },
-  "verified": false
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2708974,
+   "description": "Soupy rice with chicken, Puerto Rican style (Asopao de pollo)",
+   "basis": "16.5 g/100 g; 1 cup = 263 g = 43 g"
+  },
+  "clinicianReviewed": false
  },
  {
   "id": "pan-sobao",
@@ -277,7 +359,14 @@
    "es": "Medio pan",
    "en": "Half a roll"
   },
-  "verified": false
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 2707608,
+   "description": "Bread, lard, Puerto Rican style (Pan de manteca)",
+   "basis": "56.1 g/100 g; 50 g roll = 28 g"
+  },
+  "clinicianReviewed": true
  },
  {
   "id": "mallorca",
@@ -296,7 +385,14 @@
    "es": "De vez en cuando",
    "en": "Occasionally"
   },
-  "verified": false
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2707683,
+   "description": "Bread, Spanish coffee (Mallorca)",
+   "basis": "58.8 g/100 g; 1 piece = 85 g = 50 g"
+  },
+  "clinicianReviewed": false
  },
  {
   "id": "quesito",
@@ -317,7 +413,11 @@
    "es": "De vez en cuando",
    "en": "Occasionally"
   },
-  "verified": false
+  "verified": false,
+  "source": {
+   "match": "none"
+  },
+  "clinicianReviewed": false
  },
  {
   "id": "tembleque",
@@ -336,7 +436,14 @@
    "es": "Porción pequeña",
    "en": "Small portion"
   },
-  "verified": false
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 2710316,
+   "description": "Haupia (coconut pudding)",
+   "basis": "23.5 g/100 g; 1/2 cup = 107 g = 25 g"
+  },
+  "clinicianReviewed": false
  },
  {
   "id": "flan",
@@ -350,12 +457,19 @@
    "en": "1 slice"
   },
   "carbsMin": 30,
-  "carbsMax": 35,
+  "carbsMax": 37,
   "swap": {
    "es": "De vez en cuando",
    "en": "Occasionally"
   },
-  "verified": false
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2705683,
+   "description": "Flan",
+   "basis": "28.2 g/100 g; 1/2 cup = 130 g = 37 g"
+  },
+  "clinicianReviewed": false
  },
  {
   "id": "arroz-con-dulce",
@@ -368,13 +482,20 @@
    "es": "1/2 taza",
    "en": "1/2 cup"
   },
-  "carbsMin": 40,
-  "carbsMax": 50,
+  "carbsMin": 25,
+  "carbsMax": 45,
   "swap": {
    "es": "De vez en cuando",
    "en": "Occasionally"
   },
-  "verified": false
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 2705685,
+   "description": "Pudding, rice",
+   "basis": "18.4 g/100 g; 1/2 cup = 130 g = 24 g; arroz con dulce is denser and sweeter"
+  },
+  "clinicianReviewed": false
  },
  {
   "id": "fungi",
@@ -388,13 +509,20 @@
    "es": "1/2 taza",
    "en": "1/2 cup"
   },
-  "carbsMin": 20,
+  "carbsMin": 15,
   "carbsMax": 30,
   "swap": {
    "es": "Con pescado y vegetales",
    "en": "With fish and vegetables"
   },
-  "verified": false
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 2708373,
+   "description": "Cornmeal mush",
+   "basis": "12.3 g/100 g; 1/2 cup = 120 g = 15 g; fungi is cooked stiffer"
+  },
+  "clinicianReviewed": true
  },
  {
   "id": "kallaloo",
@@ -415,7 +543,14 @@
    "es": "Acompañe con proteína",
    "en": "Pair with protein"
   },
-  "verified": false
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 2709633,
+   "description": "Taro leaves, cooked (callaloo)",
+   "basis": "7.0 g/100 g; 1 cup = 150 g = 10 g"
+  },
+  "clinicianReviewed": true
  },
  {
   "id": "rice-and-peas",
@@ -435,7 +570,14 @@
    "es": "Sirva 1/2 taza",
    "en": "Have 1/2 cup"
   },
-  "verified": false
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2708990,
+   "description": "Beans and white rice (peas)",
+   "basis": "25.2 g/100 g; 1 cup = 170 g = 43 g"
+  },
+  "clinicianReviewed": true
  },
  {
   "id": "johnnycake",
@@ -456,7 +598,14 @@
    "es": "Uno, no dos",
    "en": "One, not two"
   },
-  "verified": false
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2707820,
+   "description": "Johnnycake",
+   "basis": "43.8 g/100 g; 1 piece = 49 g = 21 g"
+  },
+  "clinicianReviewed": true
  },
  {
   "id": "boiled-dumpling",
@@ -477,7 +626,11 @@
    "es": "Uno",
    "en": "One"
   },
-  "verified": false
+  "verified": false,
+  "source": {
+   "match": "none"
+  },
+  "clinicianReviewed": false
  },
  {
   "id": "beef-pate",
@@ -491,13 +644,20 @@
    "es": "1",
    "en": "1"
   },
-  "carbsMin": 25,
-  "carbsMax": 30,
+  "carbsMin": 27,
+  "carbsMax": 36,
   "swap": {
    "es": "Uno",
    "en": "One"
   },
-  "verified": false
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 2708711,
+   "description": "Empanada, beef (meat pie)",
+   "basis": "27.5 g/100 g; 1 regular = 130 g = 36 g"
+  },
+  "clinicianReviewed": false
  },
  {
   "id": "batata-hervida",
@@ -513,13 +673,20 @@
    "es": "1/2 taza",
    "en": "1/2 cup"
   },
-  "carbsMin": 20,
-  "carbsMax": 25,
+  "carbsMin": 18,
+  "carbsMax": 22,
   "swap": {
    "es": "Buen cambio por arroz blanco",
    "en": "Good swap for white rice"
   },
-  "verified": false
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2709702,
+   "description": "Sweet potato, boiled, no added fat",
+   "basis": "18.0 g/100 g; 1/2 cup = 100 to 125 g = 18 to 22 g"
+  },
+  "clinicianReviewed": false
  },
  {
   "id": "sweet-potato-pudding",
@@ -539,7 +706,11 @@
    "es": "De vez en cuando",
    "en": "Occasionally"
   },
-  "verified": false
+  "verified": false,
+  "source": {
+   "match": "none"
+  },
+  "clinicianReviewed": false
  },
  {
   "id": "carrucho-en-mantequilla",
@@ -553,13 +724,20 @@
    "es": "1 porción",
    "en": "1 serving"
   },
-  "carbsMin": 5,
-  "carbsMax": 10,
+  "carbsMin": 1,
+  "carbsMax": 5,
   "swap": {
    "es": "Cuidado con la salsa y la grasa",
    "en": "Watch the sauce and fat"
   },
-  "verified": false
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 173720,
+   "description": "Mollusks, conch, baked or broiled",
+   "basis": "1.7 g/100 g; 3 oz = 85 g = 1 g, plus sauce"
+  },
+  "clinicianReviewed": false
  },
  {
   "id": "bacalao",
@@ -580,7 +758,14 @@
    "es": "Enjuague para bajar la sal",
    "en": "Rinse to cut the salt"
   },
-  "verified": false
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 174190,
+   "description": "Fish, cod, Atlantic, dried and salted",
+   "basis": "0 g/100 g"
+  },
+  "clinicianReviewed": false
  },
  {
   "id": "jugo-de-fruta-natural",
@@ -597,11 +782,18 @@
    "en": "8 oz"
   },
   "carbsMin": 25,
-  "carbsMax": 30,
+  "carbsMax": 34,
   "swap": {
    "es": "Mejor la fruta entera",
    "en": "Whole fruit instead"
   },
-  "verified": false
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2709187,
+   "description": "Orange juice, 100%, freshly squeezed; passion fruit juice 2709328",
+   "basis": "10.0 to 13.6 g/100 g; 8 fl oz = 248 g = 25 to 34 g"
+  },
+  "clinicianReviewed": true
  }
 ]
