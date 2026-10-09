@@ -1,7 +1,7 @@
 // Builds a one-week plan from what local stores and kitchens have in stock (sample data),
 // within the carbohydrate target the clinician set. Traffic lights are computed in code, not by the model.
 import placesData from "@/data/places.json";
-import { askJSON, clip, lastAiError, lastAiModel, readBody, SMART_THEN_FAST } from "@/lib/claude";
+import { askJSON, clip, lastAiError, lastAiModel, MODELS, readBody } from "@/lib/claude";
 import { fallbackPlan } from "@/lib/fallback";
 import { foods, lightFor } from "@/lib/foods";
 import type { Lang, Place, Plan, PlanDay, Rx } from "@/lib/types";
@@ -29,8 +29,8 @@ export async function POST(req: Request) {
   const table = foods.map((f) => `${f.name}: ${f.carbsMin}-${f.carbsMax} g per ${f.serving.en}`).join("; ");
 
   const ai = await askJSON<{ days: { day: string; meals: { meal: string; dish: string; portion: string; carbs: number }[] }[]; shopping: { item: string; qty: string }[]; tip: string }>({
-    model: SMART_THEN_FAST,
-    timeoutMs: 45000,
+    model: MODELS.fast, // measured live: gives a complete, on-target week in about 16 s; the larger model was too slow for a demo
+    timeoutMs: 40000,
     maxTokens: 3000,
     toolName: "write_week_plan",
     toolDescription: "Write a 7-day meal plan of familiar local dishes.",

@@ -35,8 +35,8 @@ Designed for older adults and people affected by diabetes: Spanish first, 20px b
 ## Models
 | Task | Model | Why |
 |---|---|---|
-| Dish estimate, plain-language note | Claude Haiku 4.5 | Fast and low cost for short, bounded tasks |
-| Intake summary, weekly plan | Claude Sonnet 5.5 | Stronger reasoning under several constraints |
+| Dish estimate, plain-language note, weekly plan | Claude Haiku 4.5 | Fast and low cost; measured live, it returns a full on-target week in about 16 seconds |
+| Intake summary for the clinician | Claude Sonnet 5.5 | Careful summarizing: reports what the patient said and flags what to ask in person, without interpreting |
 
 ## Run it
 ```bash
