@@ -1,7 +1,7 @@
 // Builds a one-week plan from what local stores and kitchens have in stock (sample data),
 // within the carbohydrate target the clinician set. Traffic lights are computed in code, not by the model.
 import placesData from "@/data/places.json";
-import { askJSON, clip, lastAiError, readBody, SMART_THEN_FAST } from "@/lib/claude";
+import { askJSON, clip, lastAiError, lastAiModel, readBody, SMART_THEN_FAST } from "@/lib/claude";
 import { fallbackPlan } from "@/lib/fallback";
 import { foods, lightFor } from "@/lib/foods";
 import type { Lang, Place, Plan, PlanDay, Rx } from "@/lib/types";
@@ -37,7 +37,8 @@ export async function POST(req: Request) {
     system: `Build a 7-day plan (Monday to Sunday; desayuno, almuerzo, cena each day) for an older adult in Puerto Rico. Write in ${lang === "es" ? "Puerto Rican Spanish" : "English (keep local dish names in Spanish)"}.
 - Use familiar, traditional dishes. Do not turn the plan into a foreign diet.
 - ${rx.type === "produce" ? "Lunch and dinner should be built mainly from the produce in stock below, plus basic pantry items. shopping = what to pick up this week, with simple quantities for one person." : "Lunch and dinner must be dishes the local kitchens below offer. Breakfast is simple and made at home without cooking skill. shopping = the kitchen dishes for the week with how many times each appears."}
-- Each meal should be at or under the carbohydrate goal of ${rx.carbTarget} g. Give portions in household measures (taza, onzas, piezas) and an integer carbohydrate estimate.
+- Hard limit: no meal, including breakfast, may be over ${rx.carbTarget} g of carbohydrate. Check each meal's total before writing it; if it is over, make the starchy portion smaller or swap it. Avoid sweet breads and pastries (mallorca, quesito).
+- Give portions in household measures (taza, onzas, piezas) and an integer carbohydrate estimate.
 - Never include these foods: ${rx.avoid.join(", ") || "(none)"}.
 - Use the local food table for carbohydrate values where a dish matches.
 - Dish names at most 8 words. tip = one short, kind, practical sentence about eating. No medication, glucose or dosing advice.`,
@@ -91,5 +92,5 @@ export async function POST(req: Request) {
     }),
   }));
   const plan: Plan = { days, shopping: Array.isArray(ai.shopping) ? ai.shopping : fallback.shopping, tip: ai.tip || fallback.tip, source: "ai" };
-  return Response.json(plan);
+  return Response.json({ ...plan, model: lastAiModel, skipped: lastAiError });
 }

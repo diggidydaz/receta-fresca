@@ -1,6 +1,6 @@
 // Turns the patient's pre-visit answers into a one-screen summary for the clinician.
 // The model suggests logistics only (cooked meals vs produce, delivery). It never sets clinical targets.
-import { askJSON, clip, lastAiError, readBody, SMART_THEN_FAST } from "@/lib/claude";
+import { askJSON, clip, lastAiError, lastAiModel, readBody, SMART_THEN_FAST } from "@/lib/claude";
 import { fallbackIntakeSummary } from "@/lib/fallback";
 import type { IntakeAnswers, IntakeSummary, Lang, Patient } from "@/lib/types";
 
@@ -52,5 +52,5 @@ Answers:
   });
 
   if (!ai || !Array.isArray(ai.keyPoints)) return Response.json({ ...fallback, aiError: lastAiError });
-  return Response.json({ ...fallback, ...ai, source: "ai" } satisfies IntakeSummary);
+  return Response.json({ ...({ ...fallback, ...ai, source: "ai" } satisfies IntakeSummary), model: lastAiModel, skipped: lastAiError });
 }

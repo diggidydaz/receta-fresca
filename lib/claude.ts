@@ -10,7 +10,7 @@ export const MODELS = {
 } as const;
 
 /** Stronger model first; if this API key cannot use it, the fast model does the job instead. */
-export const SMART_THEN_FAST = [MODELS.smart, MODELS.fast];
+export const SMART_THEN_FAST = [MODELS.smart, "claude-sonnet-4-5", MODELS.fast];
 
 export const SAFETY = `You are part of Receta Fresca, a food-prescription demo for people with diabetes in Puerto Rico and the US Virgin Islands.
 Hard rules:
@@ -18,12 +18,15 @@ Hard rules:
 - You give food information and estimates only. A clinician makes every clinical decision.
 - All numbers are estimates. Never present them as exact or as medical advice.
 - If the person describes symptoms that could be urgent, do not interpret them. Flag them for the clinician.
+- Always address the person as "usted" in Spanish, never "tú".
 - Write for an older adult with limited health literacy: short sentences, common words, about a 5th-grade reading level.
 - Use Puerto Rican Spanish food words (habichuelas, china, guineo, vianda) when writing in Spanish.
 - All patient data here is synthetic.`;
 
 /** Last failure reason, without secrets. Returned to the client as `aiError` so problems are visible in the demo. */
 export let lastAiError = "";
+/** Which model produced the last answer, and any earlier model that was skipped. For diagnostics only. */
+export let lastAiModel = "";
 
 type AskArgs = {
   /** One model, or several to try in order if an earlier one is unavailable to this API key. */
@@ -40,6 +43,7 @@ type AskArgs = {
 export async function askJSON<T>(a: AskArgs): Promise<T | null> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   lastAiError = "";
+  lastAiModel = "";
   if (!apiKey) {
     lastAiError = "no API key configured";
     return null;
@@ -57,7 +61,10 @@ export async function askJSON<T>(a: AskArgs): Promise<T | null> {
         tool_choice: { type: "tool", name: a.toolName },
       });
       const block = res.content.find((b) => b.type === "tool_use");
-      if (block && block.type === "tool_use") return block.input as T;
+      if (block && block.type === "tool_use") {
+        lastAiModel = model;
+        return block.input as T;
+      }
       lastAiError = `${model}: no structured answer`;
     } catch (err) {
       const status = err instanceof Anthropic.APIError ? err.status : undefined;
