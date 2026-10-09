@@ -70,6 +70,7 @@ export type Plan = {
   shopping: { item: string; qty: string }[];
   tip: string;
   source: "ai" | "fallback";
+  lang?: Lang;             // language the plan was written in
 };
 
 export type EstimateItem = { name: string; serving: string; carbsMin: number; carbsMax: number; swap: string; source?: string };

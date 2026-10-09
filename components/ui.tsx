@@ -79,7 +79,7 @@ export function ChoiceGroup<V extends string>({ legend, hideLegend, name, option
   legend: string; hideLegend?: boolean; name: string; options: Choice<V>[]; value?: V; onChange: (v: V) => void;
 }) {
   return (
-    <fieldset className="flex flex-col gap-3">
+    <fieldset className="flex min-w-0 flex-col gap-3">
       <legend className={hideLegend ? "sr-only" : "mb-3 text-[1.25rem] font-bold"}>{legend}</legend>
       {options.map((o) => {
         const on = value === o.value;
@@ -87,11 +87,11 @@ export function ChoiceGroup<V extends string>({ legend, hideLegend, name, option
           <label key={o.value} className={`flex min-h-[72px] cursor-pointer items-center gap-4 rounded-2xl border-[3px] px-5 py-4 has-[:focus-visible]:outline has-[:focus-visible]:outline-4 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-focus ${on ? "border-brand bg-brand-soft" : "border-rule bg-panel"}`}>
             <input type="radio" name={name} value={o.value} checked={on} onChange={() => onChange(o.value)} className="sr-only" />
             {o.icon && <Icon name={o.icon} size={32} className="text-brand" />}
-            <span className="flex-1">
+            <span className="min-w-0 flex-1 [overflow-wrap:anywhere]">
               <span className="block text-[1.25rem] font-bold leading-tight">{o.label}</span>
               {o.hint && <span className="block text-muted">{o.hint}</span>}
             </span>
-            <span className={`flex h-9 w-9 items-center justify-center rounded-full border-[3px] ${on ? "border-brand bg-brand text-white" : "border-rule bg-panel text-transparent"}`}>
+            <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-[3px] ${on ? "border-brand bg-brand text-white" : "border-rule bg-panel text-transparent"}`}>
               <Icon name="check" size={22} />
             </span>
           </label>

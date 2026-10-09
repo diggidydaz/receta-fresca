@@ -41,7 +41,7 @@ export default function PatientHome() {
         {items.map((r) => (
           <Link key={r.href} href={r.href} className="flex min-h-[96px] items-center gap-4 rounded-2xl border-[3px] border-brand bg-panel p-5 hover:bg-brand-soft">
             <Icon name={r.icon} size={44} className="text-brand" />
-            <span className="flex-1">
+            <span className="min-w-0 flex-1 [overflow-wrap:anywhere]">
               <span className="block text-[1.563rem] font-bold leading-tight text-brand">{t(r.title)}</span>
               <span className="block text-muted">{t(r.hint)}</span>
               {r.status && (

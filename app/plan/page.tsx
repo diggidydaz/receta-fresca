@@ -1,9 +1,9 @@
 "use client";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { BigButton, Busy, Card, Notice, Page, ReadAloud, Tag, TrafficLight } from "@/components/ui";
 import { common, useT } from "@/lib/i18n";
+import { ensurePlan } from "@/lib/planLoader";
 import { setState, useAppState, useHydrated } from "@/lib/store";
-import type { Plan } from "@/lib/types";
 
 const copy = {
   title: { es: "Mi plan de la semana", en: "My plan for the week" },
@@ -11,6 +11,9 @@ const copy = {
   back: { es: "Volver a mi página", en: "Back to my page" },
   said: { es: "Lo que dijo su clínico", en: "What your clinician said" },
   preparing: { es: "Preparando su plan con lo que hay en las tiendas…", en: "Preparing your plan with what the stores have…" },
+  wait: { es: "Tarda unos 20 segundos. No cierre esta página.", en: "This takes about 20 seconds. Please keep this page open." },
+  otherLang: { es: "Este plan está escrito en inglés.", en: "This plan is written in Spanish." },
+  redo: { es: "Hacer el plan en español", en: "Make the plan in English" },
   failed: { es: "No pudimos preparar su plan. Intente otra vez.", en: "We could not prepare your plan. Please try again." },
   retry: { es: "Intentar otra vez", en: "Try again" },
   breakfast: { es: "Desayuno", en: "Breakfast" },
@@ -37,30 +40,14 @@ export default function PlanPage() {
   const hydrated = useHydrated();
   const [day, setDay] = useState(0);
   const [failed, setFailed] = useState(false);
-  const inflight = useRef(false);
   const { rx, plan } = s;
 
-  const load = useCallback(async () => {
-    if (!rx || inflight.current) return;
-    inflight.current = true;
-    try {
-      const res = await fetch("/api/plan", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ rx, lang }) });
-      if (!res.ok) throw new Error("bad");
-      const data = (await res.json()) as Plan;
-      if (!data || !Array.isArray(data.days) || data.days.length === 0) throw new Error("bad");
-      setState({ plan: data });
-    } catch {
-      setFailed(true);
-    } finally {
-      inflight.current = false;
-    }
-  }, [rx, lang]);
-
   useEffect(() => {
-    // Starts the one-time plan request; state is only set after the await.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (hydrated && rx && !plan && !failed) void load();
-  }, [hydrated, rx, plan, failed, load]);
+    if (!hydrated || !rx || plan || failed) return;
+    let live = true;
+    void ensurePlan(rx, lang).then((ok) => { if (live && !ok) setFailed(true); });
+    return () => { live = false; };
+  }, [hydrated, rx, plan, failed, lang]);
 
   if (!hydrated) return <Page><Busy /></Page>;
 
@@ -100,10 +87,23 @@ export default function PlanPage() {
           <BigButton icon="refresh" onClick={() => setFailed(false)}>{t(copy.retry)}</BigButton>
         </>
       )}
-      {!plan && !failed && <Busy label={t(copy.preparing)} />}
+      {!plan && !failed && (
+        <>
+          <Busy label={t(copy.preparing)} />
+          <p className="text-[1.1rem]">{t(copy.wait)}</p>
+        </>
+      )}
 
       {plan && current && (
         <>
+          {plan.lang && plan.lang !== lang && (
+            <Notice>
+              <p className="text-[1.1rem]">{t(copy.otherLang)}</p>
+              <div className="mt-3">
+                <BigButton variant="secondary" icon="refresh" onClick={() => { setDay(0); setFailed(false); setState({ plan: null }); }}>{t(copy.redo)}</BigButton>
+              </div>
+            </Notice>
+          )}
           <div aria-live="polite" className="flex flex-col gap-4">
             <h2>{current.day}</h2>
             {current.meals.map((m, i) => (

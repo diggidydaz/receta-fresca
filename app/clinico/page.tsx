@@ -3,6 +3,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { BigButton, Busy, Card, ChoiceGroup, Notice, Page, Tag } from "@/components/ui";
 import { useT } from "@/lib/i18n";
 import { DEFAULT_TARGET } from "@/lib/foods";
+import { ensurePlan } from "@/lib/planLoader";
 import { setState, useAppState, useHydrated } from "@/lib/store";
 import type { IntakeSummary, Patient, Rx, RxType, VisitSummary } from "@/lib/types";
 import patientsData from "@/data/patients.json";
@@ -176,6 +177,7 @@ export default function ClinicoPage() {
       createdAt: new Date().toISOString(),
     };
     setState({ rx, plan: null, order: null, visitSummary: null });
+    void ensurePlan(rx, lang); // start the weekly plan now so it is ready when the patient opens it
     setView("sending");
     try {
       const res = await fetch("/api/visit-summary", {
