@@ -28,6 +28,8 @@ export let lastAiError = "";
 /** Which model produced the last answer, and any earlier model that was skipped. For diagnostics only. */
 export let lastAiModel = "";
 
+const autoOnly = new Set<string>();
+
 type AskArgs = {
   /** One model, or several to try in order if an earlier one is unavailable to this API key. */
   model: string | string[];
@@ -51,28 +53,40 @@ export async function askJSON<T>(a: AskArgs): Promise<T | null> {
   const models = Array.isArray(a.model) ? a.model : [a.model];
   const client = new Anthropic({ apiKey, timeout: a.timeoutMs ?? 25000, maxRetries: 0 });
   for (const model of models) {
-    try {
-      const res = await client.messages.create({
-        model,
-        max_tokens: a.maxTokens ?? 1024,
-        system: `${SAFETY}\n\n${a.system}`,
-        messages: [{ role: "user", content: a.user }],
-        tools: [{ name: a.toolName, description: a.toolDescription, input_schema: a.schema as Anthropic.Tool.InputSchema }],
-        tool_choice: { type: "tool", name: a.toolName },
-      });
-      const block = res.content.find((b) => b.type === "tool_use");
-      if (block && block.type === "tool_use") {
-        lastAiModel = model;
-        return block.input as T;
+    // Some models accept a forced tool call and some only "auto"; try forced first and remember the answer.
+    const modes: ("tool" | "auto")[] = autoOnly.has(model) ? ["auto"] : ["tool", "auto"];
+    let unavailable = false;
+    for (const mode of modes) {
+      try {
+        const res = await client.messages.create({
+          model,
+          max_tokens: a.maxTokens ?? 1024,
+          system: `${SAFETY}\n\n${a.system}\n\nAnswer only by calling the ${a.toolName} tool, exactly once.`,
+          messages: [{ role: "user", content: a.user }],
+          tools: [{ name: a.toolName, description: a.toolDescription, input_schema: a.schema as Anthropic.Tool.InputSchema }],
+          tool_choice: mode === "tool" ? { type: "tool", name: a.toolName } : { type: "auto" },
+        });
+        const block = res.content.find((b) => b.type === "tool_use");
+        if (block && block.type === "tool_use") {
+          lastAiModel = model;
+          return block.input as T;
+        }
+        lastAiError = `${lastAiError} | ${model}: no structured answer`.replace(/^ \| /, "");
+        break;
+      } catch (err) {
+        const status = err instanceof Anthropic.APIError ? err.status : undefined;
+        const msg = err instanceof Error ? err.message.slice(0, 200) : "unknown error";
+        if (mode === "tool" && status === 400 && msg.includes("tool_choice")) {
+          autoOnly.add(model);
+          continue;
+        }
+        lastAiError = `${lastAiError} | ${model}: ${status ?? ""} ${msg}`.replace(/^ \| /, "");
+        console.error(`[claude] ${a.toolName} failed`, model, status, msg);
+        // Only move to the next model when this one is unavailable; a timeout or outage ends the attempt.
+        unavailable = status === 404 || status === 403 || status === 400;
+        if (!unavailable) return null;
+        break;
       }
-      lastAiError = `${model}: no structured answer`;
-    } catch (err) {
-      const status = err instanceof Anthropic.APIError ? err.status : undefined;
-      const msg = err instanceof Error ? err.message.slice(0, 200) : "unknown error";
-      lastAiError = `${lastAiError} | ${model}: ${status ?? ""} ${msg}`.replace(/^ \| /, "");
-      console.error(`[claude] ${a.toolName} failed`, model, status, msg);
-      // Only move to the next model when this one is unavailable; a timeout or outage ends the attempt.
-      if (status !== 404 && status !== 403 && status !== 400) break;
     }
   }
   return null;
