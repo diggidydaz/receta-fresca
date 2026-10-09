@@ -10,7 +10,7 @@ export const MODELS = {
 } as const;
 
 /** Stronger model first; if this API key cannot use it, the fast model does the job instead. */
-export const SMART_THEN_FAST = [MODELS.smart, "claude-sonnet-4-5", MODELS.fast];
+export const SMART_THEN_FAST = [MODELS.smart, MODELS.fast];
 
 export const SAFETY = `You are part of Receta Fresca, a food-prescription demo for people with diabetes in Puerto Rico and the US Virgin Islands.
 Hard rules:
@@ -69,8 +69,8 @@ export async function askJSON<T>(a: AskArgs): Promise<T | null> {
     } catch (err) {
       const status = err instanceof Anthropic.APIError ? err.status : undefined;
       const msg = err instanceof Error ? err.message.slice(0, 200) : "unknown error";
-      lastAiError = `${model}: ${status ?? ""} ${msg}`.trim();
-      console.error(`[claude] ${a.toolName} failed`, lastAiError);
+      lastAiError = `${lastAiError} | ${model}: ${status ?? ""} ${msg}`.replace(/^ \| /, "");
+      console.error(`[claude] ${a.toolName} failed`, model, status, msg);
       // Only move to the next model when this one is unavailable; a timeout or outage ends the attempt.
       if (status !== 404 && status !== 403 && status !== 400) break;
     }
