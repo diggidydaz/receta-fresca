@@ -221,8 +221,7 @@ export default function ClinicoPage() {
       <Card className="flex flex-col gap-4">
         <h2>{t(copy.sumTitle)}</h2>
         <div className="flex flex-wrap gap-2">
-          <Tag>{t(copy.ai)}</Tag>
-          {summary?.source === "fallback" && <Tag>{t(copy.basic)}</Tag>}
+          {summary && <Tag>{t(summary.source === "fallback" ? copy.basic : copy.ai)}</Tag>}
         </div>
         {summary ? (
           <SummaryCard summary={summary} />

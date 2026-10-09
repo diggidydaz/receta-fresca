@@ -34,8 +34,8 @@ export function TopBar() {
             </button>
           </div>
         </div>
+        <p className="bg-notice px-4 py-2 text-center text-[0.85rem] font-bold text-ink">{t(common.sample)}</p>
       </header>
-      <p className="bg-notice px-4 py-2 text-center text-[0.85rem] font-bold">{t(common.sample)}</p>
     </>
   );
 }
