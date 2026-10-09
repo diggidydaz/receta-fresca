@@ -62,7 +62,7 @@ export type Rx = {
   createdAt: string;
 };
 
-export type VisitSummary = { points: L10n[]; source: "ai" | "fallback" };
+export type VisitSummary = { points: L10n[]; source: "ai" | "template" | "fallback" };
 
 export type PlanMeal = { meal: "desayuno" | "almuerzo" | "cena"; dish: string; portion: string; carbs: number; light: Light };
 export type PlanDay = { day: string; meals: PlanMeal[] };

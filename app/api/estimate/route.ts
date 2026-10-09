@@ -16,8 +16,7 @@ export async function POST(req: Request) {
   const known = tableItems(found, lang);
   // Everything recognized from the table: answer at once, no AI call.
   if (known.length > 0 && !leftover) return Response.json(buildEstimate(known, target, "table", lang));
-  const ask = known.length > 0 ? leftover : text;
-  if (!ask.trim()) return Response.json(nothing(lang));
+  if (!text.trim()) return Response.json(nothing(lang));
 
   const ai = await askJSON<{ items: EstimateItem[] }>({
     model: MODELS.fast,
@@ -26,7 +25,9 @@ export async function POST(req: Request) {
     toolName: "report_estimate",
     toolDescription: "Report a rough carbohydrate estimate for each dish the person ate.",
     system: `Estimate carbohydrates for Caribbean (Puerto Rico and US Virgin Islands) dishes, per typical serving. Give a range, not a single number. Suggest one small, kind swap per dish, addressed to the person as \"usted\" (never \"tú\"). Do not suggest diet or artificially sweetened products; prefer water, smaller portions, or vegetables. Write in ${lang === "es" ? "Puerto Rican Spanish" : "English"}. If the text is not food or drink, or says they ate nothing, return an empty list.`,
-    user: `The person ate: "${ask}"`,
+    user: known.length > 0
+      ? `The person ate: "${text}"\nAlready counted from our table, do NOT include these: ${found.map((f) => f.name).join(", ")}.\nEstimate only the other foods and drinks mentioned (${leftover}), each as its own separate item. Sugary drinks count.`
+      : `The person ate: "${text}"\nList each food or drink as its own separate item. Sugary drinks count.`,
     schema: {
       type: "object",
       properties: {

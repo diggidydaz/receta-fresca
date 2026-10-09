@@ -32,18 +32,18 @@ export async function POST(req: Request) {
     toolName: "write_intake_summary",
     toolDescription: "Write a short pre-visit summary for a busy clinician.",
     system: `Summarize a patient's pre-visit answers for a clinician who has 30 seconds to read. Write in ${lang === "es" ? "Spanish" : "English"}.
-- Report only what the patient said. Do not add facts, diagnoses or medication advice.
+- Report only what the patient said. Write entirely in the output language; never leave words in the other language. Do not add facts, diagnoses or medication advice.
 - keyPoints: 3 to 5 short bullets, most important first.
 - flags: things the clinician should ask about in person (for example the patient feels unwell, mentions symptoms, or says they skip meals or run out of food). Empty if none. Describe, do not interpret.
 - suggestedType: "meals" if the patient cannot cook, otherwise "produce". suggestedDelivery: true if they cannot get to a store.
 - avoid: foods the patient said they cannot or will not eat, as single items.`,
     user: `Synthetic patient: ${clip(body.patient?.name, 60)}, ${Number(body.patient?.age) || "?"} years, ${clip(body.patient?.town, 60)}.
 Answers:
-1. How do you feel today? ${a.feeling ?? "(no answer)"}
+1. How do you feel today? ${a.feeling ? { good: "Bien (well)", ok: "Regular (so-so)", bad: "Mal (unwell)" }[a.feeling] : "(no answer)"}
 2. Biggest worry about health or food: ${clip(a.concern) || "(no answer)"}
 3. What do you eat on a normal day? ${clip(a.typicalDay) || "(no answer)"}
-4. Can you cook at home? ${a.canCook ?? "(no answer)"}
-5. Can you get to the store or market? ${a.canTravel ?? "(no answer)"}
+4. Can you cook at home? ${a.canCook ? { yes: "Sí (yes)", sometimes: "A veces (sometimes)", no: "No" }[a.canCook] : "(no answer)"}
+5. Can you get to the store or market? ${a.canTravel ? { yes: "Sí (yes)", no: "No, needs it brought home" }[a.canTravel] : "(no answer)"}
 6. Foods you cannot or will not eat: ${clip(a.avoid) || "(no answer)"}`,
     schema: {
       type: "object",

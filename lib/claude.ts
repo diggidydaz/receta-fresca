@@ -9,6 +9,9 @@ export const MODELS = {
   smart: "claude-sonnet-5-5",
 } as const;
 
+/** Weekly plan: the newest fast model first, then the proven one. Measured live for speed and quality. */
+export const PLAN_MODELS = ["claude-haiku-5-5", MODELS.fast];
+
 /** Stronger model first; if this API key cannot use it, the fast model does the job instead. */
 export const SMART_THEN_FAST = [MODELS.smart, MODELS.fast];
 

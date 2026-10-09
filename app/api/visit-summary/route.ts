@@ -1,4 +1,4 @@
-// Rewrites the prescription as a short, plain-language note for the patient, in both languages.
+// Writes the plain-language note the patient sees after the visit, in both languages.
 import { askJSON, clip, MODELS, readBody } from "@/lib/claude";
 import { fallbackVisitSummary } from "@/lib/fallback";
 import type { L10n, Lang, Rx } from "@/lib/types";
@@ -25,34 +25,26 @@ export async function POST(req: Request) {
   if (!rx) return Response.json({ points: [], source: "fallback" });
   const fallback = fallbackVisitSummary(rx);
 
-  const ai = await askJSON<{ points: L10n[] }>({
+  // The facts of the prescription are written from a fixed, reviewed template, never by the model.
+  // The model's only job is to restate the clinician's own free-text note in plain words, in both languages.
+  if (!rx.note.trim()) return Response.json({ ...fallback, source: "template" });
+
+  const ai = await askJSON<{ note: L10n }>({
     model: MODELS.fast,
     timeoutMs: 12000,
-    maxTokens: 700,
-    toolName: "write_visit_summary",
-    toolDescription: "Write what the clinician prescribed, in plain words for the patient.",
-    system: `Rewrite a food prescription as 3 to 5 short points the patient can understand and act on. Each point has a Spanish (es) and an English (en) version that say the same thing. Speak to the patient as "usted". One idea per point, at most 18 words. Include every fact given and add none. The carbohydrate number is the patient's goal per meal set by the clinician; say it as a goal (\"Su meta es...\"), not as what the food contains. If the clinician wrote a note, restate it faithfully in plain words.`,
-    user: `Prescription:
-- Type: ${rx.type === "produce" ? "fresh fruits, vegetables and root vegetables, picked up at a local colmado or farm" : "prepared meals from a local kitchen"}
-- Length: ${rx.weeks} weeks
-- Goal: about ${rx.carbTarget} grams of carbohydrates per meal (set by the clinician)
-- Home delivery: ${rx.needsDelivery ? "yes" : "no, patient picks up"}
-- Foods to leave out: ${rx.avoid.join(", ") || "none"}
-- Clinician note: ${rx.note || "none"}`,
+    maxTokens: 300,
+    toolName: "restate_note",
+    toolDescription: "Restate the clinician's note in plain words for the patient, in Spanish and English.",
+    system: `Restate a clinician's short note to a patient in plain words, once in Spanish (es) and once in English (en). Speak to the patient as "usted". At most 25 words each. Keep every fact and instruction; add nothing; do not give medical advice of your own. Each version must be entirely in its own language.`,
+    user: `Clinician's note: "${rx.note}"`,
     schema: {
       type: "object",
-      properties: {
-        points: {
-          type: "array",
-          minItems: 3,
-          maxItems: 5,
-          items: { type: "object", properties: { es: { type: "string" }, en: { type: "string" } }, required: ["es", "en"] },
-        },
-      },
-      required: ["points"],
+      properties: { note: { type: "object", properties: { es: { type: "string" }, en: { type: "string" } }, required: ["es", "en"] } },
+      required: ["note"],
     },
   });
 
-  if (!ai || !Array.isArray(ai.points) || ai.points.length === 0) return Response.json(fallback);
-  return Response.json({ points: ai.points, source: "ai" });
+  if (!ai || !ai.note || typeof ai.note.es !== "string" || typeof ai.note.en !== "string") return Response.json(fallback);
+  const base = fallbackVisitSummary({ ...rx, note: "" }).points;
+  return Response.json({ points: [...base, { es: `Nota de su clínico: ${ai.note.es}`, en: `Note from your clinician: ${ai.note.en}` }], source: "ai" });
 }
