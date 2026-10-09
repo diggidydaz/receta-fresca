@@ -74,7 +74,8 @@ export type Plan = {
   lang?: Lang;             // language the plan was written in
 };
 
-export type EstimateItem = { name: string; serving: string; carbsMin: number; carbsMax: number; swap: string; source?: string };
+export type Size = "small" | "normal" | "large";
+export type EstimateItem = { name: string; serving: string; carbsMin: number; carbsMax: number; swap: string; source?: string; size?: Size };
 export type Estimate = {
   items: EstimateItem[];
   carbsMin: number;

@@ -1,9 +1,10 @@
-// Looks at a photo of a plate and names the dishes on it. It returns names only, never numbers:
+// Looks at a photo of a plate, names the dishes on it and guesses small / normal / large for each.
+// It returns names and a rough size only, never grams or carbohydrate numbers:
 // the person confirms the list, and the carbohydrate values then come from the normal estimate.
 // The photo is passed to the model for this one request and is not stored by this app.
 import { askJSON, clip, lastAiError, MODELS, readBody } from "@/lib/claude";
 import { foods } from "@/lib/foods";
-import type { Lang } from "@/lib/types";
+import type { Lang, Size } from "@/lib/types";
 
 export const maxDuration = 30;
 const TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
@@ -18,28 +19,38 @@ export async function POST(req: Request) {
   if (!mediaType) return Response.json({ ok: false, dishes: [], reason: "unsupported image type" });
 
   const known = foods.map((f) => f.name).join(", ");
-  const ai = await askJSON<{ dishes: string[] }>({
+  const ai = await askJSON<{ dishes: { name: string; size: Size }[] }>({
     model: [MODELS.smart, MODELS.fast],
     timeoutMs: 20000,
     maxTokens: 300,
     image: { mediaType, data: m[2] },
     toolName: "name_dishes",
     toolDescription: "List the foods and drinks visible in the photo.",
-    system: `Name the foods and drinks you can see in a photo of a meal from Puerto Rico or the US Virgin Islands. Names only: no amounts, no nutrition numbers, no advice, no comments about the person.
+    system: `Name the foods and drinks you can see in a photo of a meal from Puerto Rico or the US Virgin Islands. No grams, no nutrition numbers, no advice, no comments about the person.
 - Use the everyday local name in ${lang === "es" ? "Puerto Rican Spanish" : "English, keeping local dish names in Spanish"}.
 - When a dish matches one on this list, use that exact name: ${known}.
 - One entry per distinct food or drink, at most 6, most prominent first. Include sugary drinks.
+- For each, give a rough size compared with a typical single serving: "small" (about half or less, including leftovers on a nearly finished plate), "normal", or "large" (clearly more than one serving). This is only a starting guess the person will correct.
 - Only list what is clearly visible. If you are unsure between two dishes, give the more common one.
 - If the photo shows no food or drink, return an empty list.`,
     user: "What foods and drinks are on this plate or table?",
     schema: {
       type: "object",
-      properties: { dishes: { type: "array", maxItems: 6, items: { type: "string" } } },
+      properties: {
+        dishes: {
+          type: "array",
+          maxItems: 6,
+          items: { type: "object", properties: { name: { type: "string" }, size: { type: "string", enum: ["small", "normal", "large"] } }, required: ["name", "size"] },
+        },
+      },
       required: ["dishes"],
     },
   });
 
   if (!ai || !Array.isArray(ai.dishes)) return Response.json({ ok: false, dishes: [], reason: lastAiError || "no answer" });
-  const dishes = ai.dishes.filter((d) => typeof d === "string").map((d) => clip(d, 60).trim()).filter(Boolean).slice(0, 6);
-  return Response.json({ ok: true, dishes });
+  const seen = ai.dishes
+    .filter((d) => d && typeof d.name === "string" && d.name.trim())
+    .slice(0, 6)
+    .map((d) => ({ name: clip(d.name, 60).trim(), size: (["small", "normal", "large"] as const).find((x) => x === d.size) ?? "normal" }));
+  return Response.json({ ok: true, dishes: seen.map((d) => d.name), sizes: seen });
 }

@@ -1,16 +1,25 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { Icon } from "@/components/Icon";
 import { BigButton, Busy, Card, Notice, Page, ReadAloud, Tag, TrafficLight, VoiceInput } from "@/components/ui";
-import { DEFAULT_TARGET } from "@/lib/foods";
+import { applySizes, DEFAULT_TARGET, normalize } from "@/lib/foods";
 import { common, useT } from "@/lib/i18n";
 import { setState, useAppState, useHydrated } from "@/lib/store";
-import type { Estimate, LogEntry } from "@/lib/types";
+import type { Estimate, L10n, LogEntry, Size } from "@/lib/types";
+
+const sizeChoices: { value: Size; label: L10n; hint: L10n }[] = [
+  { value: "small", label: { es: "Poco", en: "A little" }, hint: { es: "la mitad", en: "half" } },
+  { value: "normal", label: { es: "Normal", en: "Normal" }, hint: { es: "porción típica", en: "typical" } },
+  { value: "large", label: { es: "Mucho", en: "A lot" }, hint: { es: "una y media", en: "one and a half" } },
+];
 
 const copy = {
+  howMuch: { es: "¿Cuánto comió?", en: "How much did you eat?" },
+  adjust: { es: "Diga cuánto comió de cada cosa. El total cambia solo.", en: "Say how much of each thing you ate. The total updates by itself." },
   photo: { es: "Tomar una foto de mi plato", en: "Take a photo of my plate" },
   photoHint: { es: "La foto no se guarda.", en: "The photo is not saved." },
   looking: { es: "Mirando su foto…", en: "Looking at your photo…" },
-  saw: { es: "Esto es lo que vimos en su foto. Corrija lo que haga falta y toque «Ver mi estimado».", en: "This is what we saw in your photo. Fix anything that is wrong, then tap \"See my estimate\"." },
+  saw: { es: "Esto es lo que vimos en su foto. Borre lo que no comió, añada lo que falte, y toque «Ver mi estimado».", en: "This is what we saw in your photo. Delete what you did not eat, add what is missing, then tap \"See my estimate\"." },
   sawNothing: { es: "No pudimos reconocer comida en la foto. Diga o escriba lo que comió.", en: "We could not recognize food in the photo. Say or type what you ate." },
   photoFailed: { es: "No pudimos mirar la foto. Diga o escriba lo que comió.", en: "We could not look at the photo. Say or type what you ate." },
   photoAlt: { es: "Su foto del plato", en: "Your photo of the plate" },
@@ -44,7 +53,10 @@ export default function ComidaPage() {
   const [empty, setEmpty] = useState(false);
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
-  const [est, setEst] = useState<Estimate | null>(null);
+  const [raw, setRaw] = useState<Estimate | null>(null); // typical-serving values from the server
+  const [sizes, setSizes] = useState<Size[]>([]);
+  const [logId, setLogId] = useState<string | null>(null);
+  const [hints, setHints] = useState<Record<string, Size>>({}); // sizes the photo suggested, by dish name
   const headRef = useRef<HTMLHeadingElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const [looking, setLooking] = useState(false);
@@ -73,18 +85,19 @@ export default function ComidaPage() {
 
   const onPhoto = async (file: File | undefined) => {
     if (!file || looking) return;
-    setLooking(true); setPhotoMsg(null); setEst(null); setFailed(false); setEmpty(false);
+    setLooking(true); setPhotoMsg(null); setRaw(null); setFailed(false); setEmpty(false); setHints({});
     try {
       const dataUrl = await shrink(file);
       setPreview(dataUrl);
       const res = await fetch("/api/photo", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ image: dataUrl, lang }) });
       if (!res.ok) throw new Error("bad");
-      const data = (await res.json()) as { dishes?: string[]; ok?: boolean };
+      const data = (await res.json()) as { dishes?: string[]; sizes?: { name: string; size: Size }[]; ok?: boolean };
       if (!data.ok) { setPhotoMsg("photoFailed"); return; }
       const dishes = Array.isArray(data.dishes) ? data.dishes.filter((d) => typeof d === "string" && d.trim()) : [];
       if (dishes.length === 0) { setPhotoMsg("sawNothing"); return; }
       // The photo only fills in the words. The person confirms them, and the numbers come from the usual estimate.
       setText(dishes.join(", "));
+      setHints(Object.fromEntries((data.sizes ?? []).map((d) => [normalize(d.name), d.size])));
       setPhotoMsg("saw");
     } catch {
       setPhotoMsg("photoFailed");
@@ -94,30 +107,48 @@ export default function ComidaPage() {
     }
   };
 
-  useEffect(() => { if (est) headRef.current?.focus(); }, [est]);
+  useEffect(() => { if (raw) headRef.current?.focus(); }, [raw]);
 
   if (!hydrated) return <Page><Busy /></Page>;
 
   const target = s.rx?.carbTarget ?? DEFAULT_TARGET;
+  // What is shown: the server's typical-serving values, adjusted by the sizes the person chose.
+  const est = raw ? applySizes(raw, sizes, target) : null;
 
   const submit = async () => {
     if (busy) return;
     const q = text.trim();
     if (!q) { setEmpty(true); return; }
-    setEmpty(false); setFailed(false); setBusy(true); setEst(null);
+    setEmpty(false); setFailed(false); setBusy(true); setRaw(null); setLogId(null);
     try {
       const res = await fetch("/api/estimate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text: q, target, lang }) });
       if (!res.ok) throw new Error("bad");
       const data = (await res.json()) as Estimate;
       if (!data || !Array.isArray(data.items) || !data.light) throw new Error("bad");
-      setEst(data);
+      // Starting size for each food: the photo's guess, else a size word the person used, else normal.
+      const start: Size[] = data.items.map((it) => hints[normalize(it.name)] ?? it.size ?? "normal");
+      setRaw(data);
+      setSizes(start);
       if (data.items.length === 0) return; // nothing recognized: show the message, do not log a light
-      const entry: LogEntry = { id: Date.now().toString(), text: q, at: new Date().toISOString(), estimate: data };
+      const id = Date.now().toString();
+      const entry: LogEntry = { id, text: q, at: new Date().toISOString(), estimate: applySizes(data, start, target) };
+      setLogId(id);
       setState((st) => ({ log: [entry, ...st.log].slice(0, 20) }));
     } catch {
       setFailed(true);
     } finally {
       setBusy(false);
+    }
+  };
+
+  // Changing a size updates the total on screen and the entry already saved in today's list.
+  const pickSize = (index: number, size: Size) => {
+    if (!raw) return;
+    const next = sizes.map((x, i) => (i === index ? size : x));
+    setSizes(next);
+    if (logId) {
+      const updated = applySizes(raw, next, target);
+      setState((st) => ({ log: st.log.map((e) => (e.id === logId ? { ...e, estimate: updated } : e)) }));
     }
   };
 
@@ -170,11 +201,27 @@ export default function ComidaPage() {
                   {t({ es: `Entre ${est.carbsMin} y ${est.carbsMax} gramos de carbohidratos`, en: `Between ${est.carbsMin} and ${est.carbsMax} grams of carbs` })}
                 </p>
                 <p className="text-[1.25rem]">{t(copy.goal)}: {target} g</p>
+                <p className="text-[1.1rem] font-bold">{t(copy.adjust)}</p>
                 {est.items.map((it, i) => (
                   <Card key={i} className="flex flex-col gap-1">
                     <p className="text-[1.25rem] font-bold">{it.name}</p>
                     <p>{t(copy.serving)}: {it.serving}</p>
-                    <p>{it.carbsMin}-{it.carbsMax} g</p>
+                    <p className="text-[1.25rem] font-bold">{it.carbsMin}-{it.carbsMax} g</p>
+                    <fieldset className="my-2 min-w-0">
+                      <legend className="mb-2 font-bold">{t(copy.howMuch)}</legend>
+                      <div className="grid grid-cols-3 gap-2">
+                        {sizeChoices.map((c) => {
+                          const on = (sizes[i] ?? "normal") === c.value;
+                          return (
+                            <label key={c.value} className={`flex min-h-[72px] cursor-pointer flex-col items-center justify-center rounded-2xl border-[3px] px-1 py-2 text-center has-[:focus-visible]:outline has-[:focus-visible]:outline-4 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-focus ${on ? "border-brand bg-brand text-white" : "border-rule bg-panel text-ink"}`}>
+                              <input type="radio" name={`size-${i}`} value={c.value} checked={on} onChange={() => pickSize(i, c.value)} className="sr-only" />
+                              <span className="flex items-center gap-1 font-bold leading-tight">{on && <Icon name="check" size={20} />}{t(c.label)}</span>
+                              <span className="text-[0.85rem] leading-tight">{t(c.hint)}</span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </fieldset>
                     <p>{t(copy.idea)}: {it.swap}</p>
                     {it.source && <p className="text-[0.85rem] text-muted">{it.source}</p>}
                   </Card>
@@ -186,7 +233,7 @@ export default function ComidaPage() {
                 <ReadAloud text={readText} />
               </>
             )}
-            <BigButton variant="secondary" icon="refresh" onClick={() => { setText(""); setEst(null); setEmpty(false); setFailed(false); setPreview(null); setPhotoMsg(null); }}>{t(copy.another)}</BigButton>
+            <BigButton variant="secondary" icon="refresh" onClick={() => { setText(""); setRaw(null); setSizes([]); setLogId(null); setHints({}); setEmpty(false); setFailed(false); setPreview(null); setPhotoMsg(null); }}>{t(copy.another)}</BigButton>
           </>
         )}
       </div>

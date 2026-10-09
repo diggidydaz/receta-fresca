@@ -9,7 +9,7 @@ A clinician prescribes fresh produce or prepared meals. The patient redeems the 
 ## The flows
 1. **Before the visit** (`/intake`): the patient answers 6 questions, one per screen, by tap or voice. AI writes a one-screen summary for the clinician.
 2. **Prescribe** (`/clinico`): the summary pre-fills a food prescription. The clinician sets the carbohydrate goal and sends it in about 30 seconds. The patient gets a plain-language note.
-3. **Plan and tracker** (`/plan`, `/comida`): a weekly plan built from local stock, and a "What did I eat?" screen that takes speech, text or a photo of the plate and returns a carbohydrate range and a traffic light. For a photo, the AI only names the dishes; the person confirms them and the numbers come from the food table. The photo is not stored.
+3. **Plan and tracker** (`/plan`, `/comida`): a weekly plan built from local stock, and a "What did I eat?" screen that takes speech, text or a photo of the plate and returns a carbohydrate range and a traffic light. For a photo, the AI only names the dishes; the person confirms them and the numbers come from the food table. The photo is not stored. Each food then has Poco / Normal / Mucho buttons (half, typical, one and a half servings); the total and the light update at once. A photo or a size word in speech ("un poco de arroz") sets the starting size, and the person can change it.
 4. **Redeem** (`/canjear`, `/negocio`): the patient picks a store, farm or kitchen; the business sees and fulfills the order.
 
 ## Working vs simulated

@@ -12,8 +12,9 @@ export async function POST(req: Request) {
   const text = clip(body.text, 300);
   const target = Number.isFinite(body.target) ? Math.min(75, Math.max(15, Number(body.target))) : DEFAULT_TARGET;
 
-  const { found, leftover } = parseMeal(text);
-  const known = tableItems(found, lang);
+  const { found, leftover, sizes } = parseMeal(text);
+  // Values are always per typical serving. Any size hint travels with the item; the screen applies it.
+  const known = tableItems(found, lang, sizes);
   // Everything recognized from the table: answer at once, no AI call.
   if (known.length > 0 && !leftover) return Response.json(buildEstimate(known, target, "table", lang));
   if (!text.trim()) return Response.json(nothing(lang));

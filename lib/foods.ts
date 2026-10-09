@@ -1,6 +1,6 @@
 // Dish estimator grounded in the local food table. Pure functions: safe on server and client.
 import foodsData from "@/data/foods.json";
-import type { Estimate, EstimateItem, Food, Lang, Light } from "./types";
+import type { Estimate, EstimateItem, Food, Lang, Light, Size } from "./types";
 
 export const foods = foodsData as Food[];
 export const DEFAULT_TARGET = 45; // grams of carbohydrate per meal; the clinician sets the real one
@@ -11,7 +11,7 @@ export function normalize(s: string): string {
 
 // Words that carry no food meaning; what is left after removing table dishes and these is "unrecognized".
 const FILLER = new Set(
-  "con y de del la el lo los las un una unos unas me mi comi comio almorce desayune cene tome hoy ayer poco poquito mucho plato platos taza tazas pedazo pedazos pieza piezas porcion vaso vasos tambien mas al a en para por que solo como fue i ate had have with and some of the for my lunch breakfast dinner today just only piece pieces cup cups plate glass small big grande pequeno pequena".split(" ")
+  "dos tres cuatro cinco seis two three four five six poquita medio media mitad pedacito chiquito chiquita mucha doble bastante lleno half little bit double large extra con y de del la el lo los las un una unos unas me mi comi comio almorce desayune cene tome hoy ayer poco poquito mucho plato platos taza tazas pedazo pedazos pieza piezas porcion vaso vasos tambien mas al a en para por que solo como fue i ate had have with and some of the for my lunch breakfast dinner today just only piece pieces cup cups plate glass small big grande pequeno pequena".split(" ")
 );
 const NOTHING = /^(no (he )?com(i|ido)( nada)?|nada|ninguna|nothing|none|i (did not|didn t) eat( anything)?)$/;
 
@@ -23,18 +23,49 @@ function variants(a: string): string[] {
   return [...out];
 }
 
+/** How much a size choice scales a typical serving. */
+export const SIZE_FACTOR: Record<Size, number> = { small: 0.5, normal: 1, large: 1.5 };
+
+// Words just before a dish that say how much of it there was ("un poco de arroz", "doble mofongo").
+const SMALL_WORDS = /\b(poco|poquito|poquita|medio|media|mitad|pedacito|chiquito|chiquita|pequeno|pequena|half|little|small|bit)\b/;
+const LARGE_WORDS = /\b(mucho|mucha|doble|grande|bastante|lleno|double|large|big|extra)\b/;
+
+/**
+ * Recomputes an estimate after the person says how much of each food they ate.
+ * `est` must hold the typical-serving values; the result holds the adjusted ones.
+ */
+export function applySizes(est: Estimate, sizes: Size[], target: number): Estimate {
+  const items = est.items.map((it, i) => {
+    const f = SIZE_FACTOR[sizes[i] ?? "normal"];
+    return { ...it, size: sizes[i] ?? "normal", carbsMin: Math.round(it.carbsMin * f), carbsMax: Math.round(it.carbsMax * f) };
+  });
+  const carbsMin = items.reduce((n, i) => n + i.carbsMin, 0);
+  const carbsMax = items.reduce((n, i) => n + i.carbsMax, 0);
+  let light = lightFor(carbsMin, carbsMax, target);
+  if (est.unmatched && light === "green") light = "yellow";
+  return { ...est, items, carbsMin, carbsMax, light };
+}
+
 /** Finds table dishes mentioned in free text, and reports the food words it could not place. */
-export function parseMeal(text: string): { found: Food[]; leftover: string } {
+export function parseMeal(text: string): { found: Food[]; leftover: string; sizes: Record<string, Size> } {
   const norm = normalize(text);
-  if (!norm || NOTHING.test(norm)) return { found: [], leftover: "" };
+  if (!norm || NOTHING.test(norm)) return { found: [], leftover: "", sizes: {} };
   let rest = ` ${norm} `;
   const pairs = foods
     .flatMap((f) => [normalize(f.name), ...f.aliases.map(normalize)].flatMap(variants).map((a) => ({ a, f })))
     .sort((x, y) => y.a.length - x.a.length); // longest first, so "arroz con gandules" beats "arroz"
   const found: Food[] = [];
+  const sizes: Record<string, Size> = {};
   for (const { a, f } of pairs) {
     const needle = ` ${a} `;
     while (rest.includes(needle)) {
+      // Look at the few words just before the dish for a size word.
+      const before = rest.slice(0, rest.indexOf(needle)).split("|").pop() ?? "";
+      const near = before.trim().split(" ").slice(-3).join(" ");
+      if (!sizes[f.id]) {
+        if (SMALL_WORDS.test(near)) sizes[f.id] = "small";
+        else if (LARGE_WORDS.test(near)) sizes[f.id] = "large";
+      }
       rest = rest.replace(needle, " | ");
       if (!found.includes(f)) found.push(f);
     }
@@ -44,7 +75,7 @@ export function parseMeal(text: string): { found: Food[]; leftover: string } {
     .map((part) => part.split(" ").filter((w) => w && !FILLER.has(w) && !/^\d+$/.test(w)).join(" "))
     .filter(Boolean)
     .join(", ");
-  return { found, leftover };
+  return { found, leftover, sizes };
 }
 
 export function matchFoods(text: string): Food[] {
@@ -75,8 +106,9 @@ export function buildEstimate(items: EstimateItem[], target: number, confidence:
   return { items, carbsMin, carbsMax, light, confidence, message, ...(unmatched ? { unmatched } : {}) };
 }
 
-export function tableItems(found: Food[], lang: Lang): EstimateItem[] {
-  return found.map((f) => ({ name: f.name, serving: f.serving[lang], carbsMin: f.carbsMin, carbsMax: f.carbsMax, swap: f.swap[lang], source: sourceLabel(f, lang) }));
+/** Table values per typical serving. `sizes` carries any size the person's own words suggested. */
+export function tableItems(found: Food[], lang: Lang, sizes: Record<string, Size> = {}): EstimateItem[] {
+  return found.map((f) => ({ name: f.name, serving: f.serving[lang], carbsMin: f.carbsMin, carbsMax: f.carbsMax, swap: f.swap[lang], source: sourceLabel(f, lang), ...(sizes[f.id] ? { size: sizes[f.id] } : {}) }));
 }
 
 /** Plain-language provenance for one dish, shown under each estimate. */
@@ -93,7 +125,7 @@ export function sourceLabel(f: Food, lang: Lang): string {
 }
 
 export function estimateFromTable(text: string, target: number, lang: Lang): Estimate | null {
-  const { found, leftover } = parseMeal(text);
+  const { found, leftover, sizes } = parseMeal(text);
   if (found.length === 0) return null;
-  return buildEstimate(tableItems(found, lang), target, "table", lang, leftover);
+  return buildEstimate(tableItems(found, lang, sizes), target, "table", lang, leftover);
 }
