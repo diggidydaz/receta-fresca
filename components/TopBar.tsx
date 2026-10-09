@@ -30,7 +30,8 @@ export function TopBar() {
       <header className="bg-brand text-white">
         <div className="mx-auto flex max-w-[36rem] flex-wrap items-center justify-between gap-2 px-4 py-3">
           <Link href="/" className="inline-flex min-h-[48px] items-center gap-2 rounded-xl text-[1.25rem] font-bold">
-            <Icon name="leaf" /> {t(common.appName)}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.svg" alt="" width={40} height={40} className="h-10 w-10" /> {t(common.appName)}
           </Link>
           <div className="flex gap-2">
             <button type="button" className={pill} onClick={() => setState({ lang: lang === "es" ? "en" : "es" })} lang={lang === "es" ? "en" : "es"}>
