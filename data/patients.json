@@ -1,0 +1,5 @@
+[
+ {"id":"p1","name":"Doña Milagros R.","age":71,"town":"Río Piedras","note":{"es":"Diabetes tipo 2. Vive sola. No guía.","en":"Type 2 diabetes. Lives alone. Does not drive."}},
+ {"id":"p2","name":"Don Ismael T.","age":64,"town":"Bayamón","note":{"es":"Diabetes tipo 2. Cocina en casa con su esposa.","en":"Type 2 diabetes. Cooks at home with his wife."}},
+ {"id":"p3","name":"Sra. Yadira C.","age":48,"town":"Caguas","note":{"es":"Prediabetes. Trabaja dos turnos.","en":"Prediabetes. Works two shifts."}}
+]

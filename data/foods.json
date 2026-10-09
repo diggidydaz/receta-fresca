@@ -1,0 +1,607 @@
+[
+ {
+  "id": "arroz-blanco",
+  "name": "Arroz blanco",
+  "aliases": [
+   "arroz blanco",
+   "white rice",
+   "arroz"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 taza cocida",
+   "en": "1 cup cooked"
+  },
+  "carbsMin": 40,
+  "carbsMax": 45,
+  "swap": {
+   "es": "Sirva 1/2 taza y añada vegetales",
+   "en": "Have 1/2 cup and add vegetables"
+  },
+  "verified": false
+ },
+ {
+  "id": "arroz-con-gandules",
+  "name": "Arroz con gandules",
+  "aliases": [
+   "arroz con gandules",
+   "arroz con gandul"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1 taza",
+   "en": "1 cup"
+  },
+  "carbsMin": 40,
+  "carbsMax": 50,
+  "swap": {
+   "es": "Sirva 1/2 taza con ensalada",
+   "en": "Have 1/2 cup with salad"
+  },
+  "verified": false
+ },
+ {
+  "id": "habichuelas-guisadas",
+  "name": "Habichuelas guisadas",
+  "aliases": [
+   "habichuelas guisadas",
+   "habichuelas",
+   "stewed beans"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1/2 taza",
+   "en": "1/2 cup"
+  },
+  "carbsMin": 15,
+  "carbsMax": 20,
+  "swap": {
+   "es": "Mantenga la porción pequeña",
+   "en": "Keep the portion small"
+  },
+  "verified": false
+ },
+ {
+  "id": "mofongo",
+  "name": "Mofongo",
+  "aliases": [
+   "mofongo"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1 taza",
+   "en": "1 cup"
+  },
+  "carbsMin": 45,
+  "carbsMax": 60,
+  "swap": {
+   "es": "Porción más pequeña, con más proteína y vegetales",
+   "en": "Smaller scoop, more protein and vegetables"
+  },
+  "verified": false
+ },
+ {
+  "id": "tostones",
+  "name": "Tostones",
+  "aliases": [
+   "tostones",
+   "toston"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "5 piezas",
+   "en": "5 pieces"
+  },
+  "carbsMin": 30,
+  "carbsMax": 40,
+  "swap": {
+   "es": "Coma 2 o 3 piezas",
+   "en": "Have 2 or 3 pieces"
+  },
+  "verified": false
+ },
+ {
+  "id": "maduros",
+  "name": "Maduros",
+  "aliases": [
+   "maduros",
+   "amarillos",
+   "platano maduro"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "4 rebanadas",
+   "en": "4 slices"
+  },
+  "carbsMin": 30,
+  "carbsMax": 40,
+  "swap": {
+   "es": "Coma 2 rebanadas",
+   "en": "Have 2 slices"
+  },
+  "verified": false
+ },
+ {
+  "id": "pasteles",
+  "name": "Pasteles",
+  "aliases": [
+   "pasteles",
+   "pastel"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1 mediano",
+   "en": "1 medium"
+  },
+  "carbsMin": 30,
+  "carbsMax": 40,
+  "swap": {
+   "es": "Uno, con ensalada",
+   "en": "One, with a side salad"
+  },
+  "verified": false
+ },
+ {
+  "id": "alcapurria",
+  "name": "Alcapurria",
+  "aliases": [
+   "alcapurria",
+   "alcapurrias"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1",
+   "en": "1"
+  },
+  "carbsMin": 30,
+  "carbsMax": 40,
+  "swap": {
+   "es": "Comparta una",
+   "en": "Share one"
+  },
+  "verified": false
+ },
+ {
+  "id": "bacalaito",
+  "name": "Bacalaíto",
+  "aliases": [
+   "bacalaito",
+   "bacalaitos"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1",
+   "en": "1"
+  },
+  "carbsMin": 15,
+  "carbsMax": 20,
+  "swap": {
+   "es": "Bien con moderación",
+   "en": "Fine in moderation"
+  },
+  "verified": false
+ },
+ {
+  "id": "pernil",
+  "name": "Pernil",
+  "aliases": [
+   "pernil"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "3 onzas",
+   "en": "3 oz"
+  },
+  "carbsMin": 0,
+  "carbsMax": 2,
+  "swap": {
+   "es": "Cortes magros, quite la grasa",
+   "en": "Lean cuts, trim the fat"
+  },
+  "verified": false
+ },
+ {
+  "id": "yuca-hervida",
+  "name": "Yuca hervida",
+  "aliases": [
+   "yuca hervida",
+   "yuca"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1/2 taza",
+   "en": "1/2 cup"
+  },
+  "carbsMin": 25,
+  "carbsMax": 30,
+  "swap": {
+   "es": "Sirva 1/3 de taza",
+   "en": "Have 1/3 cup"
+  },
+  "verified": false
+ },
+ {
+  "id": "sancocho",
+  "name": "Sancocho",
+  "aliases": [
+   "sancocho"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1 1/2 tazas",
+   "en": "1.5 cups"
+  },
+  "carbsMin": 35,
+  "carbsMax": 50,
+  "swap": {
+   "es": "Más caldo y carne, menos viandas",
+   "en": "More broth and meat, fewer roots"
+  },
+  "verified": false
+ },
+ {
+  "id": "asopao-de-pollo",
+  "name": "Asopao de pollo",
+  "aliases": [
+   "asopao de pollo",
+   "asopao"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1 1/2 tazas",
+   "en": "1.5 cups"
+  },
+  "carbsMin": 30,
+  "carbsMax": 40,
+  "swap": {
+   "es": "Menos arroz",
+   "en": "Less rice"
+  },
+  "verified": false
+ },
+ {
+  "id": "pan-sobao",
+  "name": "Pan sobao",
+  "aliases": [
+   "pan sobao",
+   "pan"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1 pan",
+   "en": "1 roll"
+  },
+  "carbsMin": 25,
+  "carbsMax": 30,
+  "swap": {
+   "es": "Medio pan",
+   "en": "Half a roll"
+  },
+  "verified": false
+ },
+ {
+  "id": "mallorca",
+  "name": "Mallorca",
+  "aliases": [
+   "mallorca"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1",
+   "en": "1"
+  },
+  "carbsMin": 45,
+  "carbsMax": 55,
+  "swap": {
+   "es": "De vez en cuando",
+   "en": "Occasionally"
+  },
+  "verified": false
+ },
+ {
+  "id": "quesito",
+  "name": "Quesito",
+  "aliases": [
+   "quesito",
+   "pastelillo de guayaba",
+   "pastelillo"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1",
+   "en": "1"
+  },
+  "carbsMin": 20,
+  "carbsMax": 25,
+  "swap": {
+   "es": "De vez en cuando",
+   "en": "Occasionally"
+  },
+  "verified": false
+ },
+ {
+  "id": "tembleque",
+  "name": "Tembleque",
+  "aliases": [
+   "tembleque"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1/2 taza",
+   "en": "1/2 cup"
+  },
+  "carbsMin": 25,
+  "carbsMax": 30,
+  "swap": {
+   "es": "Porción pequeña",
+   "en": "Small portion"
+  },
+  "verified": false
+ },
+ {
+  "id": "flan",
+  "name": "Flan",
+  "aliases": [
+   "flan"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1 rebanada",
+   "en": "1 slice"
+  },
+  "carbsMin": 30,
+  "carbsMax": 35,
+  "swap": {
+   "es": "De vez en cuando",
+   "en": "Occasionally"
+  },
+  "verified": false
+ },
+ {
+  "id": "arroz-con-dulce",
+  "name": "Arroz con dulce",
+  "aliases": [
+   "arroz con dulce"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1/2 taza",
+   "en": "1/2 cup"
+  },
+  "carbsMin": 40,
+  "carbsMax": 50,
+  "swap": {
+   "es": "De vez en cuando",
+   "en": "Occasionally"
+  },
+  "verified": false
+ },
+ {
+  "id": "fungi",
+  "name": "Fungi",
+  "aliases": [
+   "fungi",
+   "funji"
+  ],
+  "region": "USVI",
+  "serving": {
+   "es": "1/2 taza",
+   "en": "1/2 cup"
+  },
+  "carbsMin": 20,
+  "carbsMax": 30,
+  "swap": {
+   "es": "Con pescado y vegetales",
+   "en": "With fish and vegetables"
+  },
+  "verified": false
+ },
+ {
+  "id": "kallaloo",
+  "name": "Kallaloo",
+  "aliases": [
+   "kallaloo",
+   "callaloo",
+   "calalu"
+  ],
+  "region": "USVI",
+  "serving": {
+   "es": "1 taza",
+   "en": "1 cup"
+  },
+  "carbsMin": 10,
+  "carbsMax": 15,
+  "swap": {
+   "es": "Acompañe con proteína",
+   "en": "Pair with protein"
+  },
+  "verified": false
+ },
+ {
+  "id": "rice-and-peas",
+  "name": "Rice and peas",
+  "aliases": [
+   "rice and peas",
+   "rice & peas"
+  ],
+  "region": "USVI",
+  "serving": {
+   "es": "1 taza",
+   "en": "1 cup"
+  },
+  "carbsMin": 40,
+  "carbsMax": 50,
+  "swap": {
+   "es": "Sirva 1/2 taza",
+   "en": "Have 1/2 cup"
+  },
+  "verified": false
+ },
+ {
+  "id": "johnnycake",
+  "name": "Johnnycake",
+  "aliases": [
+   "johnnycake",
+   "johnny cake",
+   "yaniqueque"
+  ],
+  "region": "USVI",
+  "serving": {
+   "es": "1",
+   "en": "1"
+  },
+  "carbsMin": 20,
+  "carbsMax": 30,
+  "swap": {
+   "es": "Uno, no dos",
+   "en": "One, not two"
+  },
+  "verified": false
+ },
+ {
+  "id": "boiled-dumpling",
+  "name": "Boiled dumpling",
+  "aliases": [
+   "dumpling",
+   "boiled dumpling",
+   "domplin"
+  ],
+  "region": "USVI",
+  "serving": {
+   "es": "1",
+   "en": "1"
+  },
+  "carbsMin": 25,
+  "carbsMax": 30,
+  "swap": {
+   "es": "Uno",
+   "en": "One"
+  },
+  "verified": false
+ },
+ {
+  "id": "beef-pate",
+  "name": "Beef pate",
+  "aliases": [
+   "pate",
+   "beef pate"
+  ],
+  "region": "USVI",
+  "serving": {
+   "es": "1",
+   "en": "1"
+  },
+  "carbsMin": 25,
+  "carbsMax": 30,
+  "swap": {
+   "es": "Uno",
+   "en": "One"
+  },
+  "verified": false
+ },
+ {
+  "id": "batata-hervida",
+  "name": "Batata hervida",
+  "aliases": [
+   "batata hervida",
+   "batata",
+   "sweet potato",
+   "boiled sweet potato"
+  ],
+  "region": "USVI",
+  "serving": {
+   "es": "1/2 taza",
+   "en": "1/2 cup"
+  },
+  "carbsMin": 20,
+  "carbsMax": 25,
+  "swap": {
+   "es": "Buen cambio por arroz blanco",
+   "en": "Good swap for white rice"
+  },
+  "verified": false
+ },
+ {
+  "id": "sweet-potato-pudding",
+  "name": "Sweet potato pudding",
+  "aliases": [
+   "sweet potato pudding",
+   "budin de batata"
+  ],
+  "region": "USVI",
+  "serving": {
+   "es": "1 rebanada",
+   "en": "1 slice"
+  },
+  "carbsMin": 35,
+  "carbsMax": 45,
+  "swap": {
+   "es": "De vez en cuando",
+   "en": "Occasionally"
+  },
+  "verified": false
+ },
+ {
+  "id": "carrucho-en-mantequilla",
+  "name": "Carrucho en mantequilla",
+  "aliases": [
+   "carrucho",
+   "conch"
+  ],
+  "region": "USVI",
+  "serving": {
+   "es": "1 porción",
+   "en": "1 serving"
+  },
+  "carbsMin": 5,
+  "carbsMax": 10,
+  "swap": {
+   "es": "Cuidado con la salsa y la grasa",
+   "en": "Watch the sauce and fat"
+  },
+  "verified": false
+ },
+ {
+  "id": "bacalao",
+  "name": "Bacalao",
+  "aliases": [
+   "bacalao",
+   "saltfish",
+   "salt fish"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "3 onzas",
+   "en": "3 oz"
+  },
+  "carbsMin": 0,
+  "carbsMax": 2,
+  "swap": {
+   "es": "Enjuague para bajar la sal",
+   "en": "Rinse to cut the salt"
+  },
+  "verified": false
+ },
+ {
+  "id": "jugo-de-fruta-natural",
+  "name": "Jugo de fruta natural",
+  "aliases": [
+   "jugo",
+   "juice",
+   "jugo de china",
+   "jugo de parcha"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "8 onzas",
+   "en": "8 oz"
+  },
+  "carbsMin": 25,
+  "carbsMax": 30,
+  "swap": {
+   "es": "Mejor la fruta entera",
+   "en": "Whole fruit instead"
+  },
+  "verified": false
+ }
+]
