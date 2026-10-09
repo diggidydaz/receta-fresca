@@ -29,12 +29,13 @@ export async function POST(req: Request) {
     ["Vegetales guisados con arroz integral", "Stewed vegetables with brown rice", "1 taza de vegetales, 1/3 taza de arroz", "1 cup vegetables, 1/3 cup rice", 25],
   ];
   const makeSafe = (plan: Plan): Plan => {
-    if (terms.length === 0) return plan;
     const days = plan.days.map((d) => ({
       ...d,
       meals: d.meals.map((m) => {
-        if (!violates(`${m.dish} ${m.portion}`, terms)) return m;
-        const s = standIns.find((x) => !violates(`${x[0]} ${x[2]}`, terms)) ?? standIns[2];
+        // A meal is replaced if it mentions an avoided food or goes over the clinician's carbohydrate goal.
+        if (!violates(`${m.dish} ${m.portion}`, terms) && m.carbs <= rx.carbTarget) return m;
+        const ok = standIns.filter((x) => !violates(`${x[0]} ${x[2]}`, terms));
+        const s = ok.find((x) => x[4] <= rx.carbTarget) ?? ok.sort((a, b) => a[4] - b[4])[0] ?? standIns[1];
         return { ...m, dish: lang === "es" ? s[0] : s[1], portion: lang === "es" ? s[2] : s[3], carbs: s[4], light: lightFor(s[4], s[4], rx.carbTarget) };
       }),
     }));
@@ -75,7 +76,7 @@ export async function POST(req: Request) {
 - Hard limit: no meal may be over ${rx.carbTarget} g of carbohydrate. Check each meal before writing it; if it is over, make the starchy portion smaller or swap it.
 - Give portions in household measures (taza, onzas, piezas) and an integer carbohydrate estimate. Use the local food table for carbohydrate values where a dish matches.
 - Never include these foods or anything made with them: ${terms.join(", ") || "(none)"}.
-- Dish names at most 8 words. tip = one short, kind, practical sentence about eating, addressed as "usted". No medication, glucose or dosing advice.`,
+- Dish names at most 8 words. tip = one short, kind, practical sentence about eating, written entirely in ${lang === "es" ? 'Spanish, addressed as "usted"' : 'English, addressed as "you"'}. No medication, glucose or dosing advice.`,
     user: `In stock this week (sample data):\n${stock}\n\nLocal food table (estimates): ${table}\n\nClinician note: ${rx.note || "none"}`,
     schema: {
       type: "object",

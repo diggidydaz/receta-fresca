@@ -39,11 +39,11 @@ export async function POST(req: Request) {
 - avoid: foods the patient said they cannot or will not eat, as single items.`,
     user: `Synthetic patient: ${clip(body.patient?.name, 60)}, ${Number(body.patient?.age) || "?"} years, ${clip(body.patient?.town, 60)}.
 Answers:
-1. How do you feel today? ${a.feeling ? { good: "Bien (well)", ok: "Regular (so-so)", bad: "Mal (unwell)" }[a.feeling] : "(no answer)"}
+1. How do you feel today? ${a.feeling ? (lang === "es" ? { good: "bien", ok: "regular", bad: "mal" } : { good: "well", ok: "so-so", bad: "unwell" })[a.feeling] : "(no answer)"}
 2. Biggest worry about health or food: ${clip(a.concern) || "(no answer)"}
 3. What do you eat on a normal day? ${clip(a.typicalDay) || "(no answer)"}
-4. Can you cook at home? ${a.canCook ? { yes: "Sí (yes)", sometimes: "A veces (sometimes)", no: "No" }[a.canCook] : "(no answer)"}
-5. Can you get to the store or market? ${a.canTravel ? { yes: "Sí (yes)", no: "No, needs it brought home" }[a.canTravel] : "(no answer)"}
+4. Can you cook at home? ${a.canCook ? (lang === "es" ? { yes: "sí", sometimes: "a veces", no: "no" } : { yes: "yes", sometimes: "sometimes", no: "no" })[a.canCook] : "(no answer)"}
+5. Can you get to the store or market? ${a.canTravel ? (lang === "es" ? { yes: "sí", no: "no, necesita que se lo traigan" } : { yes: "yes", no: "no, needs it brought home" })[a.canTravel] : "(no answer)"}
 6. Foods you cannot or will not eat: ${clip(a.avoid) || "(no answer)"}`,
     schema: {
       type: "object",
