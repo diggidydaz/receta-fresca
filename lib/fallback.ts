@@ -27,6 +27,7 @@ export function fallbackIntakeSummary(a: IntakeAnswers, lang: Lang): IntakeSumma
     suggestedDelivery: a.canTravel === "no",
     avoid,
     source: "fallback",
+    lang,
   };
 }
 

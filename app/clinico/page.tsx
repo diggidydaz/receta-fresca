@@ -224,6 +224,7 @@ export default function ClinicoPage() {
         <h2>{t(copy.sumTitle)}</h2>
         <div className="flex flex-wrap gap-2">
           {summary && <Tag>{t(summary.source === "fallback" ? copy.basic : copy.ai)}</Tag>}
+          {summary?.lang && summary.lang !== lang && <Tag>{t({ es: "Escrito en inglés", en: "Written in Spanish" })}</Tag>}
         </div>
         {summary ? (
           <SummaryCard summary={summary} />
@@ -237,7 +238,7 @@ export default function ClinicoPage() {
 
       <h2>{t(copy.rxTitle)}</h2>
       {failed && <Notice tone="warn"><p className="font-bold">{t(copy.errTitle)}</p></Notice>}
-      <RxForm key={summary ? "with-summary" : "no-summary"} summary={summary} initial={failed} onSubmit={send} />
+      <RxForm key={`${s.patientId}-${summary ? "with-summary" : "no-summary"}`} summary={summary} initial={failed} onSubmit={send} />
     </Page>
   );
 }

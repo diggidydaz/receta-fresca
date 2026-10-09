@@ -86,7 +86,7 @@ export default function IntakePage() {
         <DoneHeading>{t(copy.doneTitle)}</DoneHeading>
         <p className="text-[1.25rem]">{t(copy.doneLine)}</p>
         <BigButton href="/paciente" icon="home">{t(copy.backHome)}</BigButton>
-        <BigButton variant="secondary" icon="refresh" onClick={() => { setState({ intakeDone: false }); setStep(1); }}>
+        <BigButton variant="secondary" icon="refresh" onClick={() => { setState({ intakeDone: false, intakeSummary: null }); setStep(1); }}>
           {t(copy.again)}
         </BigButton>
       </Page>

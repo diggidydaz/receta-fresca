@@ -198,7 +198,7 @@ export function VoiceInput({ label, hint, value, onChange, rows = 3 }: { label: 
     <div className="flex flex-col gap-3">
       <label htmlFor={id} className="text-[1.25rem] font-bold">{label}</label>
       {hint && <p id={`${id}-h`} className="-mt-2 text-muted">{hint}</p>}
-      <textarea id={id} rows={rows} value={value} onChange={(e) => onChange(e.target.value)} aria-describedby={hint ? `${id}-h` : undefined}
+      <textarea id={id} rows={rows} maxLength={600} value={value} onChange={(e) => onChange(e.target.value)} aria-describedby={hint ? `${id}-h` : undefined}
         className="w-full rounded-2xl border-[3px] border-rule bg-panel p-4 text-[1.25rem] leading-snug" />
       {supported && (
         <button type="button" onClick={toggle} aria-pressed={listening}

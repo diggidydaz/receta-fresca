@@ -95,7 +95,8 @@ export async function askJSON<T>(a: AskArgs): Promise<T | null> {
 /** Reads a JSON body without throwing. */
 export async function readBody<T>(req: Request): Promise<Partial<T>> {
   try {
-    return (await req.json()) as Partial<T>;
+    const v: unknown = await req.json();
+    return typeof v === "object" && v !== null && !Array.isArray(v) ? (v as Partial<T>) : {};
   } catch {
     return {};
   }

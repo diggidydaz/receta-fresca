@@ -9,7 +9,17 @@ export const maxDuration = 45;
 export async function POST(req: Request) {
   const body = await readBody<{ answers: IntakeAnswers; patient: Patient; lang: Lang }>(req);
   const lang: Lang = body.lang === "en" ? "en" : "es";
-  const a: IntakeAnswers = body.answers ?? {};
+  const raw = (typeof body.answers === "object" && body.answers !== null ? body.answers : {}) as Record<string, unknown>;
+  const pick = <T extends string>(v: unknown, ok: readonly T[]): T | undefined => (ok.includes(v as T) ? (v as T) : undefined);
+  // Only known answers of the right type go any further.
+  const a: IntakeAnswers = {
+    feeling: pick(raw.feeling, ["good", "ok", "bad"] as const),
+    concern: clip(raw.concern) || undefined,
+    typicalDay: clip(raw.typicalDay) || undefined,
+    canCook: pick(raw.canCook, ["yes", "sometimes", "no"] as const),
+    canTravel: pick(raw.canTravel, ["yes", "no"] as const),
+    avoid: clip(raw.avoid) || undefined,
+  };
   const fallback = fallbackIntakeSummary(a, lang);
 
   const answered = [a.feeling, a.concern, a.typicalDay, a.canCook, a.canTravel, a.avoid].some(Boolean);
@@ -52,5 +62,5 @@ Answers:
   });
 
   if (!ai || !Array.isArray(ai.keyPoints)) return Response.json({ ...fallback, aiError: lastAiError });
-  return Response.json({ ...({ ...fallback, ...ai, source: "ai" } satisfies IntakeSummary), model: lastAiModel, skipped: lastAiError });
+  return Response.json({ ...({ ...fallback, ...ai, source: "ai", lang } satisfies IntakeSummary), model: lastAiModel, skipped: lastAiError });
 }

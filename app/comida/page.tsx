@@ -7,6 +7,7 @@ import { setState, useAppState, useHydrated } from "@/lib/store";
 import type { Estimate, LogEntry } from "@/lib/types";
 
 const copy = {
+  unmatched: { es: "No pudimos contar esta parte", en: "We could not count this part" },
   title: { es: "¿Qué comió?", en: "What did you eat?" },
   label: { es: "Diga o escriba lo que comió", en: "Say or type what you ate" },
   hint: { es: "Por ejemplo: arroz con gandules y pernil", en: "For example: rice with pigeon peas and roast pork" },
@@ -21,6 +22,7 @@ const copy = {
   idea: { es: "Idea", en: "Idea" },
   low: { es: "Cálculo aproximado de IA", en: "Rough AI guess" },
   table: { es: "De nuestra tabla de comida local", en: "From our local food table" },
+  mixed: { es: "Tabla local y cálculo de IA", en: "Local table and AI guess" },
   another: { es: "Anotar otra comida", en: "Add another meal" },
   today: { es: "Lo que ha comido hoy", en: "What you have eaten today" },
   none: { es: "Todavía no ha anotado comidas.", en: "You have not added any meals yet." },
@@ -45,6 +47,7 @@ export default function ComidaPage() {
   const target = s.rx?.carbTarget ?? DEFAULT_TARGET;
 
   const submit = async () => {
+    if (busy) return;
     const q = text.trim();
     if (!q) { setEmpty(true); return; }
     setEmpty(false); setFailed(false); setBusy(true); setEst(null);
@@ -54,6 +57,7 @@ export default function ComidaPage() {
       const data = (await res.json()) as Estimate;
       if (!data || !Array.isArray(data.items) || !data.light) throw new Error("bad");
       setEst(data);
+      if (data.items.length === 0) return; // nothing recognized: show the message, do not log a light
       const entry: LogEntry = { id: Date.now().toString(), text: q, at: new Date().toISOString(), estimate: data };
       setState((st) => ({ log: [entry, ...st.log].slice(0, 20) }));
     } catch {
@@ -92,24 +96,31 @@ export default function ComidaPage() {
         {est && (
           <>
             <h2 ref={headRef} tabIndex={-1} className="outline-none">{t(copy.result)}</h2>
-            <TrafficLight light={est.light} />
-            <p className="text-[1.563rem] font-bold leading-tight">
-              {t({ es: `Entre ${est.carbsMin} y ${est.carbsMax} gramos de carbohidratos`, en: `Between ${est.carbsMin} and ${est.carbsMax} grams of carbs` })}
-            </p>
-            <p className="text-[1.25rem]">{t(copy.goal)}: {target} g</p>
-            {est.items.map((it, i) => (
-              <Card key={i} className="flex flex-col gap-1">
-                <p className="text-[1.25rem] font-bold">{it.name}</p>
-                <p>{t(copy.serving)}: {it.serving}</p>
-                <p>{it.carbsMin}-{it.carbsMax} g</p>
-                <p>{t(copy.idea)}: {it.swap}</p>
-                {it.source && <p className="text-[0.85rem] text-muted">{it.source}</p>}
-              </Card>
-            ))}
-            <Notice><p className="text-[1.1rem]">{est.message}</p></Notice>
-            <div><Tag>{t(est.confidence === "low" ? copy.low : copy.table)}</Tag></div>
-            <p className="text-[0.9rem] text-muted">{t(common.notAdvice)}</p>
-            <ReadAloud text={readText} />
+            {est.items.length === 0 ? (
+              <Notice tone="warn"><p className="text-[1.25rem]">{est.message}</p></Notice>
+            ) : (
+              <>
+                <TrafficLight light={est.light} />
+                <p className="text-[1.563rem] font-bold leading-tight">
+                  {t({ es: `Entre ${est.carbsMin} y ${est.carbsMax} gramos de carbohidratos`, en: `Between ${est.carbsMin} and ${est.carbsMax} grams of carbs` })}
+                </p>
+                <p className="text-[1.25rem]">{t(copy.goal)}: {target} g</p>
+                {est.items.map((it, i) => (
+                  <Card key={i} className="flex flex-col gap-1">
+                    <p className="text-[1.25rem] font-bold">{it.name}</p>
+                    <p>{t(copy.serving)}: {it.serving}</p>
+                    <p>{it.carbsMin}-{it.carbsMax} g</p>
+                    <p>{t(copy.idea)}: {it.swap}</p>
+                    {it.source && <p className="text-[0.85rem] text-muted">{it.source}</p>}
+                  </Card>
+                ))}
+                {est.unmatched && <Notice tone="warn"><p className="text-[1.1rem] font-bold">{t(copy.unmatched)}: {est.unmatched}</p></Notice>}
+                <Notice><p className="text-[1.1rem]">{est.message}</p></Notice>
+                <div><Tag>{t(est.confidence === "low" ? copy.low : est.confidence === "mixed" ? copy.mixed : copy.table)}</Tag></div>
+                <p className="text-[0.9rem] text-muted">{t(common.notAdvice)}</p>
+                <ReadAloud text={readText} />
+              </>
+            )}
             <BigButton variant="secondary" icon="refresh" onClick={() => { setText(""); setEst(null); setEmpty(false); setFailed(false); }}>{t(copy.another)}</BigButton>
           </>
         )}
@@ -123,7 +134,7 @@ export default function ComidaPage() {
           <ul className="flex flex-col gap-3">
             {s.log.map((e) => (
               <li key={e.id} className="flex flex-col items-start gap-2 rounded-2xl border-2 border-rule bg-panel p-4">
-                <span className="text-[1.25rem]">{e.text}</span>
+                <span className="max-w-full text-[1.25rem] [overflow-wrap:anywhere]">{e.text}</span>
                 <TrafficLight compact light={e.estimate.light} />
               </li>
             ))}

@@ -32,7 +32,8 @@
   "name": "Arroz con gandules",
   "aliases": [
    "arroz con gandules",
-   "arroz con gandul"
+   "arroz con gandul",
+   "rice with pigeon peas"
   ],
   "region": "PR",
   "serving": {
@@ -60,7 +61,11 @@
   "aliases": [
    "habichuelas guisadas",
    "habichuelas",
-   "stewed beans"
+   "stewed beans",
+   "habichuela",
+   "habichuelas rosadas",
+   "habichuelas coloradas",
+   "beans"
   ],
   "region": "PR",
   "serving": {
@@ -110,7 +115,10 @@
   "name": "Tostones",
   "aliases": [
    "tostones",
-   "toston"
+   "toston",
+   "tostone",
+   "fried plantain",
+   "platano frito"
   ],
   "region": "PR",
   "serving": {
@@ -138,7 +146,10 @@
   "aliases": [
    "maduros",
    "amarillos",
-   "platano maduro"
+   "platano maduro",
+   "maduro",
+   "platanos maduros",
+   "fried sweet plantain"
   ],
   "region": "PR",
   "serving": {
@@ -165,7 +176,10 @@
   "name": "Pasteles",
   "aliases": [
    "pasteles",
-   "pastel"
+   "pastel",
+   "pasteles de yuca",
+   "pasteles de masa",
+   "pastel de masa"
   ],
   "region": "PR",
   "serving": {
@@ -216,7 +230,8 @@
   "name": "Bacalaíto",
   "aliases": [
    "bacalaito",
-   "bacalaitos"
+   "bacalaitos",
+   "codfish fritter"
   ],
   "region": "PR",
   "serving": {
@@ -269,7 +284,8 @@
   "name": "Yuca hervida",
   "aliases": [
    "yuca hervida",
-   "yuca"
+   "yuca",
+   "cassava"
   ],
   "region": "PR",
   "serving": {
@@ -295,7 +311,8 @@
   "id": "sancocho",
   "name": "Sancocho",
   "aliases": [
-   "sancocho"
+   "sancocho",
+   "sancocho de res"
   ],
   "region": "PR",
   "serving": {
@@ -346,7 +363,10 @@
   "name": "Pan sobao",
   "aliases": [
    "pan sobao",
-   "pan"
+   "pan",
+   "pan de agua",
+   "pan de manteca",
+   "pan criollo"
   ],
   "region": "PR",
   "serving": {
@@ -400,7 +420,8 @@
   "aliases": [
    "quesito",
    "pastelillo de guayaba",
-   "pastelillo"
+   "quesitos",
+   "pastelillos de guayaba"
   ],
   "region": "PR",
   "serving": {
@@ -502,7 +523,9 @@
   "name": "Fungi",
   "aliases": [
    "fungi",
-   "funji"
+   "funji",
+   "funche",
+   "fungee"
   ],
   "region": "USVI",
   "serving": {
@@ -530,7 +553,8 @@
   "aliases": [
    "kallaloo",
    "callaloo",
-   "calalu"
+   "calalu",
+   "kalaloo"
   ],
   "region": "USVI",
   "serving": {
@@ -613,7 +637,8 @@
   "aliases": [
    "dumpling",
    "boiled dumpling",
-   "domplin"
+   "domplin",
+   "dumplings"
   ],
   "region": "USVI",
   "serving": {
@@ -634,10 +659,17 @@
  },
  {
   "id": "beef-pate",
-  "name": "Beef pate",
+  "name": "Pastelillo de carne (pate)",
   "aliases": [
    "pate",
-   "beef pate"
+   "beef pate",
+   "pastelillo de carne",
+   "pastelillos de carne",
+   "pastelillo",
+   "empanadilla",
+   "empanadilla de carne",
+   "meat pate",
+   "pates"
   ],
   "region": "USVI",
   "serving": {
@@ -666,7 +698,8 @@
    "batata hervida",
    "batata",
    "sweet potato",
-   "boiled sweet potato"
+   "boiled sweet potato",
+   "batatas"
   ],
   "region": "USVI",
   "serving": {
@@ -774,7 +807,11 @@
    "jugo",
    "juice",
    "jugo de china",
-   "jugo de parcha"
+   "jugo de parcha",
+   "jugo natural",
+   "jugo de fruta",
+   "fruit juice",
+   "orange juice"
   ],
   "region": "PR/USVI",
   "serving": {

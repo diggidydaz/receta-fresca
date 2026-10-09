@@ -1,7 +1,7 @@
 "use client";
 // One shared weekly-plan request. The clinician screen starts it as soon as the prescription is sent,
 // so the plan is usually ready by the time the patient opens it. Both screens share the same request.
-import { getState, setState } from "./store";
+import { getPatientState, setPatientState } from "./store";
 import type { Lang, Plan, Rx } from "./types";
 
 const pending = new Map<string, Promise<boolean>>();
@@ -18,8 +18,8 @@ export function ensurePlan(rx: Rx, lang: Lang): Promise<boolean> {
       const data = (await res.json()) as Plan;
       if (!data || !Array.isArray(data.days) || data.days.length === 0) return false;
       // Ignore the answer if the clinician has sent a newer prescription meanwhile.
-      if (getState().rx?.createdAt !== rx.createdAt) return false;
-      setState({ plan: { days: data.days, shopping: data.shopping, tip: data.tip, source: data.source, lang } });
+      if (getPatientState(rx.patientId).rx?.createdAt !== rx.createdAt) return false;
+      setPatientState(rx.patientId, { plan: { days: data.days, shopping: data.shopping, tip: data.tip, source: data.source, lang } });
       return true;
     } catch {
       return false;

@@ -116,7 +116,7 @@ export default function PlanPage() {
               </Card>
             ))}
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2">
             <BigButton variant="secondary" icon="left" disabled={idx === 0} onClick={() => setDay(idx - 1)}>{t(copy.prev)}</BigButton>
             <BigButton variant="secondary" iconEnd="right" disabled={idx >= plan.days.length - 1} onClick={() => setDay(idx + 1)}>{t(copy.nextDay)}</BigButton>
           </div>

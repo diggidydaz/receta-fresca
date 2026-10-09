@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BigButton, Busy, Card, ChoiceGroup, Notice, Page, Tag } from "@/components/ui";
 import { Icon } from "@/components/Icon";
 import placesData from "@/data/places.json";
@@ -53,6 +53,10 @@ export default function CanjearPage() {
   const [placeId, setPlaceId] = useState<string | undefined>();
   const [delivery, setDelivery] = useState<boolean | null>(null);
   const [error, setError] = useState<"pick" | "deliver" | null>(null);
+  const headRef = useRef<HTMLHeadingElement>(null);
+  const orderId = s.order?.id;
+  // When the order appears, move focus to its heading so it is announced and a second tap cannot hit another button.
+  useEffect(() => { if (orderId) headRef.current?.focus(); }, [orderId]);
 
   if (!hydrated) return <Page><Busy /></Page>;
   const back = <BigButton href="/paciente" variant="quiet" icon="left">{t(copy.back)}</BigButton>;
@@ -76,7 +80,7 @@ export default function CanjearPage() {
     const allDone = o.status === "delivered";
     return (
       <Page>
-        <h1>{t(copy.yourOrder)}{place ? `: ${place.name}` : ""}</h1>
+        <h1 ref={headRef} tabIndex={-1} className="outline-none">{t(copy.yourOrder)}{place ? `: ${place.name}` : ""}</h1>
         <Card>
           <p className="text-[1.563rem] font-bold">{t(copy.show)}: {o.id}</p>
         </Card>
@@ -85,11 +89,11 @@ export default function CanjearPage() {
             const done = allDone || i < cur;
             const isNow = !allDone && i === cur;
             return (
-              <li key={st.key} className={`flex min-h-[64px] items-center gap-4 rounded-2xl p-4 ${isNow ? "border-[4px] border-brand bg-brand-soft font-bold" : "border-2 border-rule bg-panel"}`}>
-                <span className={`flex h-9 w-9 items-center justify-center rounded-full border-[3px] ${done ? "border-brand bg-brand text-white" : "border-rule bg-panel text-transparent"}`}>
+              <li key={st.key} className={`flex min-h-[64px] flex-wrap items-center gap-x-4 gap-y-1 rounded-2xl p-4 ${isNow ? "border-[4px] border-brand bg-brand-soft font-bold" : "border-2 border-rule bg-panel"}`}>
+                <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-[3px] ${done ? "border-brand bg-brand text-white" : "border-rule bg-panel text-transparent"}`}>
                   <Icon name="check" size={22} />
                 </span>
-                <span className="flex-1 text-[1.25rem]">{t(st.label)}</span>
+                <span className="min-w-0 flex-1 text-[1.25rem] [overflow-wrap:anywhere]">{t(st.label)}</span>
                 <span className={`text-[1.1rem] ${isNow ? "font-bold" : ""}`}>{t(done ? copy.done : isNow ? copy.now : copy.later)}</span>
               </li>
             );
@@ -100,7 +104,7 @@ export default function CanjearPage() {
           <p className="text-muted">{t(copy.simNote)}</p>
         </div>
         <BigButton href="/negocio" variant="secondary" icon="store">{t(copy.asBiz)}</BigButton>
-        <BigButton variant="quiet" onClick={() => setState({ order: null })}>{t(copy.change)}</BigButton>
+        <BigButton variant="quiet" onClick={() => { if (Date.now() - new Date(o.createdAt).getTime() > 1500) setState({ order: null }); }}>{t(copy.change)}</BigButton>
         {back}
       </Page>
     );

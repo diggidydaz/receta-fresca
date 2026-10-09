@@ -1,11 +1,12 @@
 "use client";
+import { useRef } from "react";
 import { BigButton, Busy, Card, Notice, Page, Tag } from "@/components/ui";
 import { Icon } from "@/components/Icon";
 import patientsData from "@/data/patients.json";
 import placesData from "@/data/places.json";
 import { common, useT } from "@/lib/i18n";
-import { setState, useAppState, useHydrated } from "@/lib/store";
-import type { L10n, OrderStatus, Patient, Place } from "@/lib/types";
+import { listOrders, setPatientState, useAppState, useHydrated } from "@/lib/store";
+import type { L10n, Order, OrderStatus, Patient, Place } from "@/lib/types";
 
 const places = placesData as Place[];
 const patients = patientsData as Patient[];
@@ -22,6 +23,7 @@ const copy = {
   pack: { es: "Para empacar", en: "To pack" },
   weekMeals: { es: "Comidas preparadas para la semana", en: "Prepared meals for the week" },
   menu: { es: "Menú que preparó la IA con la receta del clínico", en: "Menu the AI prepared from the clinician's prescription" },
+  menuSample: { es: "Menú de ejemplo para la receta del clínico", en: "Sample menu for the clinician's prescription" },
   avoid: { es: "No usar", en: "Do not use" },
   goal: { es: "Meta", en: "Goal" },
   status: { es: "Estado", en: "Status" },
@@ -52,26 +54,33 @@ export default function NegocioPage() {
   const { t } = useT();
   const s = useAppState();
   const hydrated = useHydrated();
+  const lastTap = useRef(0);
   if (!hydrated) return <Page><Busy /></Page>;
 
-  const { order, rx, plan } = s;
-  const place = order ? places.find((p) => p.id === order.placeId) : undefined;
-  const patient = patients.find((p) => p.id === s.patientId);
-  const meals = rx?.type === "meals";
-  const dishes = plan
-    ? Array.from(new Set(plan.days.flatMap((d) => d.meals.filter((m) => m.meal === "almuerzo" || m.meal === "cena").map((m) => m.dish)))).slice(0, 7)
-    : [];
-  const next = order ? nextOf[order.status] : undefined;
+  const orders = listOrders(s);
+  // A second tap within a moment is ignored, so one tap never skips a status.
+  const advance = (now: number, patientId: string, order: Order, next: OrderStatus) => {
+    if (now - lastTap.current < 700) return;
+    lastTap.current = now;
+    setPatientState(patientId, { order: { ...order, status: next } });
+  };
 
   return (
     <Page>
       <h1>{t(copy.title)}</h1>
       <div><Tag>{t(common.simulated)}</Tag></div>
 
-      {!order ? (
-        <Notice><p className="text-[1.25rem]">{t(copy.none)}</p></Notice>
-      ) : (
-        <Card className="flex flex-col gap-3 text-[1.25rem]">
+      {orders.length === 0 && <Notice><p className="text-[1.25rem]">{t(copy.none)}</p></Notice>}
+      {orders.map(({ patientId, order, rx, plan }) => {
+        const place = places.find((p) => p.id === order.placeId);
+        const patient = patients.find((p) => p.id === patientId);
+        const meals = rx.type === "meals";
+        const dishes = plan
+          ? Array.from(new Set(plan.days.flatMap((d) => d.meals.filter((m) => m.meal === "almuerzo" || m.meal === "cena").map((m) => m.dish)))).slice(0, 7)
+          : [];
+        const next = nextOf[order.status];
+        return (
+        <Card key={order.id} className="flex flex-col gap-3 text-[1.25rem]">
           <p className="font-bold">{place?.name}{place ? ` · ${t(kindLabel[place.kind])}` : ""}</p>
           <p className="text-[1.563rem] font-bold">{order.id}</p>
           <p>{t(copy.forPatient)}: {patient?.name ?? ""}</p>
@@ -83,7 +92,7 @@ export default function NegocioPage() {
               <p className="font-bold">{t(copy.weekMeals)}</p>
               {dishes.length > 0 && (
                 <>
-                  <h3>{t(copy.menu)}</h3>
+                  <h3>{t(plan?.source === "ai" ? copy.menu : copy.menuSample)}</h3>
                   <ul className="list-disc space-y-1 pl-6">{dishes.map((d, i) => <li key={i}>{d}</li>)}</ul>
                 </>
               )}
@@ -109,10 +118,11 @@ export default function NegocioPage() {
             )}
           </div>
           {next && (
-            <BigButton onClick={() => setState({ order: { ...order, status: next } })}>{t(markWord[next])}</BigButton>
+            <BigButton onClick={(e) => advance(e.timeStamp, patientId, order, next)}>{t(markWord[next])}</BigButton>
           )}
         </Card>
-      )}
+        );
+      })}
 
       <div className="flex flex-col items-start gap-2">
         <Tag>{t(common.simulated)}</Tag>

@@ -48,6 +48,7 @@ export type IntakeSummary = {
   suggestedDelivery: boolean;
   avoid: string[];
   source: "ai" | "fallback";
+  lang?: Lang;
 };
 
 export type Rx = {
@@ -79,8 +80,9 @@ export type Estimate = {
   carbsMin: number;
   carbsMax: number;
   light: Light;
-  confidence: "table" | "low";     // table = from the local food table; low = AI guess
+  confidence: "table" | "mixed" | "low"; // table = local food table; low = AI guess; mixed = some of each
   message: string;
+  unmatched?: string;              // words in the meal that neither the table nor the AI could count
 };
 
 export type LogEntry = { id: string; text: string; at: string; estimate: Estimate };
