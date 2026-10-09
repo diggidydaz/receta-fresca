@@ -26,6 +26,7 @@ A clinician prescribes fresh produce or prepared meals. The patient redeems the 
 - The clinician sets the carbohydrate goal. The AI does not.
 - Every number is labeled an estimate. Traffic lights are computed in code from the clinician's goal, not by the model.
 - The dish estimator answers from `data/foods.json` first. Claude only guesses dishes the table does not know, and that guess is flagged as low confidence.
+- Foods the patient avoids, and any meal over the clinician's carbohydrate goal, are removed from every plan in code, whatever the model returns.
 - Every AI route has a non-AI fallback, labeled as such, so the app works without a key or network.
 - Food table (`data/foods.json`, 30 dishes): 14 matched directly to a USDA FoodData Central entry, 10 to the closest available food, 6 with no USDA match yet. Each row records its FDC ID and the arithmetic. A diabetes care professional reviewed the ranges for 15 of the most common dishes. Every dish shows its source on screen.
 
@@ -35,8 +36,10 @@ Designed for older adults and people affected by diabetes: Spanish first, 20px b
 ## Models
 | Task | Model | Why |
 |---|---|---|
-| Dish estimate, plain-language note, weekly plan | Claude Haiku 4.5 | Fast and low cost; measured live, it returns a full on-target week in about 16 seconds |
 | Intake summary for the clinician | Claude Sonnet 5.5 | Careful summarizing: reports what the patient said and flags what to ask in person, without interpreting |
+| Weekly plan | Claude Haiku 5.5 (falls back to Haiku 4.5) | Measured live: a full week in about 8 seconds, started as soon as the prescription is sent |
+| Dish estimate for food outside the table, restating the clinician's note | Claude Haiku 4.5 | Fast and low cost for short, bounded tasks |
+| Prescription facts in the patient's note, traffic lights, carb goal, avoided foods | No model | Fixed template and code, so they cannot be wrong in a new way each time |
 
 ## Run it
 ```bash
