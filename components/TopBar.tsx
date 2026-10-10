@@ -43,7 +43,7 @@ export function TopBar() {
             </button>
           </div>
         </div>
-        <p className="bg-notice px-4 py-2 text-center text-[0.85rem] font-bold text-ink">{t(common.sample)}</p>
+        <p className="border-t-4 border-mango bg-notice px-4 py-2 text-center text-[0.85rem] font-bold text-ink">{t(common.sample)}</p>
       </header>
       {up && (
         <nav aria-label={t(common.back)} className="mx-auto w-full max-w-[36rem] px-4 pt-4">

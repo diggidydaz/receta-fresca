@@ -38,7 +38,7 @@ export function BigButton({ children, variant = "primary", icon, iconEnd, href, 
 
 /* ---------- Layout pieces ---------- */
 export function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <div className={`rounded-2xl border-2 border-rule bg-panel p-5 ${className}`}>{children}</div>;
+  return <div className={`rounded-2xl border-2 border-rule bg-panel p-5 shadow-sm ${className}`}>{children}</div>;
 }
 
 /** Page body: one readable column, generous spacing. */
