@@ -1,17 +1,19 @@
 // Builds a one-week plan from what local stores and kitchens have in stock (sample data),
 // within the carbohydrate target the clinician set. Traffic lights are computed in code, not by the model.
-import placesData from "@/data/places.json";
 import { askJSON, clip, lastAiError, lastAiModel, PLAN_MODELS, readBody } from "@/lib/claude";
 import { avoidTerms, violates } from "@/lib/avoid";
 import { fallbackPlan } from "@/lib/fallback";
 import { foods, lightFor } from "@/lib/foods";
+import { basePlaces, cleanStock } from "@/lib/places";
 import type { Lang, Place, Plan, PlanDay, Rx } from "@/lib/types";
 
 export const maxDuration = 60;
-const places = placesData as Place[];
 
 export async function POST(req: Request) {
-  const body = await readBody<{ rx: Rx; lang: Lang }>(req);
+  const body = await readBody<{ rx: Rx; lang: Lang; stock?: unknown }>(req);
+  // What each business said it has this week, laid over the sample stock.
+  const updates = cleanStock(body.stock);
+  const places: Place[] = basePlaces.map((p) => (updates[p.id] ? { ...p, stock: updates[p.id] } : p));
   const lang: Lang = body.lang === "en" ? "en" : "es";
   const r = body.rx;
   if (!r || (r.type !== "produce" && r.type !== "meals")) return Response.json({ days: [], shopping: [], tip: "", source: "fallback" });
@@ -50,6 +52,7 @@ export async function POST(req: Request) {
   const table = foods.map((f) => `${f.name}: ${f.carbsMin}-${f.carbsMax} g per ${f.serving.en}`).join("; ");
 
   const kitchenDishes = Array.from(new Set(places.filter((p) => p.kind === "cocina").flatMap((p) => p.stock.map((d) => d[lang])))).filter((d) => !violates(d, terms));
+  if (rx.type === "meals" && kitchenDishes.length === 0) return Response.json({ ...fallback, aiError: "no kitchen dishes in stock" });
   const mealSchema = (dishEnum?: string[]) => ({
     type: "object",
     properties: {

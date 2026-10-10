@@ -1,10 +1,14 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 import { BigButton, Busy, Card, ChoiceGroup, Notice, Page, Tag } from "@/components/ui";
+import { Icon } from "@/components/Icon";
+import { helperWord, PatientProgress } from "@/components/PatientProgress";
 import { useT } from "@/lib/i18n";
 import { DEFAULT_TARGET } from "@/lib/foods";
 import { ensurePlan } from "@/lib/planLoader";
-import { setState, useAppState, useHydrated } from "@/lib/store";
+import { download, outcomesCsv } from "@/lib/export";
+import { allPatients, setState, useAppState, useHydrated } from "@/lib/store";
 import type { IntakeSummary, Patient, Rx, RxType, VisitSummary } from "@/lib/types";
 import patientsData from "@/data/patients.json";
 
@@ -48,6 +52,23 @@ const copy = {
   patientSees: { es: "Lo que verá el paciente", en: "What the patient will see" },
   viewAs: { es: "Ver como paciente", en: "View as patient" },
   another: { es: "Hacer otra receta", en: "Write another prescription" },
+  progress: { es: "Cómo le va", en: "How it is going" },
+  helpedBy: { es: "Contestado con ayuda de", en: "Answered with help from" },
+  discTitle: { es: "Antes de empezar: qué hace la IA", en: "Before you start: what the AI does" },
+  discDoes: { es: "La IA ayuda con", en: "The AI helps with" },
+  discDoes1: { es: "Resumir lo que el paciente contestó antes de la cita. Reporta lo que dijo; no interpreta ni diagnostica.", en: "Summarizing what the patient answered before the visit. It reports what they said; it does not interpret or diagnose." },
+  discDoes2: { es: "Armar el plan de la semana con lo que tienen los colmados, fincas y cocinas.", en: "Building the weekly plan from what stores, farms and kitchens have." },
+  discDoes3: { es: "Nombrar los platos de una foto, y estimar platos que no están en la tabla de comida local (marcado como cálculo aproximado).", en: "Naming the dishes in a photo, and estimating dishes that are not in the local food table (marked as a rough guess)." },
+  discNever: { es: "La IA nunca", en: "The AI never" },
+  discNever1: { es: "Decide la meta de carbohidratos. Usted la decide.", en: "Sets the carbohydrate goal. You set it." },
+  discNever2: { es: "Recomienda ni ajusta insulina ni medicamentos.", en: "Recommends or adjusts insulin or medication." },
+  discNever3: { es: "Decide las luces de colores, la lista de comidas a evitar ni el límite por comida: eso lo hace el código, con su meta.", en: "Decides the traffic lights, the avoid list or the per-meal limit: code does that, from your goal." },
+  discYou: { es: "Todo lo hecho con IA dice «Hecho con IA». Si la IA no está disponible, la aplicación usa textos fijos y lo dice. Revise el resumen antes de recetar.", en: "Everything made with AI says \"AI-generated\". If the AI is unavailable, the app uses fixed text and says so. Review the summary before prescribing." },
+  discOk: { es: "Entendido, empezar", en: "Understood, start" },
+  discMore: { es: "Qué es real y qué es simulado", en: "What is real and what is simulated" },
+  exportTitle: { es: "Datos para evaluar el programa", en: "Data to evaluate the program" },
+  exportHint: { es: "Una fila por paciente, sin nombres ni textos: metas, luces de la semana, pedidos, A1C y Hunger Vital Sign.", en: "One row per patient, with no names or free text: goals, weekly lights, orders, A1C and Hunger Vital Sign." },
+  exportBtn: { es: "Descargar CSV sin nombres", en: "Download CSV without names" },
 };
 
 const STEP = 5, MIN = 15, MAX = 75;
@@ -154,12 +175,33 @@ export default function ClinicoPage() {
   const [view, setView] = useState<"form" | "sending" | "done">("form");
   const [failed, setFailed] = useState<FormValues | null>(null);
   const doneRef = useRef<HTMLHeadingElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (view === "done") doneRef.current?.focus();
   }, [view]);
 
   if (!hydrated) return <Page><Busy /></Page>;
+
+  if (!s.clinicianAck) {
+    const li = (x: { es: string; en: string }, icon: string) => <li className="flex items-start gap-3"><Icon name={icon} className="mt-0.5 text-brand" /><span>{t(x)}</span></li>;
+    return (
+      <Page>
+        <h1>{t(copy.discTitle)}</h1>
+        <Card className="flex flex-col gap-3">
+          <h2>{t(copy.discDoes)}</h2>
+          <ul className="flex flex-col gap-3">{li(copy.discDoes1, "check")}{li(copy.discDoes2, "check")}{li(copy.discDoes3, "check")}</ul>
+        </Card>
+        <Card className="flex flex-col gap-3">
+          <h2>{t(copy.discNever)}</h2>
+          <ul className="flex flex-col gap-3">{li(copy.discNever1, "hand")}{li(copy.discNever2, "hand")}{li(copy.discNever3, "hand")}</ul>
+        </Card>
+        <Notice><p>{t(copy.discYou)}</p></Notice>
+        <BigButton icon="check" onClick={() => setState({ clinicianAck: true })}>{t(copy.discOk)}</BigButton>
+        <BigButton variant="quiet" href="/acerca" icon="info">{t(copy.discMore)}</BigButton>
+      </Page>
+    );
+  }
 
   const patient = patients.find((p) => p.id === s.patientId) ?? patients[0];
   const summary = s.intakeSummary;
@@ -220,18 +262,26 @@ export default function ClinicoPage() {
       <ChoiceGroup legend={t(copy.patient)} name="patient" value={s.patientId} onChange={(id) => setState({ patientId: id })}
         options={patients.map((p) => ({ value: p.id, label: p.name, hint: `${p.age} ${t(copy.years)} · ${p.town} · ${t(p.note)}`, icon: "person" }))} />
 
+      {(s.rx || s.log.length > 0) && (
+        <Card className="flex flex-col gap-4">
+          <h2>{t(copy.progress)}</h2>
+          <PatientProgress patientId={s.patientId} p={s} role="clinician" />
+        </Card>
+      )}
+
       <Card className="flex flex-col gap-4">
         <h2>{t(copy.sumTitle)}</h2>
         <div className="flex flex-wrap gap-2">
           {summary && <Tag>{t(summary.source === "fallback" ? copy.basic : copy.ai)}</Tag>}
           {summary?.lang && summary.lang !== lang && <Tag>{t({ es: "Escrito en inglés", en: "Written in Spanish" })}</Tag>}
+          {summary && s.intake.helper && s.intake.helper !== "self" && <Tag>{t(copy.helpedBy)} {t(helperWord[s.intake.helper])}</Tag>}
         </div>
         {summary ? (
           <SummaryCard summary={summary} />
         ) : (
           <>
             <Notice><p className="font-bold">{t(copy.noSummary)}</p></Notice>
-            <BigButton variant="secondary" href="/intake" icon="clipboard">{t(copy.answerFor)}</BigButton>
+            <BigButton variant="secondary" icon="clipboard" onClick={() => { setState({ intake: { ...s.intake, helper: "clinic" } }); router.push("/intake"); }}>{t(copy.answerFor)}</BigButton>
           </>
         )}
       </Card>
@@ -239,6 +289,13 @@ export default function ClinicoPage() {
       <h2>{t(copy.rxTitle)}</h2>
       {failed && <Notice tone="warn"><p className="font-bold">{t(copy.errTitle)}</p></Notice>}
       <RxForm key={`${s.patientId}-${summary ? "with-summary" : "no-summary"}`} summary={summary} initial={failed} onSubmit={send} />
+
+      <Card className="flex flex-col gap-3">
+        <h2>{t(copy.exportTitle)}</h2>
+        <p>{t(copy.exportHint)}</p>
+        <BigButton variant="secondary" icon="chart" onClick={() => download(`receta-fresca-${new Date().toISOString().slice(0, 10)}.csv`, outcomesCsv(patients, allPatients(s)))}>{t(copy.exportBtn)}</BigButton>
+        <div><Tag>{t({ es: "Datos de ejemplo", en: "Sample data" })}</Tag></div>
+      </Card>
     </Page>
   );
 }

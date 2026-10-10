@@ -2,12 +2,11 @@
 import { useEffect, useRef, useState } from "react";
 import { BigButton, Busy, Card, ChoiceGroup, Notice, Page, Tag } from "@/components/ui";
 import { Icon } from "@/components/Icon";
-import placesData from "@/data/places.json";
+import { effectivePlaces } from "@/lib/places";
 import { common, useT } from "@/lib/i18n";
 import { setState, useAppState, useHydrated } from "@/lib/store";
 import type { L10n, Order, OrderStatus, Place } from "@/lib/types";
 
-const places = placesData as Place[];
 
 function makeOrderId(): string {
   return "RF-" + String(Math.floor(Math.random() * 10000)).padStart(4, "0");
@@ -59,6 +58,7 @@ export default function CanjearPage() {
   useEffect(() => { if (orderId) headRef.current?.focus(); }, [orderId]);
 
   if (!hydrated) return <Page><Busy /></Page>;
+  const places = effectivePlaces(s.stock);
   const back = <BigButton href="/paciente" variant="quiet" icon="left">{t(copy.back)}</BigButton>;
   const rx = s.rx;
 

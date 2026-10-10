@@ -10,7 +10,11 @@ A clinician prescribes fresh produce or prepared meals. The patient redeems the 
 1. **Before the visit** (`/intake`): the patient answers 6 questions, one per screen, by tap or voice. AI writes a one-screen summary for the clinician.
 2. **Prescribe** (`/clinico`): the summary pre-fills a food prescription. The clinician sets the carbohydrate goal and sends it in about 30 seconds. The patient gets a plain-language note.
 3. **Plan and tracker** (`/plan`, `/comida`): a weekly plan built from local stock, and a "What did I eat?" screen that takes speech, text or a photo of the plate and returns a carbohydrate range and a traffic light. For a photo, the AI only names the dishes; the person confirms them and the numbers come from the food table. The photo is not stored. Each food then has Poco / Normal / Mucho buttons (half, typical, one and a half servings); the total and the light update at once. A photo or a size word in speech ("un poco de arroz") sets the starting size, and the person can change it.
-4. **Redeem** (`/canjear`, `/negocio`): the patient picks a store, farm or kitchen; the business sees and fulfills the order.
+4. **Redeem** (`/canjear`, `/negocio`, `/negocio/inventario`): the patient picks a store, farm or kitchen; the business sees and fulfills the order, says what it has this week (new plans use it), and sees what customers' plans ask for.
+5. **Follow-up** (`/clinico`, `/promotora`): the clinician sees "How it is going" (last 7 days of lights, "I could not eat well today" with the reason, teach-back result, order, promotora notes), records A1C and the Hunger Vital Sign, and downloads a CSV without names. The community health worker sees patients needing a call first (no food, prescription not picked up after 3 days), leaves notes the clinician sees, and helps with the pre-visit questions; the summary says who helped.
+6. **At home**: "My week" pattern for the patient, the day's meals read aloud, a one-question teach-back, a printable week, a read-only family link (data in the link only, expires with the prescription), and offline use (the app is saved on the phone; meals in the food table are estimated without a connection).
+
+The first time a clinician opens `/clinico`, a screen explains what the AI does and never does.
 
 ## Working vs simulated
 | Working | Simulated |
@@ -19,7 +23,9 @@ A clinician prescribes fresh produce or prepared meals. The patient redeems the 
 | Prescription and plain-language note | Stores, farms, kitchens and their stock |
 | AI weekly plan from stock | Order status, delivery, voucher payment |
 | Dish estimator grounded in a local food table | Storage (this browser only, no accounts) |
-| Spanish and English, large text, read aloud | |
+| Spanish and English, large text, read aloud | All roles share one browser (no accounts, no server) |
+| Weekly pattern, follow-up alerts, notes, A1C, CSV export | The "3 days have passed" demo button |
+| Printed plan, family link, offline use | |
 
 ## Responsible design
 - The app never diagnoses and never recommends or adjusts insulin or medication.
@@ -28,7 +34,8 @@ A clinician prescribes fresh produce or prepared meals. The patient redeems the 
 - The dish estimator answers from `data/foods.json` first. Claude only guesses dishes the table does not know, and that guess is flagged as low confidence.
 - Foods the patient avoids, and any meal over the clinician's carbohydrate goal, are removed from every plan in code, whatever the model returns.
 - Every AI route has a non-AI fallback, labeled as such, so the app works without a key or network.
-- Food table (`data/foods.json`, 30 dishes): 14 matched directly to a USDA FoodData Central entry, 10 to the closest available food, 6 with no USDA match yet. Each row records its FDC ID and the arithmetic. A diabetes care professional reviewed the ranges for 15 of the most common dishes. Every dish shows its source on screen.
+- Food table (`data/foods.json`, 92 dishes): 59 matched directly to a USDA FoodData Central entry, 27 to the closest available food, 6 with no USDA match yet. Each row records its FDC ID and the arithmetic. A diabetes care professional reviewed the ranges for 15 of the most common dishes; the other 77 are not yet reviewed and say so. Every dish shows its source on screen.
+- Weekly counts, follow-up alerts and the patient's weekly message are computed in code with fixed wording, never by a model.
 
 ## Accessibility
 Designed for older adults and people affected by diabetes: Spanish first, 20px base text with a larger-text switch, Atkinson Hyperlegible typeface, one question per screen, touch targets of 56px or more, voice input and read aloud, visible focus, and traffic lights that use color, shape and a word together. Target: WCAG 2.2 AA.

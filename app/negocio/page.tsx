@@ -3,12 +3,11 @@ import { useRef } from "react";
 import { BigButton, Busy, Card, Notice, Page, Tag } from "@/components/ui";
 import { Icon } from "@/components/Icon";
 import patientsData from "@/data/patients.json";
-import placesData from "@/data/places.json";
+import { effectivePlaces } from "@/lib/places";
 import { common, useT } from "@/lib/i18n";
 import { listOrders, setPatientState, useAppState, useHydrated } from "@/lib/store";
 import type { L10n, Order, OrderStatus, Patient, Place } from "@/lib/types";
 
-const places = placesData as Place[];
 const patients = patientsData as Patient[];
 
 const copy = {
@@ -30,6 +29,7 @@ const copy = {
   complete: { es: "Pedido completado", en: "Order complete" },
   pitch: { es: "El negocio recibe el pago del vale cuando entrega el pedido.", en: "The business is paid for the voucher when it delivers the order." },
   home: { es: "Inicio", en: "Home" },
+  stock: { es: "Decir lo que tengo esta semana", en: "Say what I have this week" },
 };
 
 const statusWord: Record<OrderStatus, L10n> = {
@@ -56,6 +56,7 @@ export default function NegocioPage() {
   const hydrated = useHydrated();
   const lastTap = useRef(0);
   if (!hydrated) return <Page><Busy /></Page>;
+  const places = effectivePlaces(s.stock);
 
   const orders = listOrders(s);
   // A second tap within a moment is ignored, so one tap never skips a status.
@@ -69,6 +70,7 @@ export default function NegocioPage() {
     <Page>
       <h1>{t(copy.title)}</h1>
       <div><Tag>{t(common.simulated)}</Tag></div>
+      <BigButton href="/negocio/inventario" variant="secondary" icon="store">{t(copy.stock)}</BigButton>
 
       {orders.length === 0 && <Notice><p className="text-[1.25rem]">{t(copy.none)}</p></Notice>}
       {orders.map(({ patientId, order, rx, plan }) => {

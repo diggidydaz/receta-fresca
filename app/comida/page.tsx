@@ -1,11 +1,13 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/Icon";
-import { BigButton, Busy, Card, Notice, Page, ReadAloud, Tag, TrafficLight, VoiceInput } from "@/components/ui";
-import { applySizes, DEFAULT_TARGET, normalize } from "@/lib/foods";
+import { BigButton, Busy, Card, ChoiceGroup, Notice, Page, ReadAloud, Tag, TrafficLight, VoiceInput } from "@/components/ui";
+import { skipWord, WeekCard } from "@/components/WeekCard";
+import { applySizes, DEFAULT_TARGET, estimateFromTable, normalize } from "@/lib/foods";
 import { common, useT } from "@/lib/i18n";
-import { setState, useAppState, useHydrated } from "@/lib/store";
-import type { Estimate, L10n, LogEntry, Size } from "@/lib/types";
+import { LOG_MAX, setState, useAppState, useHydrated } from "@/lib/store";
+import type { Estimate, L10n, LogEntry, Size, SkipReason } from "@/lib/types";
+import { isToday } from "@/lib/week";
 
 const sizeChoices: { value: Size; label: L10n; hint: L10n }[] = [
   { value: "small", label: { es: "Poco", en: "A little" }, hint: { es: "la mitad", en: "half" } },
@@ -43,6 +45,17 @@ const copy = {
   today: { es: "Lo que ha comido hoy", en: "What you have eaten today" },
   none: { es: "Todavía no ha anotado comidas.", en: "You have not added any meals yet." },
   back: { es: "Volver a mi página", en: "Back to my page" },
+  offline: { es: "Sin conexión: este estimado viene solo de nuestra tabla de comida local, en su teléfono.", en: "No connection: this estimate comes only from our local food table, on your phone." },
+  offlineNone: { es: "Sin conexión, y esa comida no está en nuestra tabla. Intente otra vez cuando tenga señal.", en: "No connection, and that food is not in our table. Try again when you have a signal." },
+  skipTitle: { es: "¿Hoy no pudo comer bien?", en: "Could you not eat well today?" },
+  skipHint: { es: "Dígalo aquí. Su clínico lo verá.", en: "Tell us here. Your clinician will see it." },
+  skipOpen: { es: "Hoy no pude comer bien", en: "I could not eat well today" },
+  skipWhy: { es: "¿Por qué?", en: "Why?" },
+  skipSave: { es: "Guardar", en: "Save" },
+  skipCancel: { es: "Cancelar", en: "Cancel" },
+  skipPick: { es: "Escoja una razón.", en: "Choose a reason." },
+  skipSaved: { es: "Anotado. Su clínico lo verá.", en: "Noted. Your clinician will see it." },
+  skipNoFood: { es: "Si no tiene comida, su promotora o su clínico le pueden ayudar.", en: "If you have no food, your community health worker or clinician can help." },
 };
 
 export default function ComidaPage() {
@@ -62,6 +75,11 @@ export default function ComidaPage() {
   const [looking, setLooking] = useState(false);
   const [photoMsg, setPhotoMsg] = useState<"saw" | "sawNothing" | "photoFailed" | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [offline, setOffline] = useState<"used" | "none" | null>(null);
+  const [skipOpen, setSkipOpen] = useState(false);
+  const [skipReason, setSkipReason] = useState<SkipReason | undefined>();
+  const [skipErr, setSkipErr] = useState(false);
+  const [skipSaved, setSkipSaved] = useState<SkipReason | null>(null);
 
   // Shrinks the photo in the browser before sending, so it uploads fast on a slow connection.
   const shrink = (file: File): Promise<string> =>
@@ -119,11 +137,21 @@ export default function ComidaPage() {
     if (busy) return;
     const q = text.trim();
     if (!q) { setEmpty(true); return; }
-    setEmpty(false); setFailed(false); setBusy(true); setRaw(null); setLogId(null);
+    setEmpty(false); setFailed(false); setBusy(true); setRaw(null); setLogId(null); setOffline(null);
     try {
-      const res = await fetch("/api/estimate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text: q, target, lang }) });
-      if (!res.ok) throw new Error("bad");
-      const data = (await res.json()) as Estimate;
+      let data: Estimate;
+      try {
+        const res = await fetch("/api/estimate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text: q, target, lang }) });
+        if (!res.ok) throw new Error("bad");
+        data = (await res.json()) as Estimate;
+      } catch (err) {
+        // No network: the food table lives in the app, so table dishes can still be counted on the phone.
+        if (!(err instanceof TypeError) && navigator.onLine) throw err;
+        const local = estimateFromTable(q, target, lang);
+        if (!local) { setOffline("none"); return; }
+        data = local;
+        setOffline("used");
+      }
       if (!data || !Array.isArray(data.items) || !data.light) throw new Error("bad");
       // Starting size for each food: the photo's guess, else a size word the person used, else normal.
       const start: Size[] = data.items.map((it) => hints[normalize(it.name)] ?? it.size ?? "normal");
@@ -133,7 +161,7 @@ export default function ComidaPage() {
       const id = Date.now().toString();
       const entry: LogEntry = { id, text: q, at: new Date().toISOString(), estimate: applySizes(data, start, target) };
       setLogId(id);
-      setState((st) => ({ log: [entry, ...st.log].slice(0, 20) }));
+      setState((st) => ({ log: [entry, ...st.log].slice(0, LOG_MAX) }));
     } catch {
       setFailed(true);
     } finally {
@@ -148,9 +176,18 @@ export default function ComidaPage() {
     setSizes(next);
     if (logId) {
       const updated = applySizes(raw, next, target);
-      setState((st) => ({ log: st.log.map((e) => (e.id === logId ? { ...e, estimate: updated } : e)) }));
+      setState((st) => ({ log: st.log.map((e) => (e.id === logId && e.kind !== "skipped" ? { ...e, estimate: updated } : e)) }));
     }
   };
+
+  // "I could not eat well today" is kept in the same log, so the week and the clinician see it next to the meals.
+  const saveSkip = () => {
+    if (!skipReason) { setSkipErr(true); return; }
+    const entry: LogEntry = { id: Date.now().toString(), kind: "skipped", reason: skipReason, at: new Date().toISOString() };
+    setState((st) => ({ log: [entry, ...st.log].slice(0, LOG_MAX) }));
+    setSkipSaved(skipReason); setSkipOpen(false); setSkipReason(undefined); setSkipErr(false);
+  };
+  const today = s.log.filter((e) => isToday(e.at));
 
   const readText = est
     ? [
@@ -181,6 +218,7 @@ export default function ComidaPage() {
       <BigButton icon="plate" onClick={submit}>{t(copy.go)}</BigButton>
 
       {busy && <Busy label={t(copy.working)} />}
+      {offline && <Notice tone={offline === "none" ? "warn" : "info"}><p role="status" className="text-[1.1rem] font-bold">{t(offline === "used" ? copy.offline : copy.offlineNone)}</p></Notice>}
       {failed && (
         <>
           <Notice tone="warn"><p role="alert" className="text-[1.25rem]">{t(copy.failed)}</p></Notice>
@@ -233,26 +271,62 @@ export default function ComidaPage() {
                 <ReadAloud text={readText} />
               </>
             )}
-            <BigButton variant="secondary" icon="refresh" onClick={() => { setText(""); setRaw(null); setSizes([]); setLogId(null); setHints({}); setEmpty(false); setFailed(false); setPreview(null); setPhotoMsg(null); }}>{t(copy.another)}</BigButton>
+            <BigButton variant="secondary" icon="refresh" onClick={() => { setOffline(null); setText(""); setRaw(null); setSizes([]); setLogId(null); setHints({}); setEmpty(false); setFailed(false); setPreview(null); setPhotoMsg(null); }}>{t(copy.another)}</BigButton>
           </>
         )}
       </div>
 
+      <section className="flex flex-col gap-3" aria-labelledby="skip-h">
+        <h2 id="skip-h">{t(copy.skipTitle)}</h2>
+        <p className="-mt-2 text-muted">{t(copy.skipHint)}</p>
+        {skipOpen ? (
+          <div className="flex flex-col gap-3">
+            <ChoiceGroup<SkipReason> legend={t(copy.skipWhy)} name="skip-reason" value={skipReason} onChange={(v) => { setSkipReason(v); setSkipErr(false); }}
+              options={(["noFood", "unwell", "other"] as const).map((r) => ({ value: r, label: t(skipWord[r]) }))} />
+            {skipErr && <p role="alert" className="text-[1.25rem] font-bold text-stop">{t(copy.skipPick)}</p>}
+            <BigButton icon="check" onClick={saveSkip}>{t(copy.skipSave)}</BigButton>
+            <BigButton variant="quiet" onClick={() => { setSkipOpen(false); setSkipErr(false); }}>{t(copy.skipCancel)}</BigButton>
+          </div>
+        ) : (
+          <BigButton variant="secondary" icon="warn" onClick={() => { setSkipOpen(true); setSkipSaved(null); }}>{t(copy.skipOpen)}</BigButton>
+        )}
+        <div aria-live="polite" className="flex flex-col gap-3">
+          {skipSaved && (
+            <>
+              <Notice><p className="text-[1.25rem] font-bold">{t(copy.skipSaved)}</p></Notice>
+              {skipSaved === "noFood" && <Notice><p className="text-[1.1rem]">{t(copy.skipNoFood)}</p></Notice>}
+              {skipSaved === "unwell" && <Notice tone="warn"><p className="text-[1.1rem] font-bold">{t(common.callClinician)}</p></Notice>}
+            </>
+          )}
+        </div>
+      </section>
+
       <section className="flex flex-col gap-3">
         <h2>{t(copy.today)}</h2>
-        {s.log.length === 0 ? (
+        {today.length === 0 ? (
           <p className="text-[1.25rem]">{t(copy.none)}</p>
         ) : (
           <ul className="flex flex-col gap-3">
-            {s.log.map((e) => (
+            {today.map((e) => (
               <li key={e.id} className="flex flex-col items-start gap-2 rounded-2xl border-2 border-rule bg-panel p-4">
-                <span className="max-w-full text-[1.25rem] [overflow-wrap:anywhere]">{e.text}</span>
-                <TrafficLight compact light={e.estimate.light} />
+                {e.kind === "skipped" ? (
+                  <>
+                    <span className="text-[1.25rem]">{t(copy.skipOpen)}</span>
+                    <span className="inline-flex items-center gap-1.5 rounded-full border-2 border-stop px-3 py-1 text-[0.9rem] font-bold text-stop"><Icon name="warn" size={18} /> {t(skipWord[e.reason])}</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="max-w-full text-[1.25rem] [overflow-wrap:anywhere]">{e.text}</span>
+                    <TrafficLight compact light={e.estimate.light} />
+                  </>
+                )}
               </li>
             ))}
           </ul>
         )}
       </section>
+
+      <WeekCard log={s.log} audience="patient" />
       <BigButton href="/paciente" variant="quiet" icon="left">{t(copy.back)}</BigButton>
     </Page>
   );

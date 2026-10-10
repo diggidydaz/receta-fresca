@@ -15,6 +15,7 @@ const copy = {
 const roles: { href: string; icon: string; title: L10n; hint: L10n }[] = [
   { href: "/paciente", icon: "person", title: { es: "Soy paciente", en: "I am a patient" }, hint: { es: "Mi cita, mi plan y mi comida", en: "My visit, my plan and my food" } },
   { href: "/clinico", icon: "clipboard", title: { es: "Soy clínico", en: "I am a clinician" }, hint: { es: "Recetar comida en 30 segundos", en: "Prescribe food in 30 seconds" } },
+  { href: "/promotora", icon: "people", title: { es: "Soy promotora de salud", en: "I am a community health worker" }, hint: { es: "Mis pacientes, llamadas y visitas", en: "My patients, calls and visits" } },
   { href: "/negocio", icon: "store", title: { es: "Soy colmado, finca o cocina", en: "I am a store, farm or kitchen" }, hint: { es: "Ver y preparar pedidos", en: "See and prepare orders" } },
 ];
 

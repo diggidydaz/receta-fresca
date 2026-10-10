@@ -136,7 +136,7 @@
 | **Intake** | `StartIntake`, `AnswerIntakeQuestion`, `SubmitIntake`, `SummarizeIntake` | Cannot submit twice. Max 6 questions. |
 | **Prescription** | `ConfigurePrescription`, `SendPrescription`, `GenerateVisitNote` | CarbTarget 15–75g. Type: produce or meals. One active Rx per patient. |
 | **Plan** | `RequestPlan`, `GeneratePlan` | 7 days × 3 meals. No meal > carbTarget. Immutable once generated. |
-| **MealLog** | `LogMeal`, `EstimateMeal`, `FlagFoodInsecurity`, `SummarizeWeek` | Text clipped 300 chars. Max 20 entries. Each entry gets one estimate. |
+| **MealLog** | `LogMeal`, `EstimateMeal`, `FlagFoodInsecurity`, `SummarizeWeek` | Text clipped 300 chars. Max 200 entries (was 20; too few for a week). Each meal entry gets one estimate. |
 | **TeachBack** | `AnswerTeachBack` | Correct = green. One attempt per plan view. |
 | **Order** | `SelectPlace`, `RequestDelivery`, `PlaceOrder`, `AcceptOrder`, `PrepareOrder`, `FulfillOrder` | Status: received → preparing → ready → delivered. Cannot regress. One active per patient. |
 | **Voucher** | `RedeemVoucher` | Redeem once. Requires OrderFulfilled. Tied to one Order. |
@@ -157,16 +157,16 @@
 | Weekly meal plan | Patient | `/plan` | Yes |
 | Meal estimator result | Patient | `/comida` | Yes |
 | Today's food log | Patient | `/comida` log section | Yes |
-| Weekly pattern summary | Patient | F7 | No |
-| Patient food log | Clinician | F1 | No |
-| CHW caseload dashboard | CHW | F11 | No |
+| Weekly pattern summary | Patient | F7 | Yes |
+| Patient food log | Clinician | F1 | Yes |
+| CHW caseload dashboard | CHW | F11 | Yes (`/promotora`) |
 | Business order queue | Business | `/negocio` | Yes (simulated) |
-| Business stock manager | Business | F14 | No |
+| Business stock manager | Business | F14 | Yes |
 | Store/farm/kitchen picker | Patient | `/canjear` | Yes |
 | Order tracker | Patient | `/canjear` order view | Yes |
-| Family plan view | Caregiver | F12 | No |
-| Outcomes report | Clinician / Admin | F17 | No |
-| Teach-back screen | Patient | F4 | No |
+| Family plan view | Caregiver | F12 | Yes |
+| Outcomes report | Clinician / Admin | F17 | Yes (CSV) |
+| Teach-back screen | Patient | F4 | Yes |
 
 ---
 
@@ -238,28 +238,28 @@
 | `AnswerIntakeQuestion` | `setState({ intake: {...} })` | Yes |
 | `SubmitIntake` | `fetch("/api/intake-summary")` | Yes |
 | `SummarizeIntake` | `askJSON` in `/api/intake-summary/route.ts` | Yes |
-| `AcknowledgeAIDisclosure` | `setState({ aiDisclosureAcked: true })` | No |
+| `AcknowledgeAIDisclosure` | `setState({ clinicianAck: true })` in `/clinico` | Yes |
 | `SelectPatient` | `setState({ patientId })` | Yes |
 | `ConfigurePrescription` | RxForm state in `/clinico` | Yes |
 | `SendPrescription` | `fetch("/api/visit-summary")` + `setState({ rx })` | Yes |
 | `GenerateVisitNote` | `askJSON` in `/api/visit-summary/route.ts` | Yes |
 | `RequestPlan` | `ensurePlan()` in `lib/planLoader.ts` | Yes |
 | `GeneratePlan` | `askJSON` in `/api/plan/route.ts` | Yes |
-| `ReadPlanAloud` | `ReadAloud` component on `/plan` | No (F5) |
+| `ReadPlanAloud` | `ReadAloud` for the day on `/plan` | Yes |
 | `LogMeal` | `fetch("/api/estimate")` in `/comida` | Yes |
 | `EstimateMeal` | `/api/estimate/route.ts` | Yes |
-| `FlagFoodInsecurity` | Button on `/comida` | No (F13) |
-| `SummarizeWeek` | Computed from `log[]` | No (F7) |
-| `AnswerTeachBack` | TeachBack component on `/plan` | No (F4) |
+| `FlagFoodInsecurity` | "Hoy no pude comer bien" on `/comida` (`kind: "skipped"` log entry) | Yes |
+| `SummarizeWeek` | `summarizeWeek()` in `lib/week.ts` | Yes |
+| `AnswerTeachBack` | `components/TeachBack.tsx` on `/plan` | Yes |
 | `SelectPlace` | `setPlaceId()` in `/canjear` | Yes |
 | `PlaceOrder` | `setState({ order })` in `/canjear` | Yes |
-| `UpdateStock` | `/negocio/stock` page | No (F14) |
+| `UpdateStock` | `/negocio/inventario` page | Yes (browser only) |
 | `AcceptOrder` | Status advance in `/negocio` | Yes (simulated) |
 | `FulfillOrder` | Status advance in `/negocio` | Yes (simulated) |
 | `RedeemVoucher` | Server-side voucher validation | No (F15) |
-| `ViewPatientLog` | `/clinico/log` page | No (F1) |
-| `AddCHWNote` | CHW note input | No (F11) |
-| `RecordA1C` | A1C input on clinician page | No (F17) |
+| `ViewPatientLog` | `PatientProgress` on `/clinico` | Yes |
+| `AddCHWNote` | Notes on `/promotora` | Yes |
+| `RecordA1C` | A1C input in `PatientProgress` | Yes |
 | `CreatePatientAccount` | Phone + PIN registration | No (F10) |
 | `AssignCHW` | CHW assignment flow | No (F11) |
-| `SharePlanWithFamily` | Share link generator | No (F12) |
+| `SharePlanWithFamily` | `familyLink()` in `lib/share.ts`, `/familia` | Yes |

@@ -3,18 +3,26 @@
 // Each synthetic patient has their own record, so switching patients never mixes one person's
 // answers, prescription, plan or order with another's.
 import { useSyncExternalStore } from "react";
-import type { AppState, Order, Rx } from "./types";
+import type { AppState, ChwNote, HvsAnswer, LogEntry, Order, Outcomes, Rx, StockUpdate, TeachBack } from "./types";
 
 const KEY = "receta-fresca-v2";
 
-type PatientState = Pick<AppState, "intake" | "intakeDone" | "intakeSummary" | "rx" | "visitSummary" | "plan" | "log" | "order">;
-type Stored = { lang: AppState["lang"]; bigText: boolean; patientId: string; patients: Record<string, PatientState> };
+export type PatientState = Pick<AppState, "intake" | "intakeDone" | "intakeSummary" | "rx" | "visitSummary" | "plan" | "log" | "order" | "teachBack" | "outcomes" | "chwNotes">;
+type Device = Pick<AppState, "lang" | "bigText" | "patientId" | "clinicianAck" | "stock">;
+type Stored = Device & { patients: Record<string, PatientState> };
 
-const emptyPatient = (): PatientState => ({ intake: {}, intakeDone: false, intakeSummary: null, rx: null, visitSummary: null, plan: null, log: [], order: null });
+/** Most meals kept per patient: enough for several weeks of three meals a day. */
+export const LOG_MAX = 200;
+
+export const emptyPatient = (): PatientState => ({ intake: {}, intakeDone: false, intakeSummary: null, rx: null, visitSummary: null, plan: null, log: [], order: null, teachBack: null, outcomes: { a1c: [], hvs: [] }, chwNotes: [] });
 const PATIENT_KEYS = Object.keys(emptyPatient()) as (keyof PatientState)[];
-const initialStored: Stored = { lang: "es", bigText: false, patientId: "p1", patients: {} };
+const DEVICE_KEYS: (keyof Device)[] = ["lang", "bigText", "patientId", "clinicianAck", "stock"];
+const initialStored: Stored = { lang: "es", bigText: false, patientId: "p1", clinicianAck: false, stock: {}, patients: {} };
 
-const flatten = (st: Stored): AppState => ({ lang: st.lang, bigText: st.bigText, patientId: st.patientId, ...(st.patients[st.patientId] ?? emptyPatient()) });
+const flatten = (st: Stored): AppState => {
+  const { patients, ...device } = st;
+  return { ...device, ...(patients[st.patientId] ?? emptyPatient()) };
+};
 export const initialState: AppState = flatten(initialStored);
 
 let stored: Stored = initialStored;
@@ -33,15 +41,40 @@ function sanitizePatient(v: unknown): PatientState {
   const plan = isObj(v.plan) && Array.isArray(v.plan.days) && Array.isArray(v.plan.shopping) && v.plan.days.every((d) => isObj(d) && Array.isArray(d.meals)) ? (v.plan as AppState["plan"]) : null;
   const visit = isObj(v.visitSummary) && Array.isArray(v.visitSummary.points) ? (v.visitSummary as AppState["visitSummary"]) : null;
   const order = isObj(v.order) && typeof v.order.id === "string" && typeof v.order.placeId === "string" ? (v.order as unknown as Order) : null;
-  const log = Array.isArray(v.log) ? (v.log.filter((x) => isObj(x) && typeof x.text === "string" && isObj(x.estimate)) as AppState["log"]) : [];
-  return { intake: isObj(v.intake) ? (v.intake as AppState["intake"]) : {}, intakeDone: v.intakeDone === true, intakeSummary: sum, rx, visitSummary: visit, plan: rx ? plan : null, log, order: rx ? order : null };
+  const log = Array.isArray(v.log) ? (v.log.filter(validEntry).slice(0, LOG_MAX) as LogEntry[]) : [];
+  const tb = isObj(v.teachBack) && typeof v.teachBack.correct === "boolean" && typeof v.teachBack.planAt === "string" ? (v.teachBack as unknown as TeachBack) : null;
+  const o = isObj(v.outcomes) ? v.outcomes : {};
+  const hvsOk = (x: unknown): x is HvsAnswer => x === "often" || x === "sometimes" || x === "never";
+  const outcomes: Outcomes = {
+    a1c: Array.isArray(o.a1c) ? o.a1c.filter((x) => isObj(x) && typeof x.value === "number" && typeof x.at === "string") as Outcomes["a1c"] : [],
+    hvs: Array.isArray(o.hvs) ? o.hvs.filter((x) => isObj(x) && hvsOk(x.q1) && hvsOk(x.q2) && typeof x.at === "string") as Outcomes["hvs"] : [],
+  };
+  const chwNotes = Array.isArray(v.chwNotes) ? (v.chwNotes.filter((x) => isObj(x) && typeof x.text === "string" && typeof x.at === "string") as ChwNote[]) : [];
+  return { intake: isObj(v.intake) ? (v.intake as AppState["intake"]) : {}, intakeDone: v.intakeDone === true, intakeSummary: sum, rx, visitSummary: visit, plan: rx ? plan : null, log, order: rx ? order : null, teachBack: rx ? tb : null, outcomes, chwNotes };
+}
+
+function validEntry(x: unknown): boolean {
+  if (!isObj(x) || typeof x.id !== "string" || typeof x.at !== "string") return false;
+  if (x.kind === "skipped") return x.reason === "noFood" || x.reason === "unwell" || x.reason === "other";
+  return typeof x.text === "string" && isObj(x.estimate);
+}
+
+function sanitizeStock(v: unknown): Record<string, StockUpdate> {
+  const out: Record<string, StockUpdate> = {};
+  if (!isObj(v)) return out;
+  for (const [id, u] of Object.entries(v)) {
+    if (!isObj(u) || typeof u.at !== "string" || !Array.isArray(u.items)) continue;
+    const items = u.items.filter((i) => isObj(i) && typeof i.es === "string" && typeof i.en === "string") as StockUpdate["items"];
+    out[id] = { items, at: u.at };
+  }
+  return out;
 }
 
 function sanitize(v: unknown): Stored {
   if (!isObj(v)) return initialStored;
   const patients: Record<string, PatientState> = {};
   if (isObj(v.patients)) for (const [id, p] of Object.entries(v.patients)) patients[id] = sanitizePatient(p);
-  return { lang: v.lang === "en" ? "en" : "es", bigText: v.bigText === true, patientId: typeof v.patientId === "string" ? v.patientId : "p1", patients };
+  return { lang: v.lang === "en" ? "en" : "es", bigText: v.bigText === true, patientId: typeof v.patientId === "string" ? v.patientId : "p1", clinicianAck: v.clinicianAck === true, stock: sanitizeStock(v.stock), patients };
 }
 
 function load() {
@@ -81,7 +114,7 @@ function applyTo(st: Stored, patientId: string, patch: Partial<AppState>): Store
     if ((PATIENT_KEYS as string[]).includes(k)) {
       (rec as Record<string, unknown>)[k] = val;
       touched = true;
-    } else if (k === "lang" || k === "bigText" || k === "patientId") {
+    } else if ((DEVICE_KEYS as string[]).includes(k)) {
       (next as Record<string, unknown>)[k] = val;
     }
   }
@@ -105,6 +138,12 @@ export function setPatientState(patientId: string, patch: Partial<PatientState>)
 export function getPatientState(patientId: string): PatientState {
   load();
   return stored.patients[patientId] ?? emptyPatient();
+}
+
+/** Every patient's own record, for screens that look across patients (promotora, export). */
+export function allPatients(st: AppState): Record<string, PatientState> {
+  void st; // re-evaluated whenever state changes
+  return stored.patients;
 }
 
 /** Every patient's open order with its prescription and plan, newest first: what a store or kitchen sees. */

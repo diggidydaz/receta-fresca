@@ -35,6 +35,10 @@ const copy = {
   q5no: { es: "No, necesito que me lo traigan", en: "No, I need it delivered" },
   q6: { es: "¿Hay comidas que no puede o no quiere comer?", en: "Are there foods you cannot or do not want to eat?" },
   q6h: { es: "Por ejemplo: mariscos, cerdo, leche.", en: "For example: shellfish, pork, milk." },
+  helping: { es: "Usted está contestando por", en: "You are answering for" },
+  helpingHint: { es: "Lea cada pregunta en voz alta y escriba las palabras de la persona, no las suyas.", en: "Read each question aloud and write down the person's words, not your own." },
+  familyHelp: { es: "Un familiar me está ayudando", en: "A family member is helping me" },
+  selfAnswer: { es: "Lo contesta el paciente", en: "The patient is answering" },
 };
 
 const TOTAL = 6;
@@ -68,6 +72,7 @@ export default function IntakePage() {
   const [failed, setFailed] = useState(false);
 
   if (!hydrated) return <Page><Busy /></Page>;
+  const patient = patients.find((p) => p.id === s.patientId) ?? patients[0];
 
   const set = (patch: Partial<IntakeAnswers>) => setState({ intake: { ...s.intake, ...patch } });
 
@@ -75,7 +80,6 @@ export default function IntakePage() {
     setFailed(false);
     setSending(true);
     try {
-      const patient = patients.find((p) => p.id === s.patientId) ?? patients[0];
       const res = await fetch("/api/intake-summary", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -154,8 +158,16 @@ export default function IntakePage() {
       body = <VoiceInput label={t(copy.yourAnswer)} hint={t(copy.q6h)} value={s.intake.avoid ?? ""} onChange={(v) => set({ avoid: v })} />;
   }
 
+  const helper = s.intake.helper && s.intake.helper !== "self" ? s.intake.helper : null;
+
   return (
     <Page>
+      {helper && (
+        <Notice>
+          <p className="text-[1.25rem] font-bold">{t(copy.helping)} {patient.name}</p>
+          <p>{t(copy.helpingHint)}</p>
+        </Notice>
+      )}
       <Progress step={step} total={TOTAL} />
       <StepHeading focusKey={step}>{question}</StepHeading>
       <ReadAloud text={question} />
@@ -173,6 +185,11 @@ export default function IntakePage() {
           <BigButton icon={failed ? "refresh" : "check"} onClick={submit}>{failed ? t(copy.retry) : t(copy.send)}</BigButton>
         )}
         {step > 1 && <BigButton variant="secondary" icon="left" onClick={() => setStep(step - 1)}>{t(common.back)}</BigButton>}
+        {step === 1 && (
+          helper
+            ? <BigButton variant="quiet" icon="person" onClick={() => set({ helper: "self" })}>{t(copy.selfAnswer)}</BigButton>
+            : <BigButton variant="quiet" icon="people" onClick={() => set({ helper: "family" })}>{t(copy.familyHelp)}</BigButton>
+        )}
       </div>
     </Page>
   );

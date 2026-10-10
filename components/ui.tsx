@@ -227,7 +227,7 @@ export function Notice({ children, tone = "info" }: { children: React.ReactNode;
   return (
     <div className={`flex items-start gap-3 rounded-2xl border-2 p-4 ${tone === "warn" ? "border-stop bg-panel" : "border-rule bg-notice"}`}>
       <Icon name={tone === "warn" ? "warn" : "info"} className={tone === "warn" ? "text-stop" : "text-ink"} />
-      <div className="flex-1">{children}</div>
+      <div className="min-w-0 flex-1 [overflow-wrap:anywhere]">{children}</div>
     </div>
   );
 }

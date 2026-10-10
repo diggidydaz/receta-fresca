@@ -1,7 +1,7 @@
 "use client";
 // One shared weekly-plan request. The clinician screen starts it as soon as the prescription is sent,
 // so the plan is usually ready by the time the patient opens it. Both screens share the same request.
-import { getPatientState, setPatientState } from "./store";
+import { getPatientState, getState, setPatientState } from "./store";
 import type { Lang, Plan, Rx } from "./types";
 
 const pending = new Map<string, Promise<boolean>>();
@@ -13,7 +13,7 @@ export function ensurePlan(rx: Rx, lang: Lang): Promise<boolean> {
   if (existing) return existing;
   const p = (async () => {
     try {
-      const res = await fetch("/api/plan", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ rx, lang }) });
+      const res = await fetch("/api/plan", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ rx, lang, stock: Object.fromEntries(Object.entries(getState().stock).map(([id, u]) => [id, u.items])) }) });
       if (!res.ok) return false;
       const data = (await res.json()) as Plan;
       if (!data || !Array.isArray(data.days) || data.days.length === 0) return false;

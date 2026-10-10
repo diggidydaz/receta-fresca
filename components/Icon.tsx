@@ -20,6 +20,11 @@ const paths: Record<string, React.ReactNode> = {
   refresh: (<><path d="M19.5 12a7.5 7.5 0 11-2.2-5.3" /><path d="M19.5 4.500v4h-4" /></>),
   camera: (<><path d="M4 8.5h3l1.5-2.5h7L17 8.5h3v10.5H4V8.5z" /><circle cx="12" cy="13.5" r="3.5" /></>),
   truck: (<><path d="M3 6.500h10.500v10H3zM13.5 10h4l3 3v3.500h-7" /><circle cx="7" cy="17.5" r="1.8" /><circle cx="17" cy="17.5" r="1.8" /></>),
+  print: (<><path d="M7 9V3.500h10V9" /><rect x="3.500" y="9" width="17" height="7.500" rx="1.5" /><path d="M7 14h10v6.500H7z" /></>),
+  share: (<><circle cx="6.500" cy="12" r="2.500" /><circle cx="17.500" cy="6" r="2.500" /><circle cx="17.500" cy="18" r="2.500" /><path d="M8.700 10.800l6.600-3.600M8.700 13.200l6.600 3.600" /></>),
+  people: (<><circle cx="8.500" cy="8.500" r="3" /><circle cx="16.500" cy="9.500" r="2.500" /><path d="M3 19.500c.6-3.500 2.800-5 5.500-5s4.900 1.500 5.500 5M14.500 14.700c2.700-.4 5.400.8 6.300 4.800" /></>),
+  note: (<><path d="M5.500 3.500h9l4 4v13h-13z" /><path d="M14.500 3.500v4h4M8.500 12h7M8.500 15.500h7" /></>),
+  chart: (<><path d="M4 4v16h16" /><path d="M8 16v-4M12 16V8M16 16v-6" /></>),
 };
 
 export type IconName = keyof typeof paths;

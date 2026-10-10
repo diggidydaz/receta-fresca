@@ -9,6 +9,7 @@ import { setState, useAppState } from "@/lib/store";
 // Where "Back" leads from each screen: always one clear step up, never a surprise.
 const parent: Record<string, string> = {
   "/paciente": "/", "/clinico": "/", "/negocio": "/", "/acerca": "/",
+  "/promotora": "/", "/negocio/inventario": "/negocio",
   "/intake": "/paciente", "/plan": "/paciente", "/comida": "/paciente", "/canjear": "/paciente",
 };
 
@@ -27,7 +28,7 @@ export function TopBar() {
   return (
     <>
       <a href="#contenido" className="sr-only-focusable bg-panel p-3 font-bold text-brand">{t(common.skip)}</a>
-      <header className="bg-brand text-white">
+      <header className="bg-brand text-white print:hidden">
         <div className="mx-auto flex max-w-[36rem] flex-wrap items-center justify-between gap-2 px-4 py-3">
           <Link href="/" className="inline-flex min-h-[48px] items-center gap-2 rounded-xl text-[1.25rem] font-bold">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -46,7 +47,7 @@ export function TopBar() {
         <p className="bg-notice px-4 py-2 text-center text-[0.85rem] font-bold text-ink">{t(common.sample)}</p>
       </header>
       {up && (
-        <nav aria-label={t(common.back)} className="mx-auto w-full max-w-[36rem] px-4 pt-4">
+        <nav aria-label={t(common.back)} className="mx-auto w-full max-w-[36rem] px-4 pt-4 print:hidden">
           <Link href={up} className="inline-flex min-h-[56px] items-center gap-2 rounded-2xl border-[3px] border-brand bg-panel px-5 text-[1.25rem] font-bold text-brand hover:bg-brand-soft">
             <Icon name="left" /> {t(common.back)}
           </Link>

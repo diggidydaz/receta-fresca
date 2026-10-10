@@ -832,5 +832,1864 @@
    "basis": "10.0 to 13.6 g/100 g; 8 fl oz = 248 g = 25 to 34 g"
   },
   "clinicianReviewed": true
+ },
+ {
+  "id": "arroz-con-pollo",
+  "name": "Arroz con pollo",
+  "aliases": [
+   "arroz con pollo",
+   "chicken and rice",
+   "chicken with rice",
+   "rice with chicken"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1 taza (unos 141 g)",
+   "en": "1 cup (about 141 g)"
+  },
+  "carbsMin": 23,
+  "carbsMax": 34,
+  "swap": {
+   "es": "Sirva 1/2 taza y añada ensalada",
+   "en": "Have 1/2 cup and add salad"
+  },
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 167659,
+   "description": "Restaurant, Latino, chicken and rice, entree, prepared",
+   "basis": "20 g/100 g; 1 cup = 141 g = 28.2 g; restaurant entree; home recipes vary in rice-to-chicken ratio"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "arroz-con-salchichas",
+  "name": "Arroz con salchichas",
+  "aliases": [
+   "arroz con salchichas",
+   "arroz con salchicha",
+   "rice with vienna sausage",
+   "rice with sausage"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1 taza (unos 180 g)",
+   "en": "1 cup (about 180 g)"
+  },
+  "carbsMin": 53,
+  "carbsMax": 68,
+  "swap": {
+   "es": "Sirva 1/2 taza con vegetales",
+   "en": "Have 1/2 cup with vegetables"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2708978,
+   "description": "Rice with vienna sausage, Puerto Rican style",
+   "basis": "33.5 g/100 g; 1 cup = 180 g = 60.3 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "arroz-mamposteao",
+  "name": "Arroz mamposteao",
+  "aliases": [
+   "arroz mamposteao",
+   "mamposteao",
+   "arroz mampostiao",
+   "mampostiao",
+   "rice with stewed beans"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1 taza (unos 188 g)",
+   "en": "1 cup (about 188 g)"
+  },
+  "carbsMin": 38,
+  "carbsMax": 48,
+  "swap": {
+   "es": "Sirva 1/2 taza con ensalada",
+   "en": "Have 1/2 cup with salad"
+  },
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 2708980,
+   "description": "Rice with stewed beans, Puerto Rican style",
+   "basis": "23 g/100 g; 1 cup = 188 g = 43.2 g; rice mixed with stewed beans"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "arroz-con-leche",
+  "name": "Arroz con leche",
+  "aliases": [
+   "arroz con leche",
+   "rice pudding"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1/2 taza (unos 127 g)",
+   "en": "1/2 cup (about 127 g)"
+  },
+  "carbsMin": 27,
+  "carbsMax": 36,
+  "swap": {
+   "es": "Sírvase 1/4 de taza para saborearlo",
+   "en": "Enjoy a 1/4-cup taste"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 168063,
+   "description": "Restaurant, Latino, arroz con leche (rice pudding)",
+   "basis": "24.9 g/100 g; 1/2 of 1 cup (253 g) = 126.5 g = 31.5 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "habichuelas-blancas",
+  "name": "Habichuelas blancas guisadas",
+  "aliases": [
+   "habichuelas blancas",
+   "habichuela blanca",
+   "habichuelas blancas guisadas",
+   "white beans",
+   "stewed white beans"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1/2 taza (unos 93 g)",
+   "en": "1/2 cup (about 93 g)"
+  },
+  "carbsMin": 18,
+  "carbsMax": 25,
+  "swap": {
+   "es": "Media taza, con poco arroz",
+   "en": "Keep to 1/2 cup with a little rice"
+  },
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 2707353,
+   "description": "White beans, NFS",
+   "basis": "23.3 g/100 g; 1/2 of 1 cup (185 g) = 92.5 g = 21.6 g; plain beans; sofrito, broth and calabaza in the stew vary"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "garbanzos-guisados",
+  "name": "Garbanzos guisados",
+  "aliases": [
+   "garbanzos guisados",
+   "garbanzos",
+   "garbanzo",
+   "chickpeas",
+   "stewed chickpeas"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1/2 taza (unos 93 g)",
+   "en": "1/2 cup (about 93 g)"
+  },
+  "carbsMin": 20,
+  "carbsMax": 27,
+  "swap": {
+   "es": "Media taza, acompañada de vegetales",
+   "en": "Have 1/2 cup alongside vegetables"
+  },
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 2707415,
+   "description": "Chickpeas, from dried, fat added",
+   "basis": "25.5 g/100 g; 1/2 of 1 cup (185 g) = 92.5 g = 23.6 g; plain chickpeas; potatoes or calabaza in the stew vary"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "lentejas",
+  "name": "Lentejas guisadas",
+  "aliases": [
+   "lentejas",
+   "lentejas guisadas",
+   "lentils",
+   "stewed lentils"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1/2 taza (unos 93 g)",
+   "en": "1/2 cup (about 93 g)"
+  },
+  "carbsMin": 15,
+  "carbsMax": 20,
+  "swap": {
+   "es": "Media taza con ensalada",
+   "en": "Have 1/2 cup with salad"
+  },
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 2707424,
+   "description": "Lentils, from dried, fat added",
+   "basis": "18.7 g/100 g; 1/2 of 1 cup (185 g) = 92.5 g = 17.3 g; plain lentils; stew additions vary"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "gandules-guisados",
+  "name": "Gandules guisados",
+  "aliases": [
+   "gandules guisados",
+   "gandules",
+   "gandules verdes",
+   "stewed pigeon peas",
+   "pigeon peas"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1/2 taza (unos 77 g)",
+   "en": "1/2 cup (about 77 g)"
+  },
+  "carbsMin": 13,
+  "carbsMax": 17,
+  "swap": {
+   "es": "Media taza con poco arroz",
+   "en": "Keep to 1/2 cup with a little rice"
+  },
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 170430,
+   "description": "Pigeonpeas, immature seeds, cooked, boiled, drained, without salt",
+   "basis": "19.5 g/100 g; 1/2 of 1 cup (153 g) = 76.5 g = 14.9 g; green (immature) pigeon peas, boiled; stew additions vary"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "panapen",
+  "name": "Panapén hervido",
+  "aliases": [
+   "panapen",
+   "panapen hervido",
+   "pana hervida",
+   "breadfruit",
+   "boiled breadfruit"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 taza (unos 170 g)",
+   "en": "1 cup (about 170 g)"
+  },
+  "carbsMin": 39,
+  "carbsMax": 50,
+  "swap": {
+   "es": "Sirva 1/2 taza con pescado o pollo",
+   "en": "Have 1/2 cup with fish or chicken"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2709879,
+   "description": "Breadfruit, cooked",
+   "basis": "26.3 g/100 g; 1 cup = 170 g = 44.7 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "name-hervido",
+  "name": "Ñame hervido",
+  "aliases": [
+   "name hervido",
+   "name",
+   "yam",
+   "boiled yam"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 taza en pedazos (unos 136 g)",
+   "en": "1 cup, cubed (about 136 g)"
+  },
+  "carbsMin": 33,
+  "carbsMax": 42,
+  "swap": {
+   "es": "Sirva 1/2 taza con proteína y ensalada",
+   "en": "Have 1/2 cup with protein and salad"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 170072,
+   "description": "Yam, cooked, boiled, drained, or baked, without salt",
+   "basis": "27.5 g/100 g; 1 cup, cubes = 136 g = 37.4 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "yautia-hervida",
+  "name": "Yautía hervida",
+  "aliases": [
+   "yautia hervida",
+   "yautia",
+   "yautia blanca",
+   "yautia lila",
+   "malanga",
+   "tannia",
+   "tannier",
+   "dasheen",
+   "boiled taro",
+   "taro"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 taza (unos 160 g)",
+   "en": "1 cup (about 160 g)"
+  },
+  "carbsMin": 38,
+  "carbsMax": 51,
+  "swap": {
+   "es": "Sirva 1/2 taza con proteína y ensalada",
+   "en": "Have 1/2 cup with protein and salad"
+  },
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 2709567,
+   "description": "Taro, cooked",
+   "basis": "27.6 g/100 g; 1 cup = 160 g = 44.2 g; FDC has no cooked yautia (tannier) entry; cooked taro used"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "guineos-verdes",
+  "name": "Guineos verdes hervidos",
+  "aliases": [
+   "guineos verdes",
+   "guineo verde",
+   "guineitos",
+   "guineitos en escabeche",
+   "guineos en escabeche",
+   "guineo hervido",
+   "guineos hervidos",
+   "green bananas",
+   "green banana",
+   "boiled green bananas"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "2 guineos medianos (unos 252 g sin cáscara)",
+   "en": "2 medium bananas (about 252 g peeled)"
+  },
+  "carbsMin": 49,
+  "carbsMax": 66,
+  "swap": {
+   "es": "Coma 1 guineo con bacalao o huevo",
+   "en": "Have 1 banana with codfish or egg"
+  },
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 2709224,
+   "description": "Banana, raw",
+   "basis": "22.7 g/100 g; 2 x 1 banana (126 g) = 252 g = 57.2 g; FDC has no cooked green banana entry; raw banana total carbohydrate used"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "guineo-maduro",
+  "name": "Guineo maduro",
+  "aliases": [
+   "guineo maduro",
+   "guineos maduros",
+   "guineo",
+   "banana",
+   "ripe banana"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 guineo mediano (unos 126 g sin cáscara)",
+   "en": "1 medium banana (about 126 g peeled)"
+  },
+  "carbsMin": 25,
+  "carbsMax": 32,
+  "swap": {
+   "es": "Si es grande, coma la mitad",
+   "en": "If it is a big one, have half"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2709224,
+   "description": "Banana, raw",
+   "basis": "22.7 g/100 g; 1 banana = 126 g = 28.6 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "platano-hervido",
+  "name": "Plátano hervido",
+  "aliases": [
+   "platano hervido",
+   "platanos hervidos",
+   "platano sancochado",
+   "platano maduro hervido",
+   "amarillo hervido",
+   "boiled plantain"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1/2 plátano (unos 118 g)",
+   "en": "1/2 plantain (about 118 g)"
+  },
+  "carbsMin": 33,
+  "carbsMax": 42,
+  "swap": {
+   "es": "Medio plátano con proteína y vegetales",
+   "en": "Half a plantain with protein and vegetables"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2709558,
+   "description": "Plantain, cooked, no added fat",
+   "basis": "31.8 g/100 g; 1/2 of 1 whole (235 g) = 117.5 g = 37.4 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "mangu",
+  "name": "Mangú",
+  "aliases": [
+   "mangu",
+   "majado de platano",
+   "platano majado",
+   "mashed plantain"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1 taza (unos 200 g)",
+   "en": "1 cup (about 200 g)"
+  },
+  "carbsMin": 54,
+  "carbsMax": 73,
+  "swap": {
+   "es": "Sirva 1/2 taza con huevo y ensalada",
+   "en": "Have 1/2 cup with egg and salad"
+  },
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 2709558,
+   "description": "Plantain, cooked, no added fat",
+   "basis": "31.8 g/100 g; 1 cup, mashed = 200 g = 63.6 g; plain boiled plantain; butter or oil added in the mash not counted (adds no carbohydrate)"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "sorullitos",
+  "name": "Sorullitos de maíz",
+  "aliases": [
+   "sorullitos",
+   "sorullitos de maiz",
+   "sorullito",
+   "sorullos",
+   "sorullo",
+   "corn sticks",
+   "cornmeal sticks"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "3 sorullitos (unos 60 g)",
+   "en": "3 sticks (about 60 g)"
+  },
+  "carbsMin": 26,
+  "carbsMax": 33,
+  "swap": {
+   "es": "Coma 1 o 2",
+   "en": "Have 1 or 2"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2708715,
+   "description": "Cornmeal stick, Puerto Rican style",
+   "basis": "48.4 g/100 g; 3 x 1 stick (20 g) = 60 g = 29 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "rellenos-de-papa",
+  "name": "Relleno de papa",
+  "aliases": [
+   "relleno de papa",
+   "rellenos de papa",
+   "papa rellena",
+   "papas rellenas",
+   "stuffed potato",
+   "potato ball"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1 relleno (unos 95 g)",
+   "en": "1 fritter (about 95 g)"
+  },
+  "carbsMin": 14,
+  "carbsMax": 17,
+  "swap": {
+   "es": "Uno, con ensalada",
+   "en": "One, with salad"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2710138,
+   "description": "Fried stuffed potatoes, Puerto Rican style",
+   "basis": "16.2 g/100 g; 1 fritter = 95 g = 15.4 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "pastelon",
+  "name": "Pastelón",
+  "aliases": [
+   "pastelon",
+   "pastelon de platano",
+   "pastelon de amarillo",
+   "pastelon de maduro",
+   "plantain lasagna",
+   "ripe plantain pie"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1 pedazo (unos 190 g)",
+   "en": "1 piece (about 190 g)"
+  },
+  "carbsMin": 37,
+  "carbsMax": 47,
+  "swap": {
+   "es": "Medio pedazo con ensalada",
+   "en": "Half a piece with salad"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2710140,
+   "description": "Ripe plantain meat pie, Puerto Rican style",
+   "basis": "22 g/100 g; 1 piece (4\" x 2\" x 2\") = 190 g = 41.8 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "chicken-pate",
+  "name": "Chicken pate",
+  "aliases": [
+   "chicken pate",
+   "pate de pollo",
+   "empanadilla de pollo",
+   "pastelillo de pollo",
+   "chicken empanada",
+   "chicken turnover"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 grande (unos 130 g)",
+   "en": "1 large (about 130 g)"
+  },
+  "carbsMin": 31,
+  "carbsMax": 40,
+  "swap": {
+   "es": "Uno, con ensalada",
+   "en": "One, with salad"
+  },
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 2708713,
+   "description": "Empanada, chicken",
+   "basis": "27.4 g/100 g; 1 regular/large = 130 g = 35.6 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "saltfish-pate",
+  "name": "Saltfish pate",
+  "aliases": [
+   "saltfish pate",
+   "salt fish pate",
+   "pate de bacalao",
+   "codfish pate"
+  ],
+  "region": "USVI",
+  "serving": {
+   "es": "1 grande (unos 130 g)",
+   "en": "1 large (about 130 g)"
+  },
+  "carbsMin": 33,
+  "carbsMax": 45,
+  "swap": {
+   "es": "Uno, con ensalada",
+   "en": "One, with salad"
+  },
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 2708709,
+   "description": "Empanada, NFS",
+   "basis": "29.9 g/100 g; 1 regular/large = 130 g = 38.9 g; no saltfish pastry in FDC; generic empanada used (the dough carries most of the carbohydrate)"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "pan-integral",
+  "name": "Pan integral",
+  "aliases": [
+   "pan integral",
+   "pan de trigo integral",
+   "whole wheat bread",
+   "wheat bread"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 rebanada (unos 36 g)",
+   "en": "1 slice (about 36 g)"
+  },
+  "carbsMin": 14,
+  "carbsMax": 17,
+  "swap": {
+   "es": "Una rebanada con proteína",
+   "en": "One slice with protein"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2707709,
+   "description": "Bread, whole wheat",
+   "basis": "43.1 g/100 g; 1 medium or regular slice = 36 g = 15.5 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "pan-de-molde",
+  "name": "Pan de molde",
+  "aliases": [
+   "pan de molde",
+   "pan blanco",
+   "white bread",
+   "sliced bread",
+   "sandwich bread"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 rebanada (unos 28 g)",
+   "en": "1 slice (about 28 g)"
+  },
+  "carbsMin": 12,
+  "carbsMax": 15,
+  "swap": {
+   "es": "Pruebe pan integral",
+   "en": "Try whole wheat bread"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2707598,
+   "description": "Bread, white",
+   "basis": "49.2 g/100 g; 1 medium or regular slice = 28 g = 13.8 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "galletas-de-soda",
+  "name": "Galletas de soda",
+  "aliases": [
+   "galletas de soda",
+   "galleta de soda",
+   "galletas saltinas",
+   "galleta saltina",
+   "galletas export",
+   "saltines",
+   "saltine crackers",
+   "soda crackers"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "5 galletas pequeñas tipo saltina (unos 15 g)",
+   "en": "5 small saltine-type crackers (about 15 g)"
+  },
+  "carbsMin": 10,
+  "carbsMax": 12,
+  "swap": {
+   "es": "Con queso o mantequilla de maní",
+   "en": "With cheese or peanut butter"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2708167,
+   "description": "Crackers, saltine",
+   "basis": "74 g/100 g; 5 x 1 cracker (3 g) = 15 g = 11.1 g; larger soda crackers weigh more per cracker"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "avena",
+  "name": "Avena",
+  "aliases": [
+   "avena",
+   "avena con leche",
+   "oatmeal",
+   "cooked oatmeal",
+   "oats"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 taza cocida con leche (unos 240 g)",
+   "en": "1 cup cooked with milk (about 240 g)"
+  },
+  "carbsMin": 34,
+  "carbsMax": 44,
+  "swap": {
+   "es": "Endulce poco y añada canela",
+   "en": "Go light on sugar; add cinnamon"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2708383,
+   "description": "Oatmeal, regular or quick, made with milk, no added fat",
+   "basis": "16.2 g/100 g; 1 cup, cooked = 240 g = 38.9 g; made with milk; each teaspoon of added sugar adds about 4 g (Sugar, white, FDC 2710258: 99.6 g/100 g, 1 tsp = 4.2 g)"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "cornflakes",
+  "name": "Cornflakes",
+  "aliases": [
+   "cornflakes",
+   "corn flakes",
+   "cereal de maiz",
+   "hojuelas de maiz"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 taza (unos 30 g), sin contar la leche",
+   "en": "1 cup (about 30 g), milk not included"
+  },
+  "carbsMin": 21,
+  "carbsMax": 26,
+  "swap": {
+   "es": "Media taza y un huevo",
+   "en": "Have 1/2 cup plus an egg"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2708453,
+   "description": "Cereal, corn flakes, plain",
+   "basis": "79.5 g/100 g; 1 cup = 30 g = 23.9 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "cafe-con-leche",
+  "name": "Café con leche",
+  "aliases": [
+   "cafe con leche",
+   "cafe con leche y azucar",
+   "coffee with milk"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 taza (8 onzas, unos 248 g)",
+   "en": "1 cup (8 oz, about 248 g)"
+  },
+  "carbsMin": 12,
+  "carbsMax": 16,
+  "swap": {
+   "es": "Pídalo con menos azúcar",
+   "en": "Ask for less sugar"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2710384,
+   "description": "Coffee, cafe con leche",
+   "basis": "5.63 g/100 g; 1 cup (8 fl oz) = 248 g = 14 g; each extra teaspoon of sugar adds about 4 g (FDC 2710258)"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "cafe-negro",
+  "name": "Café negro",
+  "aliases": [
+   "cafe negro",
+   "cafe puya",
+   "cafe sin azucar",
+   "cafe",
+   "black coffee",
+   "coffee"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 taza (unos 240 g), sin azúcar",
+   "en": "1 cup (about 240 g), no sugar"
+  },
+  "carbsMin": 0,
+  "carbsMax": 1,
+  "swap": {
+   "es": "Cada cucharadita de azúcar suma unos 4 g",
+   "en": "Each teaspoon of sugar adds about 4 g"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2710375,
+   "description": "Coffee, brewed",
+   "basis": "0 g/100 g; 1 cup (8 fl oz) = 240 g = 0 g; each teaspoon of sugar adds about 4 g (FDC 2710258)"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "refresco",
+  "name": "Refresco",
+  "aliases": [
+   "refresco",
+   "soda",
+   "cola",
+   "coca cola",
+   "coke",
+   "pepsi",
+   "soft drink"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 lata (12 onzas, unos 372 g)",
+   "en": "1 can (12 oz, about 372 g)"
+  },
+  "carbsMin": 36,
+  "carbsMax": 42,
+  "swap": {
+   "es": "Pruebe agua con limón o refresco de dieta",
+   "en": "Try water with lime or diet soda"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2710541,
+   "description": "Soft drink, cola",
+   "basis": "10.4 g/100 g; 1 can (12 fl oz) = 372 g = 38.7 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "refresco-de-dieta",
+  "name": "Refresco de dieta",
+  "aliases": [
+   "refresco de dieta",
+   "soda de dieta",
+   "coca cola de dieta",
+   "pepsi de dieta",
+   "diet soda",
+   "diet coke",
+   "diet pepsi",
+   "coke zero"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 lata (12 onzas, unos 360 g)",
+   "en": "1 can (12 oz, about 360 g)"
+  },
+  "carbsMin": 0,
+  "carbsMax": 1,
+  "swap": {
+   "es": "El agua también es buena opción",
+   "en": "Water is a good choice too"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2710542,
+   "description": "Soft drink, cola, diet",
+   "basis": "0.29 g/100 g; 1 can (12 fl oz) = 360 g = 1 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "malta",
+  "name": "Malta",
+  "aliases": [
+   "malta",
+   "malta india",
+   "malta goya",
+   "malt beverage",
+   "malt drink"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 botella de 12 onzas (355 mL)",
+   "en": "1 bottle, 12 oz (355 mL)"
+  },
+  "carbsMin": 47,
+  "carbsMax": 58,
+  "swap": {
+   "es": "Comparta la botella o tome media",
+   "en": "Share the bottle or have half"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2668222,
+   "description": "MALTA INDIA MALT BEVERAGE, 12 FL OZ",
+   "basis": "Branded label data: 13.2 g/100 mL; 355 mL = 47 g. Malta Goya (FDC 1945508): 16.3 g/100 mL = 58 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "jugo-de-tamarindo",
+  "name": "Jugo de tamarindo",
+  "aliases": [
+   "jugo de tamarindo",
+   "refresco de tamarindo",
+   "agua de tamarindo",
+   "tamarind juice",
+   "tamarind drink"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 vaso de 8 onzas (unos 248 g)",
+   "en": "8 oz glass (about 248 g)"
+  },
+  "carbsMin": 62,
+  "carbsMax": 76,
+  "swap": {
+   "es": "Un vaso pequeño, con agua y hielo",
+   "en": "A small glass, with water and ice"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2710568,
+   "description": "Tamarind drink",
+   "basis": "27.7 g/100 g; Quantity not specified (8 fl oz) = 248 g = 68.7 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "leche",
+  "name": "Leche",
+  "aliases": [
+   "leche",
+   "vaso de leche",
+   "leche entera",
+   "leche fresca",
+   "milk",
+   "whole milk"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 vaso de 8 onzas (unos 244 g)",
+   "en": "8 oz glass (about 244 g)"
+  },
+  "carbsMin": 10,
+  "carbsMax": 12,
+  "swap": {
+   "es": "Un vaso es una buena porción",
+   "en": "One glass is a good portion"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2705385,
+   "description": "Milk, whole",
+   "basis": "4.63 g/100 g; 1 cup = 244 g = 11.3 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "budin-de-pan",
+  "name": "Budín de pan",
+  "aliases": [
+   "budin de pan",
+   "budin",
+   "bread pudding"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 pedazo (unos 100 g)",
+   "en": "1 piece (about 100 g)"
+  },
+  "carbsMin": 20,
+  "carbsMax": 27,
+  "swap": {
+   "es": "Medio pedazo, para saborearlo",
+   "en": "Half a piece, to savor it"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2705680,
+   "description": "Pudding, bread",
+   "basis": "23.5 g/100 g; Quantity not specified = 100 g = 23.5 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "mantecado",
+  "name": "Mantecado",
+  "aliases": [
+   "mantecado",
+   "helado",
+   "helado de vainilla",
+   "ice cream",
+   "vanilla ice cream"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1/2 taza (unos 68 g)",
+   "en": "1/2 cup (about 68 g)"
+  },
+  "carbsMin": 14,
+  "carbsMax": 18,
+  "swap": {
+   "es": "Una bola pequeña",
+   "en": "One small scoop"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2705630,
+   "description": "Ice cream, vanilla",
+   "basis": "23.6 g/100 g; 1/2 of 1 cup (135 g) = 67.5 g = 15.9 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "bizcocho",
+  "name": "Bizcocho",
+  "aliases": [
+   "bizcocho",
+   "bizcocho de cumpleanos",
+   "cake",
+   "birthday cake",
+   "cupcake"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 pedazo pequeño o 1 cupcake (unos 90 g)",
+   "en": "1 small piece or 1 cupcake (about 90 g)"
+  },
+  "carbsMin": 41,
+  "carbsMax": 55,
+  "swap": {
+   "es": "Medio pedazo, y comparta el resto",
+   "en": "Half a piece; share the rest"
+  },
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 2707853,
+   "description": "Cake or cupcake, NFS",
+   "basis": "53.6 g/100 g; 1 cupcake, any size = 90 g = 48.2 g; frosting amount varies"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "lechosa",
+  "name": "Lechosa",
+  "aliases": [
+   "lechosa",
+   "lechosa fresca",
+   "papaya",
+   "papaya fresca"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 taza en pedazos (unos 165 g)",
+   "en": "1 cup, cubed (about 165 g)"
+  },
+  "carbsMin": 16,
+  "carbsMax": 20,
+  "swap": {
+   "es": "Buena opción de postre",
+   "en": "A good dessert choice"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2709246,
+   "description": "Papaya, raw",
+   "basis": "10.8 g/100 g; 1 cup = 165 g = 17.8 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "dulce-de-lechosa",
+  "name": "Dulce de lechosa",
+  "aliases": [
+   "dulce de lechosa",
+   "papaya en almibar",
+   "candied papaya",
+   "papaya in syrup"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "2 pedazos (unos 78 g), escurridos",
+   "en": "2 pieces (about 78 g), drained"
+  },
+  "carbsMin": 37,
+  "carbsMax": 50,
+  "swap": {
+   "es": "Un pedacito con queso blanco",
+   "en": "One small piece with white cheese"
+  },
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 169927,
+   "description": "Papaya, canned, heavy syrup, drained",
+   "basis": "55.8 g/100 g; 2 x 1 piece (39 g) = 78 g = 43.5 g; canned papaya in heavy syrup, drained; syrup eaten with it adds more"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "mango",
+  "name": "Mango",
+  "aliases": [
+   "mango",
+   "mangoes"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 taza en pedazos (unos 165 g)",
+   "en": "1 cup, cubed (about 165 g)"
+  },
+  "carbsMin": 22,
+  "carbsMax": 27,
+  "swap": {
+   "es": "Media taza basta",
+   "en": "Half a cup is plenty"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2709242,
+   "description": "Mango, raw",
+   "basis": "15 g/100 g; 1 cup = 165 g = 24.8 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "pina",
+  "name": "Piña",
+  "aliases": [
+   "pina",
+   "pina fresca",
+   "pineapple"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 taza en pedazos (unos 165 g)",
+   "en": "1 cup, cubed (about 165 g)"
+  },
+  "carbsMin": 21,
+  "carbsMax": 26,
+  "swap": {
+   "es": "Media taza como postre",
+   "en": "Half a cup for dessert"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2709260,
+   "description": "Pineapple, raw",
+   "basis": "14.1 g/100 g; 1 cup = 165 g = 23.3 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "china",
+  "name": "China",
+  "aliases": [
+   "china",
+   "china fresca",
+   "naranja",
+   "orange"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1 china mediana (unos 154 g sin cáscara)",
+   "en": "1 medium orange (about 154 g peeled)"
+  },
+  "carbsMin": 16,
+  "carbsMax": 20,
+  "swap": {
+   "es": "Mejor entera que en jugo",
+   "en": "Better whole than as juice"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2709171,
+   "description": "Orange, raw",
+   "basis": "11.8 g/100 g; 1 fruit = 154 g = 18.2 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "aguacate",
+  "name": "Aguacate",
+  "aliases": [
+   "aguacate",
+   "avocado"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1/2 taza en pedazos (unos 75 g)",
+   "en": "1/2 cup, cubed (about 75 g)"
+  },
+  "carbsMin": 5,
+  "carbsMax": 7,
+  "swap": {
+   "es": "Añádalo a la ensalada",
+   "en": "Add it to your salad"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2709223,
+   "description": "Avocado, raw",
+   "basis": "8.53 g/100 g; 1/2 of 1 cup (150 g) = 75 g = 6.4 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "pasta-de-guayaba",
+  "name": "Pasta de guayaba",
+  "aliases": [
+   "pasta de guayaba",
+   "guayaba en pasta",
+   "dulce de guayaba",
+   "guava paste"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1 pedazo mediano (unos 32 g)",
+   "en": "1 medium piece (about 32 g)"
+  },
+  "carbsMin": 21,
+  "carbsMax": 26,
+  "swap": {
+   "es": "Un pedacito fino con queso blanco",
+   "en": "A thin slice with white cheese"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2710307,
+   "description": "Guava paste",
+   "basis": "72.6 g/100 g; 1 medium piece = 32 g = 23.2 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "ensalada-de-papa",
+  "name": "Ensalada de papa",
+  "aliases": [
+   "ensalada de papa",
+   "ensalada de papas",
+   "potato salad"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1/2 taza (unos 138 g)",
+   "en": "1/2 cup (about 138 g)"
+  },
+  "carbsMin": 20,
+  "carbsMax": 25,
+  "swap": {
+   "es": "Media taza junto a ensalada verde",
+   "en": "Half a cup next to a green salad"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2709532,
+   "description": "Potato salad with egg, made with mayonnaise",
+   "basis": "16.2 g/100 g; 1/2 of 1 cup (275 g) = 137.5 g = 22.3 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "ensalada-de-coditos",
+  "name": "Ensalada de coditos",
+  "aliases": [
+   "ensalada de coditos",
+   "ensalada de macarrones",
+   "ensalada de pasta",
+   "macaroni salad",
+   "pasta salad"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1/2 taza (unos 102 g)",
+   "en": "1/2 cup (about 102 g)"
+  },
+  "carbsMin": 22,
+  "carbsMax": 28,
+  "swap": {
+   "es": "Media taza junto a ensalada verde",
+   "en": "Half a cup next to a green salad"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2708932,
+   "description": "Macaroni or pasta salad, made with mayonnaise",
+   "basis": "24.6 g/100 g; 1/2 of 1 cup (204 g) = 102 g = 25.1 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "ensalada-verde",
+  "name": "Ensalada verde",
+  "aliases": [
+   "ensalada verde",
+   "ensalada",
+   "ensalada de lechuga",
+   "lechuga y tomate",
+   "green salad",
+   "salad",
+   "lettuce and tomato"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 taza (unos 73 g), sin aderezo",
+   "en": "1 cup (about 73 g), no dressing"
+  },
+  "carbsMin": 3,
+  "carbsMax": 4,
+  "swap": {
+   "es": "Llene medio plato con ella",
+   "en": "Fill half the plate with it"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2709822,
+   "description": "Lettuce, salad with assorted vegetables including tomatoes and/or carrots, no dressing",
+   "basis": "4.58 g/100 g; 1 cup = 73 g = 3.3 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "pasta-cocida",
+  "name": "Pasta (espaguetis, coditos)",
+  "aliases": [
+   "espaguetis",
+   "espagueti",
+   "spaghetti",
+   "pasta",
+   "macarrones",
+   "coditos",
+   "fideos",
+   "noodles"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 taza cocida (unos 140 g)",
+   "en": "1 cup cooked (about 140 g)"
+  },
+  "carbsMin": 39,
+  "carbsMax": 47,
+  "swap": {
+   "es": "Sirva 1/2 taza con vegetales y proteína",
+   "en": "Have 1/2 cup with vegetables and protein"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2708357,
+   "description": "Pasta, cooked",
+   "basis": "30.7 g/100 g; 1 cup, cooked = 140 g = 43 g; plain cooked pasta; sauce not included"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "mondongo",
+  "name": "Mondongo",
+  "aliases": [
+   "mondongo",
+   "stewed tripe",
+   "tripe stew"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1 taza (unos 280 g)",
+   "en": "1 cup (about 280 g)"
+  },
+  "carbsMin": 23,
+  "carbsMax": 31,
+  "swap": {
+   "es": "Una taza con poco arroz",
+   "en": "One cup with a little rice"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2706725,
+   "description": "Stewed tripe, with potatoes, Puerto Rican style",
+   "basis": "9.49 g/100 g; 1 cup = 280 g = 26.6 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "chuletas",
+  "name": "Chuletas fritas",
+  "aliases": [
+   "chuleta",
+   "chuleta frita",
+   "chuletas fritas",
+   "chuleta kan kan",
+   "pork chop",
+   "pork chops"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1 chuleta regular (unos 120 g de carne)",
+   "en": "1 regular chop (about 120 g of meat)"
+  },
+  "carbsMin": 0,
+  "carbsMax": 1,
+  "swap": {
+   "es": "Acompáñela con vegetales",
+   "en": "Pair it with vegetables"
+  },
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 2705867,
+   "description": "Pork, chop, lean and fat eaten",
+   "basis": "0.01 g/100 g; 1 regular = 120 g = 0 g; pork chop, not breaded; cooking method not specified in FDC"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "pollo-frito",
+  "name": "Pollo frito",
+  "aliases": [
+   "pollo frito",
+   "chicharrones de pollo",
+   "chicharron de pollo",
+   "fried chicken"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 presa (unos 85 g de carne)",
+   "en": "1 piece (about 85 g of meat)"
+  },
+  "carbsMin": 5,
+  "carbsMax": 7,
+  "swap": {
+   "es": "Una presa con ensalada",
+   "en": "One piece with salad"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2705949,
+   "description": "Chicken, NS as to part, fried, coated, skin / coating eaten",
+   "basis": "7.14 g/100 g; 1 piece = 85 g = 6.1 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "pollo-asado",
+  "name": "Pollo asado",
+  "aliases": [
+   "pollo asado",
+   "pollo al horno",
+   "pollo horneado",
+   "pollo al carbon",
+   "pollo a la parrilla",
+   "baked chicken",
+   "roast chicken",
+   "grilled chicken"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "3 onzas de carne (unos 85 g)",
+   "en": "3 oz of meat (about 85 g)"
+  },
+  "carbsMin": 0,
+  "carbsMax": 1,
+  "swap": {
+   "es": "Buena proteína; añada vegetales",
+   "en": "A good protein; add vegetables"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2705933,
+   "description": "Chicken, NS as to part, baked, broiled, or roasted, skin eaten",
+   "basis": "0 g/100 g; Quantity not specified = 85 g = 0 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "fricase-de-pollo",
+  "name": "Fricasé de pollo",
+  "aliases": [
+   "fricase de pollo",
+   "pollo en fricase",
+   "fricase",
+   "pollo guisado",
+   "chicken fricassee",
+   "stewed chicken"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1 taza sin hueso (unos 223 g), con papas",
+   "en": "1 cup boneless (about 223 g), with potatoes"
+  },
+  "carbsMin": 14,
+  "carbsMax": 18,
+  "swap": {
+   "es": "Con poco arroz y ensalada",
+   "en": "With a little rice and salad"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2706710,
+   "description": "Chicken fricassee, Puerto Rican style",
+   "basis": "7.17 g/100 g; 1 cup, boneless = 223 g = 16 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "carne-guisada",
+  "name": "Carne guisada",
+  "aliases": [
+   "carne guisada",
+   "carne guisada con papas",
+   "carne de res guisada",
+   "beef stew",
+   "stewed beef"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1 taza (unos 212 g), con papas",
+   "en": "1 cup (about 212 g), with potatoes"
+  },
+  "carbsMin": 12,
+  "carbsMax": 16,
+  "swap": {
+   "es": "Con poco arroz y ensalada",
+   "en": "With a little rice and salad"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2706503,
+   "description": "Beef stew with potatoes, Puerto Rican style",
+   "basis": "6.53 g/100 g; 1 cup = 212 g = 13.8 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "bistec-encebollado",
+  "name": "Bistec encebollado",
+  "aliases": [
+   "bistec encebollado",
+   "bistec con cebolla",
+   "bistec",
+   "biftec",
+   "steak and onions",
+   "steak with onions"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1 taza (unos 179 g)",
+   "en": "1 cup (about 179 g)"
+  },
+  "carbsMin": 6,
+  "carbsMax": 8,
+  "swap": {
+   "es": "Acompáñelo con vegetales",
+   "en": "Pair it with vegetables"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2706754,
+   "description": "Beef steak with onions, Puerto Rican style",
+   "basis": "3.89 g/100 g; 1 cup = 179 g = 7 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "serenata",
+  "name": "Serenata de bacalao",
+  "aliases": [
+   "serenata",
+   "serenata de bacalao",
+   "ensalada de bacalao",
+   "codfish salad"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1 taza (unos 145 g), sin las viandas",
+   "en": "1 cup (about 145 g), root vegetables not included"
+  },
+  "carbsMin": 3,
+  "carbsMax": 5,
+  "swap": {
+   "es": "Poca vianda y mucha ensalada",
+   "en": "A little root vegetable and lots of salad"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2706871,
+   "description": "Codfish salad, Puerto Rican style, Serenata",
+   "basis": "2.81 g/100 g; 1 cup = 145 g = 4.1 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "bacalao-con-viandas",
+  "name": "Bacalao con viandas",
+  "aliases": [
+   "bacalao con viandas",
+   "viandas con bacalao",
+   "guineos con bacalao",
+   "codfish with root vegetables"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1 taza (unos 173 g)",
+   "en": "1 cup (about 173 g)"
+  },
+  "carbsMin": 28,
+  "carbsMax": 36,
+  "swap": {
+   "es": "Más bacalao y ensalada, menos vianda",
+   "en": "More codfish and salad, less root vegetable"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2706719,
+   "description": "Codfish with starchy vegetables, Puerto Rican style",
+   "basis": "18.5 g/100 g; 1 cup = 173 g = 32 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "pescado-frito",
+  "name": "Pescado frito",
+  "aliases": [
+   "pescado frito",
+   "pescao frito",
+   "chillo frito",
+   "fried fish",
+   "fish fry"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 filete pequeño (unos 90 g)",
+   "en": "1 small fillet (about 90 g)"
+  },
+  "carbsMin": 8,
+  "carbsMax": 13,
+  "swap": {
+   "es": "Acompáñelo con ensalada",
+   "en": "Pair it with salad"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2706227,
+   "description": "Fish, NS as to type, fried",
+   "basis": "11.7 g/100 g; 1 small/regular fillet = 90 g = 10.5 g; coated; a lighter flour dusting gives less"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "cabro-guisado",
+  "name": "Cabro guisado",
+  "aliases": [
+   "cabro guisado",
+   "chivo guisado",
+   "carne de cabro",
+   "stewed goat",
+   "goat stew"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 taza (unos 177 g)",
+   "en": "1 cup (about 177 g)"
+  },
+  "carbsMin": 2,
+  "carbsMax": 5,
+  "swap": {
+   "es": "Con vegetales y poca vianda",
+   "en": "With vegetables and a little root vegetable"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2706414,
+   "description": "Stewed goat, Puerto Rican style",
+   "basis": "1.98 g/100 g; 1 cup = 177 g = 3.5 g; Puerto Rican style; USVI stewed goat is similar"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "sopa-de-pollo",
+  "name": "Sopa de pollo",
+  "aliases": [
+   "sopa de pollo",
+   "caldo de pollo",
+   "chicken soup"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "1 taza (unos 245 g)",
+   "en": "1 cup (about 245 g)"
+  },
+  "carbsMin": 8,
+  "carbsMax": 11,
+  "swap": {
+   "es": "Añádale más vegetales",
+   "en": "Add more vegetables to it"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2707135,
+   "description": "Soup, sopa or caldo de pollo",
+   "basis": "4.04 g/100 g; 1 cup = 245 g = 9.9 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "sopa-de-fideos",
+  "name": "Sopa de fideos",
+  "aliases": [
+   "sopa de fideos",
+   "sopa de fideo",
+   "sopa de pollo con fideos",
+   "chicken noodle soup",
+   "noodle soup"
+  ],
+  "region": "PR",
+  "serving": {
+   "es": "1 taza (unos 245 g)",
+   "en": "1 cup (about 245 g)"
+  },
+  "carbsMin": 13,
+  "carbsMax": 17,
+  "swap": {
+   "es": "Añádale más vegetales",
+   "en": "Add more vegetables to it"
+  },
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 2709149,
+   "description": "Soup, chicken noodle",
+   "basis": "6.21 g/100 g; 1 cup = 245 g = 15.2 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "huevos",
+  "name": "Huevos",
+  "aliases": [
+   "huevo",
+   "huevo frito",
+   "huevos fritos",
+   "huevo hervido",
+   "huevos hervidos",
+   "revoltillo",
+   "fried eggs",
+   "scrambled eggs",
+   "eggs"
+  ],
+  "region": "PR/USVI",
+  "serving": {
+   "es": "2 huevos (unos 110 g)",
+   "en": "2 eggs (about 110 g)"
+  },
+  "carbsMin": 1,
+  "carbsMax": 1,
+  "swap": {
+   "es": "Buena proteína para el desayuno",
+   "en": "A good breakfast protein"
+  },
+  "verified": true,
+  "source": {
+   "match": "direct",
+   "fdcId": 2707155,
+   "description": "Egg, whole, fried, NS as to fat",
+   "basis": "0.91 g/100 g; 2 x 1 egg (55 g) = 110 g = 1 g"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "sweet-bread",
+  "name": "Sweet bread",
+  "aliases": [
+   "sweet bread",
+   "crucian sweet bread"
+  ],
+  "region": "USVI",
+  "serving": {
+   "es": "1 rebanada gruesa (unos 43 g)",
+   "en": "1 thick slice (about 43 g)"
+  },
+  "carbsMin": 19,
+  "carbsMax": 26,
+  "swap": {
+   "es": "Una rebanada fina con café",
+   "en": "One thin slice with coffee"
+  },
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 2707644,
+   "description": "Bread, raisin",
+   "basis": "52.2 g/100 g; 1 large or thick slice = 43 g = 22.4 g; no Crucian sweet bread in FDC; raisin bread used, recipes vary"
+  },
+  "clinicianReviewed": false
+ },
+ {
+  "id": "potato-stuffing",
+  "name": "Potato stuffing",
+  "aliases": [
+   "potato stuffing",
+   "potato stuffin"
+  ],
+  "region": "USVI",
+  "serving": {
+   "es": "1/2 taza (unos 125 g)",
+   "en": "1/2 cup (about 125 g)"
+  },
+  "carbsMin": 19,
+  "carbsMax": 25,
+  "swap": {
+   "es": "Media taza con vegetales",
+   "en": "Half a cup with vegetables"
+  },
+  "verified": false,
+  "source": {
+   "match": "closest",
+   "fdcId": 2709496,
+   "description": "Potato, mashed, from fresh, made with milk",
+   "basis": "17.6 g/100 g; 1/2 of 1 cup (250 g) = 125 g = 22 g; no USVI potato stuffing in FDC; mashed potato with milk used; added sugar or tomato paste varies"
+  },
+  "clinicianReviewed": false
  }
 ]

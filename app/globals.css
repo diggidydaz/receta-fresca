@@ -56,3 +56,10 @@ h3 { font-size: 1.25rem; line-height: 1.25; font-weight: 700; }
 .sr-only-focusable:not(:focus) {
   position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
 }
+
+/* Printed plan: black on white, no backgrounds to waste ink, nothing split across pages. */
+@media print {
+  html, html[data-big="1"] { font-size: 16px; }
+  body { background: #fff; }
+  main { max-width: none; padding: 0; }
+}

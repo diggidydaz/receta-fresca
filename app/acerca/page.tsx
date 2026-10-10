@@ -12,7 +12,11 @@ const sections: { title: L10n; items: L10n[] }[] = [
       { es: "Plan de la semana hecho con IA, con lo que hay en las tiendas.", en: "A weekly plan made with AI from what stores have in stock." },
       { es: "Estimado de carbohidratos de platos locales, basado primero en nuestra tabla de comida local.", en: "Carbohydrate estimates for local dishes, grounded first in our local food table." },
       { es: "Foto del plato: la IA solo nombra los platos que ve; la persona los confirma y los números salen de la tabla. La foto no se guarda.", en: "Photo of the plate: the AI only names the dishes it sees; the person confirms them and the numbers come from the table. The photo is not saved." },
-      { es: "Pedido en colmado, finca o cocina, y vista del negocio.", en: "Ordering from a store, farm or kitchen, and the business view." },
+      { es: "Pedido en colmado, finca o cocina, y vista del negocio. El negocio dice lo que tiene esta semana y los planes nuevos lo usan.", en: "Ordering from a store, farm or kitchen, and the business view. The business says what it has this week and new plans use it." },
+      { es: "«Mi semana»: las luces de los últimos 7 días, contadas en el teléfono, y «Hoy no pude comer bien».", en: "\"My week\": the lights from the last 7 days, counted on the phone, and \"I could not eat well today\"." },
+      { es: "El clínico ve cómo le va al paciente, anota A1C y Hunger Vital Sign, y descarga datos sin nombres.", en: "The clinician sees how the patient is doing, records A1C and the Hunger Vital Sign, and downloads data without names." },
+      { es: "La promotora ve quién necesita una llamada (por ejemplo, receta sin recoger en 3 días), deja notas y ayuda con las preguntas.", en: "The community health worker sees who needs a call (for example, a prescription not picked up in 3 days), leaves notes and helps with the questions." },
+      { es: "Plan impreso, enlace de solo lectura para la familia, y uso sin conexión con la tabla de comida local.", en: "Printed plan, a read-only link for family, and offline use with the local food table." },
       { es: "Español e inglés, letra grande, lectura en voz alta.", en: "Spanish and English, large text, read aloud." },
     ],
   },
@@ -22,7 +26,8 @@ const sections: { title: L10n; items: L10n[] }[] = [
       { es: "Los pacientes. No hay datos de personas reales.", en: "The patients. There is no data about real people." },
       { es: "Los colmados, fincas y cocinas, y lo que tienen en inventario.", en: "The stores, farms and kitchens, and their stock." },
       { es: "El estado del pedido, la entrega y el pago del vale.", en: "Order status, delivery and voucher payment." },
-      { es: "Los datos se guardan solo en este navegador.", en: "Data is kept only in this browser." },
+      { es: "Los datos se guardan solo en este navegador. Clínico, promotora, negocio y paciente comparten este navegador en la demostración; no hay cuentas ni servidor.", en: "Data is kept only in this browser. Clinician, community health worker, business and patient share this browser in the demo; there are no accounts and no server." },
+      { es: "El botón que hace como si hubieran pasado 3 días.", en: "The button that acts as if 3 days had passed." },
     ],
   },
   {
@@ -37,7 +42,7 @@ const sections: { title: L10n; items: L10n[] }[] = [
   {
     title: { es: "Fuentes y créditos", en: "Sources and credits" },
     items: [
-      { es: "Tabla de comida local, 30 platos: 14 comparados directamente con USDA FoodData Central, 10 con el alimento más parecido, y 6 todavía sin fuente. Una profesional de cuidado de diabetes revisó 15 de los platos más comunes.", en: "Local food table, 30 dishes: 14 matched directly to USDA FoodData Central, 10 to the closest food, and 6 still without a source. A diabetes care professional reviewed 15 of the most common dishes." },
+      { es: "Tabla de comida local, 92 platos: 59 comparados directamente con USDA FoodData Central, 27 con el alimento más parecido, y 6 todavía sin fuente. Una profesional de cuidado de diabetes revisó 15 de los platos más comunes; los otros 77 todavía no han sido revisados.", en: "Local food table, 92 dishes: 59 matched directly to USDA FoodData Central, 27 to the closest food, and 6 still without a source. A diabetes care professional reviewed 15 of the most common dishes; the other 77 have not been reviewed yet." },
       { es: "Inteligencia artificial: Claude, de Anthropic.", en: "AI: Claude, by Anthropic." },
       { es: "Tipografía: Atkinson Hyperlegible, del Braille Institute, hecha para personas con baja visión.", en: "Typeface: Atkinson Hyperlegible, by the Braille Institute, made for people with low vision." },
     ],

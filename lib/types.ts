@@ -36,7 +36,10 @@ export type IntakeAnswers = {
   canCook?: "yes" | "sometimes" | "no";
   canTravel?: "yes" | "no";
   avoid?: string;
+  helper?: Helper;                 // who answered: the patient, or someone helping them
 };
+
+export type Helper = "self" | "promotora" | "family" | "clinic";
 
 export type IntakeSummary = {
   headline: string;
@@ -86,7 +89,19 @@ export type Estimate = {
   unmatched?: string;              // words in the meal that neither the table nor the AI could count
 };
 
-export type LogEntry = { id: string; text: string; at: string; estimate: Estimate };
+/** A meal the person logged, or a day they could not eat well (and why). */
+export type SkipReason = "noFood" | "unwell" | "other";
+export type LogEntry =
+  | { id: string; kind?: "meal"; text: string; at: string; estimate: Estimate }
+  | { id: string; kind: "skipped"; reason: SkipReason; at: string };
+
+export type TeachBack = { at: string; planAt: string; correct: boolean };
+
+/** Hunger Vital Sign, 2 items. Positive when either answer is "often" or "sometimes" true. */
+export type HvsAnswer = "often" | "sometimes" | "never";
+export type Outcomes = { a1c: { value: number; at: string }[]; hvs: { q1: HvsAnswer; q2: HvsAnswer; at: string }[] };
+
+export type ChwNote = { at: string; text: string };
 
 export type OrderStatus = "received" | "preparing" | "ready" | "delivered";
 export type Order = { id: string; placeId: string; needsDelivery: boolean; status: OrderStatus; createdAt: string };
@@ -103,4 +118,12 @@ export type AppState = {
   plan: Plan | null;
   log: LogEntry[];
   order: Order | null;
+  teachBack: TeachBack | null;
+  outcomes: Outcomes;
+  chwNotes: ChwNote[];
+  // Shared by everyone on this device (not per patient):
+  clinicianAck: boolean;           // clinician has read what the AI does and does not do
+  stock: Record<string, StockUpdate>; // what each business says it has this week, by place id
 };
+
+export type StockUpdate = { items: L10n[]; at: string };
