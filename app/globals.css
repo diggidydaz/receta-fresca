@@ -3,6 +3,10 @@
 @import "@fontsource/atkinson-hyperlegible/latin-700.css";
 @import "@fontsource/atkinson-hyperlegible/latin-ext-400.css";
 @import "@fontsource/atkinson-hyperlegible/latin-ext-700.css";
+@import "@fontsource/fraunces/latin-500.css";
+@import "@fontsource/fraunces/latin-600.css";
+@import "@fontsource/fraunces/latin-ext-500.css";
+@import "@fontsource/fraunces/latin-ext-600.css";
 
 /* Design tokens. Contrast figures are against --color-ground (#FFFBF2). */
 @theme {
@@ -14,12 +18,14 @@
   --color-brand: #14532d;       /* buttons, links; white text on it 9.9:1 */
   --color-brand-dark: #0c3a1f;
   --color-brand-soft: #e3f1e6;  /* selected-state tint (always paired with a check mark) */
+  --color-line: #e3d8bf;        /* decorative hairlines on cards (not on controls) */
   --color-mango: #f5a524;       /* logo mango; decorative accent only, never carries text */
   --color-focus: #1d4ed8;       /* focus ring, 6.4:1 */
   --color-go: #166534;          /* traffic green, white text 7.1:1 */
   --color-wait: #fde68a;        /* traffic yellow, used with ink text 13:1 */
   --color-stop: #991b1b;        /* traffic red, white text 8.3:1 */
   --color-notice: #fff4cc;      /* sample-data banner */
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
   --font-sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
@@ -34,9 +40,9 @@ body {
   line-height: 1.55;
 }
 
-h1 { font-size: 1.953rem; line-height: 1.15; font-weight: 700; letter-spacing: -0.01em; }
-h2 { font-size: 1.563rem; line-height: 1.2; font-weight: 700; letter-spacing: -0.005em; }
-h3 { font-size: 1.25rem; line-height: 1.25; font-weight: 700; }
+h1 { font-family: var(--font-display); font-size: 1.953rem; line-height: 1.12; font-weight: 600; letter-spacing: -0.015em; }
+h2 { font-family: var(--font-display); font-size: 1.563rem; line-height: 1.2; font-weight: 600; letter-spacing: -0.01em; }
+h3 { font-family: var(--font-display); font-size: 1.25rem; line-height: 1.25; font-weight: 600; }
 
 /* Focus is always visible, never removed. */
 :focus-visible {

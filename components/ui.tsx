@@ -7,7 +7,7 @@ import type { L10n, Light } from "@/lib/types";
 
 /* ---------- Buttons ---------- */
 const base =
-  "inline-flex w-full items-center justify-center gap-3 rounded-2xl px-6 py-4 min-h-[64px] text-[1.25rem] font-bold leading-tight text-center border-[3px] transition-colors disabled:opacity-60 disabled:cursor-not-allowed";
+  "inline-flex w-full items-center justify-center gap-3 rounded-full px-6 py-4 min-h-[64px] text-[1.25rem] font-bold leading-tight text-center border-[3px] transition-colors disabled:opacity-60 disabled:cursor-not-allowed";
 const variants = {
   primary: "bg-brand text-white border-brand hover:bg-brand-dark hover:border-brand-dark",
   secondary: "bg-panel text-brand border-brand hover:bg-brand-soft",
@@ -38,7 +38,7 @@ export function BigButton({ children, variant = "primary", icon, iconEnd, href, 
 
 /* ---------- Layout pieces ---------- */
 export function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <div className={`rounded-2xl border-2 border-rule bg-panel p-5 shadow-sm ${className}`}>{children}</div>;
+  return <div className={`rounded-3xl border border-line bg-panel p-6 shadow-sm ${className}`}>{children}</div>;
 }
 
 /** Page body: one readable column, generous spacing. */
@@ -84,7 +84,7 @@ export function ChoiceGroup<V extends string>({ legend, hideLegend, name, option
       {options.map((o) => {
         const on = value === o.value;
         return (
-          <label key={o.value} className={`flex min-h-[72px] cursor-pointer items-center gap-4 rounded-2xl border-[3px] px-5 py-4 has-[:focus-visible]:outline has-[:focus-visible]:outline-4 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-focus ${on ? "border-brand bg-brand-soft" : "border-rule bg-panel"}`}>
+          <label key={o.value} className={`flex min-h-[72px] cursor-pointer items-center gap-4 rounded-3xl border-[3px] px-5 py-4 has-[:focus-visible]:outline has-[:focus-visible]:outline-4 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-focus ${on ? "border-brand bg-brand-soft" : "border-rule bg-panel"}`}>
             <input type="radio" name={name} value={o.value} checked={on} onChange={() => onChange(o.value)} className="sr-only" />
             {o.icon && <Icon name={o.icon} size={32} className="text-brand" />}
             <span className="min-w-0 flex-1 [overflow-wrap:anywhere]">
