@@ -236,3 +236,27 @@ export function Notice({ children, tone = "info" }: { children: React.ReactNode;
 export function Tag({ children }: { children: React.ReactNode }) {
   return <span className="inline-block rounded-full border-2 border-ink bg-notice px-3 py-0.5 text-[0.85rem] font-bold">{children}</span>;
 }
+
+/* ---------- Text fields ---------- */
+export const fieldCls = "w-full min-h-[56px] rounded-2xl border-[3px] border-rule bg-panel px-4 py-3 text-[1.25rem] leading-snug";
+
+/** One labelled text box, with an optional hint and an error read out with the field. */
+export function Field({ label, hint, error, value, onChange, ...rest }: {
+  label: string;
+  hint?: string;
+  error?: string;
+  value: string;
+  onChange: (v: string) => void;
+} & Omit<React.InputHTMLAttributes<HTMLInputElement>, "value" | "onChange" | "className">) {
+  const id = useId();
+  const described = [hint && `${id}-hint`, error && `${id}-err`].filter(Boolean).join(" ") || undefined;
+  return (
+    <div className="flex flex-col gap-2">
+      <label htmlFor={id} className="text-[1.25rem] font-bold">{label}</label>
+      {hint && <p id={`${id}-hint`} className="text-muted">{hint}</p>}
+      <input id={id} value={value} onChange={(e) => onChange(e.target.value)} aria-invalid={error ? true : undefined} aria-describedby={described}
+        className={`${fieldCls} ${error ? "border-stop" : ""}`} {...rest} />
+      {error && <p id={`${id}-err`} className="font-bold text-stop">{error}</p>}
+    </div>
+  );
+}

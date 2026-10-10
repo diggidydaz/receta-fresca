@@ -27,7 +27,7 @@ export type Place = {
   stock: L10n[];           // produce in stock (colmado, finca) or dishes offered (cocina)
 };
 
-export type Patient = { id: string; name: string; age: number; town: string; note: L10n };
+export type Patient = { id: string; name: string; age: number; town: string; note: L10n; phone?: string };
 
 export type IntakeAnswers = {
   feeling?: "good" | "ok" | "bad";
@@ -104,7 +104,16 @@ export type Outcomes = { a1c: { value: number; at: string }[]; hvs: { q1: HvsAns
 export type ChwNote = { at: string; text: string };
 
 export type OrderStatus = "received" | "preparing" | "ready" | "delivered";
-export type Order = { id: string; placeId: string; needsDelivery: boolean; status: OrderStatus; createdAt: string };
+export type Order = {
+  id: string;
+  placeId: string;
+  needsDelivery: boolean;
+  status: OrderStatus;             // fulfillment, set by the business one step at a time
+  createdAt: string;
+  voucher?: string;                // code the patient shows; issued by the server (F15)
+  expiresAt?: string;              // voucher ends with the prescription
+  redeemedAt?: string;             // set only when the business's redemption was accepted
+};
 
 export type AppState = {
   lang: Lang;

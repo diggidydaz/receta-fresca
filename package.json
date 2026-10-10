@@ -7,16 +7,21 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "e2e": "node scripts/e2e.mjs"
+    "e2e": "node scripts/e2e.mjs",
+    "seed": "node scripts/seed.mjs",
+    "rls-check": "node scripts/rls-check.mjs",
+    "e2e:server": "node scripts/e2e-server.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.132.1",
     "@fontsource/atkinson-hyperlegible": "^5.3.0",
     "next": "16.4.0",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
+    "@supabase/supabase-js": "^2.117.3",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -25,6 +30,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.4.0",
     "playwright-core": "^1.64.0",
+    "supabase": "^2.120.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

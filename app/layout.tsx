@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { AccountGate } from "@/components/Account";
 import { SwRegister } from "@/components/SwRegister";
 import { TopBar } from "@/components/TopBar";
 
@@ -18,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="es" translate="no" className="notranslate">
       <body className="flex min-h-dvh flex-col">
         <TopBar />
-        {children}
+        <AccountGate>{children}</AccountGate>
         <SwRegister />
       </body>
     </html>

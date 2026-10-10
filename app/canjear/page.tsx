@@ -4,13 +4,9 @@ import { BigButton, Busy, Card, ChoiceGroup, Notice, Page, Tag } from "@/compone
 import { Icon } from "@/components/Icon";
 import { effectivePlaces } from "@/lib/places";
 import { common, useT } from "@/lib/i18n";
-import { setState, useAppState, useHydrated } from "@/lib/store";
-import type { L10n, Order, OrderStatus, Place } from "@/lib/types";
-
-
-function makeOrderId(): string {
-  return "RF-" + String(Math.floor(Math.random() * 10000)).padStart(4, "0");
-}
+import { cancelOrder, placeOrder, type OrderError } from "@/lib/orders";
+import { useAppState, useHydrated, useSession } from "@/lib/store";
+import type { L10n, OrderStatus, Place } from "@/lib/types";
 
 const copy = {
   noRx: { es: "Su clínico todavía no le ha enviado una receta.", en: "Your clinician has not sent you a prescription yet." },
@@ -23,7 +19,13 @@ const copy = {
   pickFirst: { es: "Escoja un lugar primero.", en: "Choose a place first." },
   confirm: { es: "Confirmar", en: "Confirm" },
   yourOrder: { es: "Su pedido", en: "Your order" },
-  show: { es: "Enseñe este número", en: "Show this number" },
+  show: { es: "Enseñe este código", en: "Show this code" },
+  orderNo: { es: "Pedido", en: "Order" },
+  validUntil: { es: "Vale hasta el", en: "Valid until" },
+  used: { es: "Vale usado el", en: "Voucher used on" },
+  offline: { es: "No hay conexión. Para pedir necesita internet. Trate otra vez cuando tenga señal.", en: "No connection. You need internet to order. Try again when you have signal." },
+  refused: { es: "No se pudo hacer el pedido. Puede que la receta haya vencido. Llame a su clínica.", en: "The order could not be made. The prescription may have ended. Call your clinic." },
+  cantChange: { es: "El negocio ya empezó su pedido. Para cambiarlo, llame al negocio.", en: "The business has already started your order. To change it, call the business." },
   done: { es: "Hecho", en: "Done" },
   now: { es: "Ahora", en: "Now" },
   later: { es: "Falta", en: "Still to come" },
@@ -51,7 +53,9 @@ export default function CanjearPage() {
   const hydrated = useHydrated();
   const [placeId, setPlaceId] = useState<string | undefined>();
   const [delivery, setDelivery] = useState<boolean | null>(null);
-  const [error, setError] = useState<"pick" | "deliver" | null>(null);
+  const [error, setError] = useState<"pick" | "deliver" | OrderError | "cantChange" | null>(null);
+  const [busy, setBusy] = useState(false);
+  const demo = useSession().status === "demo";
   const headRef = useRef<HTMLHeadingElement>(null);
   const orderId = s.order?.id;
   // When the order appears, move focus to its heading so it is announced and a second tap cannot hit another button.
@@ -72,8 +76,17 @@ export default function CanjearPage() {
     );
   }
 
+  const dateOf = (iso: string) => new Date(iso).toLocaleDateString(s.lang === "es" ? "es-PR" : "en-US", { day: "numeric", month: "long" });
+
   if (s.order) {
     const o = s.order;
+    const change = async () => {
+      if (Date.now() - new Date(o.createdAt).getTime() <= 1500) return; // a second tap on Confirm must not cancel
+      setBusy(true);
+      const err = await cancelOrder(s.patientId);
+      setBusy(false);
+      setError(err === "refused" ? "cantChange" : err);
+    };
     const place = places.find((p) => p.id === o.placeId);
     const list = steps(o.needsDelivery);
     const cur = list.findIndex((x) => x.key === o.status);
@@ -81,8 +94,11 @@ export default function CanjearPage() {
     return (
       <Page>
         <h1 ref={headRef} tabIndex={-1} className="outline-none">{t(copy.yourOrder)}{place ? `: ${place.name}` : ""}</h1>
-        <Card>
-          <p className="text-[1.563rem] font-bold">{t(copy.show)}: {o.id}</p>
+        <Card className="flex flex-col gap-2">
+          <p className="text-[1.25rem] font-bold">{t(copy.show)}:</p>
+          <p className="font-mono text-[2rem] font-bold tracking-wider [overflow-wrap:anywhere]" aria-label={(o.voucher ?? o.id).split("").join(" ")}>{o.voucher ?? o.id}</p>
+          <p className="text-muted">{t(copy.orderNo)} {o.id}</p>
+          {o.redeemedAt ? <p className="font-bold">{t(copy.used)} {dateOf(o.redeemedAt)}</p> : o.expiresAt && <p>{t(copy.validUntil)} {dateOf(o.expiresAt)}</p>}
         </Card>
         <ol className="flex flex-col gap-3">
           {list.map((st, i) => {
@@ -99,12 +115,17 @@ export default function CanjearPage() {
             );
           })}
         </ol>
-        <div className="flex flex-col items-start gap-2">
-          <Tag>{t(common.simulated)}</Tag>
-          <p className="text-muted">{t(copy.simNote)}</p>
-        </div>
-        <BigButton href="/negocio" variant="secondary" icon="store">{t(copy.asBiz)}</BigButton>
-        <BigButton variant="quiet" onClick={() => { if (Date.now() - new Date(o.createdAt).getTime() > 1500) setState({ order: null }); }}>{t(copy.change)}</BigButton>
+        {demo && (
+          <>
+            <div className="flex flex-col items-start gap-2">
+              <Tag>{t(common.simulated)}</Tag>
+              <p className="text-muted">{t(copy.simNote)}</p>
+            </div>
+            <BigButton href="/negocio" variant="secondary" icon="store">{t(copy.asBiz)}</BigButton>
+          </>
+        )}
+        {error && error !== "pick" && error !== "deliver" && <p role="alert" className="text-[1.25rem] font-bold text-stop">{t(copy[error])}</p>}
+        {o.status === "received" && !o.redeemedAt && <BigButton variant="quiet" disabled={busy} onClick={change}>{t(copy.change)}</BigButton>}
         {back}
       </Page>
     );
@@ -116,18 +137,13 @@ export default function CanjearPage() {
   const wantsDelivery = delivery ?? rx.needsDelivery;
   const blocked = Boolean(place && wantsDelivery && !place.delivers);
 
-  const confirm = () => {
+  const confirm = async () => {
     if (!place) { setError("pick"); return; }
     if (blocked) { setError("deliver"); return; }
     setError(null);
-    const order: Order = {
-      id: makeOrderId(),
-      placeId: place.id,
-      needsDelivery: wantsDelivery,
-      status: "received",
-      createdAt: new Date().toISOString(),
-    };
-    setState({ order });
+    setBusy(true);
+    setError(await placeOrder(s.patientId, place.id, wantsDelivery));
+    setBusy(false);
   };
 
   return (
@@ -158,7 +174,8 @@ export default function CanjearPage() {
         <Notice tone="warn"><p role="alert" className="text-[1.25rem] font-bold">{t(copy.noDelivery)}</p></Notice>
       )}
       {error === "pick" && <p role="alert" className="text-[1.25rem] font-bold text-stop">{t(copy.pickFirst)}</p>}
-      <BigButton icon="check" onClick={confirm}>{t(copy.confirm)}</BigButton>
+      {(error === "offline" || error === "refused") && <p role="alert" className="text-[1.25rem] font-bold text-stop">{t(copy[error])}</p>}
+      <BigButton icon="check" disabled={busy} onClick={confirm}>{busy ? t(common.loading) : t(copy.confirm)}</BigButton>
       {back}
     </Page>
   );

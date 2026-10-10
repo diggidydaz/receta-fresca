@@ -9,7 +9,7 @@ import { setState, useAppState } from "@/lib/store";
 // Where "Back" leads from each screen: always one clear step up, never a surprise.
 const parent: Record<string, string> = {
   "/paciente": "/", "/clinico": "/", "/negocio": "/", "/acerca": "/",
-  "/promotora": "/", "/negocio/inventario": "/negocio",
+  "/promotora": "/", "/entrar": "/", "/negocio/inventario": "/negocio",
   "/intake": "/paciente", "/plan": "/paciente", "/comida": "/paciente", "/canjear": "/paciente",
 };
 

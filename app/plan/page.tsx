@@ -3,12 +3,10 @@ import { useEffect, useState } from "react";
 import { BigButton, Busy, Card, Notice, Page, ReadAloud, Tag, TrafficLight } from "@/components/ui";
 import { TeachBack } from "@/components/TeachBack";
 import { WeekPlan } from "@/components/WeekPlan";
-import patientsData from "@/data/patients.json";
 import { familyLink } from "@/lib/share";
-import type { Patient } from "@/lib/types";
 import { common, useT } from "@/lib/i18n";
 import { ensurePlan } from "@/lib/planLoader";
-import { setState, useAppState, useHydrated } from "@/lib/store";
+import { setState, useAppState, useHydrated, listPatients } from "@/lib/store";
 
 const copy = {
   title: { es: "Mi plan de la semana", en: "My plan for the week" },
@@ -78,7 +76,7 @@ export default function PlanPage() {
   }
 
   const summary = s.visitSummary;
-  const patient = (patientsData as Patient[]).find((p) => p.id === s.patientId);
+  const patient = listPatients(s).find((p) => p.id === s.patientId);
 
   const share = async () => {
     if (!plan || !rx) return;

@@ -1,7 +1,8 @@
 // Receta Fresca offline support. Keeps the app's screens and files on the phone so a patient with a
-// weak signal can still open their plan and note meals. AI requests (/api/) always go to the network.
-const CACHE = "receta-fresca-v1";
-const PAGES = ["/", "/paciente", "/plan", "/comida", "/canjear", "/intake", "/acerca", "/familia", "/clinico", "/promotora", "/negocio"];
+// weak signal can still open their plan and note meals. AI requests (/api/) always go to the network,
+// and so does Supabase (another origin): records are cached by lib/store.ts, never here.
+const CACHE = "receta-fresca-v2";
+const PAGES = ["/", "/paciente", "/plan", "/comida", "/canjear", "/intake", "/acerca", "/familia", "/clinico", "/promotora", "/negocio", "/negocio/inventario", "/entrar"];
 const FILES = ["/logo.svg", "/icon-192.png", "/icon-512.png", "/manifest.webmanifest"];
 
 // Each page's own scripts and styles, so a page never opened online still works offline.

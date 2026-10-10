@@ -2,11 +2,9 @@
 import { useEffect, useRef, useState } from "react";
 import { BigButton, Busy, ChoiceGroup, Notice, Page, Progress, ReadAloud, StepHeading, VoiceInput } from "@/components/ui";
 import { common, useT } from "@/lib/i18n";
-import { setState, useAppState, useHydrated } from "@/lib/store";
-import type { IntakeAnswers, IntakeSummary, Patient } from "@/lib/types";
-import patientsData from "@/data/patients.json";
+import { setState, useAppState, useHydrated, listPatients } from "@/lib/store";
+import type { IntakeAnswers, IntakeSummary } from "@/lib/types";
 
-const patients = patientsData as Patient[];
 
 const copy = {
   hint: { es: "Puede saltar una pregunta.", en: "You may skip a question." },
@@ -72,6 +70,7 @@ export default function IntakePage() {
   const [failed, setFailed] = useState(false);
 
   if (!hydrated) return <Page><Busy /></Page>;
+  const patients = listPatients(s);
   const patient = patients.find((p) => p.id === s.patientId) ?? patients[0];
 
   const set = (patch: Partial<IntakeAnswers>) => setState({ intake: { ...s.intake, ...patch } });

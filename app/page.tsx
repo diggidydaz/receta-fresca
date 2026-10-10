@@ -3,12 +3,15 @@ import Link from "next/link";
 import { Icon } from "@/components/Icon";
 import { BigButton, Page } from "@/components/ui";
 import { common, useT } from "@/lib/i18n";
-import { resetDemo } from "@/lib/store";
+import { roleHome } from "@/components/Account";
+import { resetDemo, useSession } from "@/lib/store";
 import type { L10n } from "@/lib/types";
 
 const copy = {
   who: { es: "¿Quién es usted?", en: "Who are you?" },
   reset: { es: "Empezar la demostración de nuevo", en: "Start the demo again" },
+  signIn: { es: "Entrar con mi cuenta", en: "Sign in to my account" },
+  myPage: { es: "Ir a mi página", en: "Go to my page" },
   resetDone: { es: "Demostración reiniciada.", en: "Demo reset." },
 };
 
@@ -21,12 +24,15 @@ const roles: { href: string; icon: string; title: L10n; hint: L10n }[] = [
 
 export default function Home() {
   const { t } = useT();
+  const session = useSession();
   return (
     <Page>
       <div>
         <h1>{t(common.tagline)}</h1>
         <p className="mt-3 text-[1.25rem] font-bold text-muted">{t(copy.who)}</p>
       </div>
+      {session.status === "signedIn" && <BigButton href={roleHome[session.role]} icon="right">{t(copy.myPage)}</BigButton>}
+      {session.status === "signedOut" && <BigButton href="/entrar" icon="person">{t(copy.signIn)}</BigButton>}
       <nav aria-label={t(copy.who)} className="flex flex-col gap-4">
         {roles.map((r) => (
           <Link key={r.href} href={r.href} className="flex min-h-[96px] items-center gap-4 rounded-2xl border-[3px] border-brand bg-panel p-5 hover:bg-brand-soft">
@@ -40,7 +46,7 @@ export default function Home() {
         ))}
       </nav>
       <BigButton variant="quiet" href="/acerca" icon="info">{t(common.about)}</BigButton>
-      <BigButton variant="quiet" icon="refresh" onClick={() => { resetDemo(); window.alert(t(copy.resetDone)); }}>{t(copy.reset)}</BigButton>
+      {session.status === "demo" && <BigButton variant="quiet" icon="refresh" onClick={() => { resetDemo(); window.alert(t(copy.resetDone)); }}>{t(copy.reset)}</BigButton>}
     </Page>
   );
 }

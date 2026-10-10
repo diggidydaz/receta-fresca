@@ -1,18 +1,16 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
-import { BigButton, Busy, Card, ChoiceGroup, Notice, Page, Tag } from "@/components/ui";
+import { BigButton, Busy, Card, ChoiceGroup, fieldCls, Notice, Page, Tag } from "@/components/ui";
 import { Icon } from "@/components/Icon";
 import { helperWord, PatientProgress } from "@/components/PatientProgress";
 import { useT } from "@/lib/i18n";
 import { DEFAULT_TARGET } from "@/lib/foods";
 import { ensurePlan } from "@/lib/planLoader";
 import { download, outcomesCsv } from "@/lib/export";
-import { allPatients, setState, useAppState, useHydrated } from "@/lib/store";
-import type { IntakeSummary, Patient, Rx, RxType, VisitSummary } from "@/lib/types";
-import patientsData from "@/data/patients.json";
-
-const patients = patientsData as Patient[];
+import { EnrolPatient } from "@/components/Account";
+import { allPatients, listPatients, setState, useAppState, useHydrated, useSession } from "@/lib/store";
+import type { IntakeSummary, Rx, RxType, VisitSummary } from "@/lib/types";
 
 const copy = {
   title: { es: "Recetar comida", en: "Prescribe food" },
@@ -114,7 +112,7 @@ function RxForm({ summary, initial, onSubmit }: { summary: IntakeSummary | null;
     note: "",
   }));
   const set = (p: Partial<FormValues>) => setV((o) => ({ ...o, ...p }));
-  const fieldCls = "w-full rounded-2xl border-[3px] border-rule bg-panel px-4 py-3 text-[1.25rem] leading-snug";
+
   const stepBtn = "flex h-16 w-16 items-center justify-center rounded-2xl border-[3px] border-brand bg-panel text-[2rem] font-bold text-brand hover:bg-brand-soft disabled:opacity-40";
 
   return (
@@ -174,6 +172,7 @@ export default function ClinicoPage() {
   const hydrated = useHydrated();
   const [view, setView] = useState<"form" | "sending" | "done">("form");
   const [failed, setFailed] = useState<FormValues | null>(null);
+  const demo = useSession().status === "demo";
   const doneRef = useRef<HTMLHeadingElement>(null);
   const router = useRouter();
 
@@ -203,6 +202,16 @@ export default function ClinicoPage() {
     );
   }
 
+  const patients = listPatients(s);
+  if (patients.length === 0) {
+    return (
+      <Page>
+        <h1>{t(copy.title)}</h1>
+        <Notice><p className="text-[1.25rem]">{t({ es: "Todavía no hay pacientes inscritos.", en: "No patients are enrolled yet." })}</p></Notice>
+        <EnrolPatient onEnrolled={(id) => setState({ patientId: id })} />
+      </Page>
+    );
+  }
   const patient = patients.find((p) => p.id === s.patientId) ?? patients[0];
   const summary = s.intakeSummary;
 
@@ -249,7 +258,7 @@ export default function ClinicoPage() {
             {(s.visitSummary?.points ?? []).map((p, i) => <li key={i}>{t(p)}</li>)}
           </ul>
         </Card>
-        <BigButton href="/paciente" icon="person">{t(copy.viewAs)}</BigButton>
+        {demo && <BigButton href="/paciente" icon="person">{t(copy.viewAs)}</BigButton>}
         <BigButton variant="secondary" icon="refresh" onClick={() => setView("form")}>{t(copy.another)}</BigButton>
       </Page>
     );
@@ -260,7 +269,8 @@ export default function ClinicoPage() {
       <h1>{t(copy.title)}</h1>
 
       <ChoiceGroup legend={t(copy.patient)} name="patient" value={s.patientId} onChange={(id) => setState({ patientId: id })}
-        options={patients.map((p) => ({ value: p.id, label: p.name, hint: `${p.age} ${t(copy.years)} · ${p.town} · ${t(p.note)}`, icon: "person" }))} />
+        options={patients.map((p) => ({ value: p.id, label: p.name, hint: [`${p.age} ${t(copy.years)}`, p.town, t(p.note)].filter(Boolean).join(" · "), icon: "person" }))} />
+      {!demo && <EnrolPatient onEnrolled={(id) => setState({ patientId: id })} />}
 
       {(s.rx || s.log.length > 0) && (
         <Card className="flex flex-col gap-4">

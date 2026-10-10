@@ -1,11 +1,10 @@
 "use client";
 import Link from "next/link";
-import patients from "@/data/patients.json";
 import { Icon } from "@/components/Icon";
 import { useState } from "react";
 import { BigButton, Busy, ChoiceGroup, Notice, Page, Tag } from "@/components/ui";
 import { common, useT } from "@/lib/i18n";
-import { setState, useAppState, useHydrated } from "@/lib/store";
+import { listPatients, setState, useAppState, useHydrated, useSession } from "@/lib/store";
 import type { L10n } from "@/lib/types";
 
 const copy = {
@@ -24,7 +23,9 @@ export default function PatientHome() {
   const s = useAppState();
   const hydrated = useHydrated();
   const [picking, setPicking] = useState(false);
+  const demo = useSession().status === "demo";
   if (!hydrated) return <Page><Busy /></Page>;
+  const patients = listPatients(s);
   const patient = patients.find((p) => p.id === s.patientId) ?? patients[0];
   const hasRx = Boolean(s.rx);
 
@@ -39,10 +40,10 @@ export default function PatientHome() {
     <Page>
       <div>
         <p className="text-[1.25rem] font-bold text-muted">{t(copy.hello)}</p>
-        <h1>{patient.name}</h1>
+        <h1>{patient?.name}</h1>
         <p className="mt-2 text-[1.25rem]">{t(copy.what)}</p>
       </div>
-      {picking ? (
+      {!demo ? null : picking ? (
         <div className="flex flex-col gap-3">
           <ChoiceGroup
             legend={t(copy.who)}

@@ -5,14 +5,13 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Icon } from "@/components/Icon";
 import { PatientProgress } from "@/components/PatientProgress";
+import { EnrolPatient, ResetPin } from "@/components/Account";
 import { BigButton, Busy, Card, Notice, Page, Tag } from "@/components/ui";
-import patientsData from "@/data/patients.json";
 import { alertsFor, NON_REDEMPTION_DAYS } from "@/lib/care";
 import { common, useT } from "@/lib/i18n";
-import { allPatients, emptyPatient, setPatientState, setState, useAppState, useHydrated, type PatientState } from "@/lib/store";
-import type { L10n, Patient } from "@/lib/types";
-
-const patients = patientsData as Patient[];
+import { formatPhone } from "@/lib/phone";
+import { allPatients, emptyPatient, listPatients, setPatientState, setState, useAppState, useHydrated, useSession, type PatientState } from "@/lib/store";
+import type { L10n } from "@/lib/types";
 
 const copy = {
   title: { es: "Mis pacientes", en: "My patients" },
@@ -81,11 +80,12 @@ export default function PromotoraPage() {
   const hydrated = useHydrated();
   const router = useRouter();
   const [open, setOpen] = useState<string | null>(null);
+  const demo = useSession().status === "demo";
   if (!hydrated) return <Page><Busy /></Page>;
 
   const records = allPatients(s);
   const empty = emptyPatient();
-  const rows = patients
+  const rows = listPatients(s)
     .map((pt) => {
       const p = records[pt.id] ?? empty;
       const alerts = alertsFor(p);
@@ -119,7 +119,7 @@ export default function PromotoraPage() {
       {rows.map(({ pt, p, alerts, urgent }) => (
         <Card key={pt.id} className={`flex flex-col gap-3 ${urgent ? "border-[3px] border-stop" : ""}`}>
           <h2 className="flex items-center gap-2"><Icon name="person" /> {pt.name}</h2>
-          <p className="text-muted">{pt.age} {t(copy.years)} · {pt.town} · {t(pt.note)}</p>
+          <p className="text-muted">{[`${pt.age} ${t(copy.years)}`, pt.town, t(pt.note), pt.phone && formatPhone(pt.phone)].filter(Boolean).join(" · ")}</p>
           <p className={`flex items-center gap-2 font-bold ${alerts.length ? "text-stop" : "text-brand"}`}>
             <Icon name={alerts.length ? "warn" : "check"} /> {t(alerts.length ? copy.needs : copy.ok)}
           </p>
@@ -133,14 +133,18 @@ export default function PromotoraPage() {
           <div id={`prog-${pt.id}`} hidden={open !== pt.id}>
             {open === pt.id && <PatientProgress patientId={pt.id} p={p} role="promotora" />}
           </div>
+          {!demo && <ResetPin patientId={pt.id} />}
         </Card>
       ))}
 
-      <Notice>
-        <p className="font-bold">{t(copy.simTitle)}</p>
-        <p>{t(copy.simHint)}</p>
-        <div className="mt-3"><BigButton variant="secondary" icon="refresh" onClick={simulate}>{t(copy.simGo)}</BigButton></div>
-      </Notice>
+      {!demo && <EnrolPatient onEnrolled={() => {}} />}
+      {demo && (
+        <Notice>
+          <p className="font-bold">{t(copy.simTitle)}</p>
+          <p>{t(copy.simHint)}</p>
+          <div className="mt-3"><BigButton variant="secondary" icon="refresh" onClick={simulate}>{t(copy.simGo)}</BigButton></div>
+        </Notice>
+      )}
       <BigButton variant="quiet" href="/" icon="home">{t(common.home)}</BigButton>
     </Page>
   );

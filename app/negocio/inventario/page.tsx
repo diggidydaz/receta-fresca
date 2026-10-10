@@ -7,7 +7,7 @@ import { BigButton, Busy, Card, ChoiceGroup, Notice, Page, Tag } from "@/compone
 import { daysSince } from "@/lib/care";
 import { common, useT } from "@/lib/i18n";
 import { basePlaces, catalogFor, effectivePlaces } from "@/lib/places";
-import { allPatients, setState, useAppState, useHydrated } from "@/lib/store";
+import { allPatients, setState, useAppState, useHydrated, useSession } from "@/lib/store";
 import type { L10n, Place } from "@/lib/types";
 
 const copy = {
@@ -93,7 +93,11 @@ export default function InventarioPage() {
   const { t } = useT();
   const s = useAppState();
   const hydrated = useHydrated();
-  const [placeId, setPlaceId] = useState<string | undefined>();
+  const [picked, setPlaceId] = useState<string | undefined>();
+  const session = useSession();
+  // A business account always edits its own place; the demo lets you pick one.
+  const own = session.status === "signedIn" ? session.placeId ?? undefined : undefined;
+  const placeId = own ?? picked;
   if (!hydrated) return <Page><Busy /></Page>;
 
   const places = effectivePlaces(s.stock);
@@ -124,8 +128,10 @@ export default function InventarioPage() {
     <Page>
       <h1>{t(copy.title)}</h1>
       <div><Tag>{t(common.simulated)}</Tag></div>
-      <ChoiceGroup legend={t(copy.which)} name="biz" value={placeId} onChange={setPlaceId}
-        options={basePlaces.map((p) => ({ value: p.id, label: p.name, hint: `${t(kindLabel[p.kind])} · ${p.town}`, icon: "store" }))} />
+      {own ? <p className="text-[1.25rem] font-bold">{place?.name} · {place?.town}</p> : (
+        <ChoiceGroup legend={t(copy.which)} name="biz" value={placeId} onChange={setPlaceId}
+          options={basePlaces.map((p) => ({ value: p.id, label: p.name, hint: `${t(kindLabel[p.kind])} · ${p.town}`, icon: "store" }))} />
+      )}
 
       {place && (
         <>
