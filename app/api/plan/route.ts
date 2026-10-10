@@ -69,7 +69,7 @@ export async function POST(req: Request) {
     maxTokens: 3000,
     toolName: "write_week_plan",
     toolDescription: "Write a 7-day meal plan of familiar local dishes.",
-    system: `Build a 7-day plan (Monday to Sunday; desayuno, almuerzo, cena each day) for an older adult in Puerto Rico. Write in ${lang === "es" ? "Puerto Rican Spanish" : "English (keep local dish names in Spanish)"}.
+    system: `Build a 7-day plan (Monday to Sunday; desayuno, almuerzo, cena each day) for an older adult in Puerto Rico. Write everything in ${lang === "es" ? "Puerto Rican Spanish" : "English: day names, dish names, portions, shopping items and quantities. Translate dish names in full (\"Stewed chicken with salad\"); keep the Spanish word only for a dish with no English name (mofongo, pasteles, tostones)"}. Never mix the two languages.
 - Use familiar, traditional dishes. Do not turn the plan into a foreign diet.
 - ${rx.type === "produce" ? "Lunch and dinner should be built mainly from the produce in stock below, plus basic pantry items. shopping = what to pick up this week from those stores, with simple quantities for one person." : "Lunch and dinner are chosen from the kitchens' dishes; vary them through the week and do not repeat a dish on the same day. Breakfast is simple and needs no cooking skill. shopping = each kitchen dish used, with how many times it appears this week (for example \"2 veces\"); do not list groceries."}
 - Breakfast: simple, not fried, no processed meats (no salami, jamón, salchicha), no sweet breads or pastries (mallorca, quesito).

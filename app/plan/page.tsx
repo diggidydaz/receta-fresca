@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { BigButton, Busy, Card, Notice, Page, ReadAloud, Tag, TrafficLight } from "@/components/ui";
 import { common, useT } from "@/lib/i18n";
-import { ensurePlan } from "@/lib/planLoader";
+import { ensurePlan, translatePlan } from "@/lib/planLoader";
 import { setState, useAppState, useHydrated } from "@/lib/store";
 
 const copy = {
@@ -14,6 +14,7 @@ const copy = {
   wait: { es: "Tarda unos 20 segundos. No cierre esta página.", en: "This takes about 20 seconds. Please keep this page open." },
   otherLang: { es: "Este plan está escrito en inglés.", en: "This plan is written in Spanish." },
   redo: { es: "Hacer el plan en español", en: "Make the plan in English" },
+  translating: { es: "Poniendo su plan en español…", en: "Putting your plan into English…" },
   failed: { es: "No pudimos preparar su plan. Intente otra vez.", en: "We could not prepare your plan. Please try again." },
   retry: { es: "Intentar otra vez", en: "Try again" },
   breakfast: { es: "Desayuno", en: "Breakfast" },
@@ -40,7 +41,17 @@ export default function PlanPage() {
   const hydrated = useHydrated();
   const [day, setDay] = useState(0);
   const [failed, setFailed] = useState(false);
+  const [noTranslation, setNoTranslation] = useState(false);
   const { rx, plan } = s;
+  // The plan is always shown in the language of the screen. A plan written in the other language is translated first.
+  const wrongLang = Boolean(plan?.lang && plan.lang !== lang);
+
+  useEffect(() => {
+    if (!hydrated || !rx || !plan || !wrongLang || noTranslation) return;
+    let live = true;
+    void translatePlan(rx, plan, lang).then((ok) => { if (live && !ok) setNoTranslation(true); });
+    return () => { live = false; };
+  }, [hydrated, rx, plan, wrongLang, noTranslation, lang]);
 
   useEffect(() => {
     if (!hydrated || !rx || plan || failed) return;
@@ -94,13 +105,15 @@ export default function PlanPage() {
         </>
       )}
 
-      {plan && current && (
+      {plan && wrongLang && !noTranslation && <Busy label={t(copy.translating)} />}
+
+      {plan && current && (!wrongLang || noTranslation) && (
         <>
-          {plan.lang && plan.lang !== lang && (
+          {wrongLang && (
             <Notice>
               <p className="text-[1.1rem]">{t(copy.otherLang)}</p>
               <div className="mt-3">
-                <BigButton variant="secondary" icon="refresh" onClick={() => { setDay(0); setFailed(false); setState({ plan: null }); }}>{t(copy.redo)}</BigButton>
+                <BigButton variant="secondary" icon="refresh" onClick={() => { setDay(0); setFailed(false); setNoTranslation(false); setState({ plan: null }); }}>{t(copy.redo)}</BigButton>
               </div>
             </Notice>
           )}
